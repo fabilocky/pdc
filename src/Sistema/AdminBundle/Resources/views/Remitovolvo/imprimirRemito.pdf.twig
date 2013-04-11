@@ -1,0 +1,87 @@
+<table>    
+        <tr>
+            <td align="right" style="font-weight: bold">Remito Nro: {{ entity.id }}</td>
+            <td align="right" style="font-weight: bold">Fecha: {{ entity.fecha|date('d-m-Y') }}</td>
+        </tr>                
+</table>
+<table>    
+        <tr>
+            <td align="right" style="font-weight: bold; color: red">Cotizacion: {{ entity.cotizacion }}</td>            
+        </tr>                
+</table>
+<br>
+<table>
+    <tbody>
+        <tr>            
+            <td class="th">Cliente: {{ entity.cliente }}</td>
+            <td></td>            
+        </tr>       
+        <tr>            
+            <td class="th">Camion Chasis N°: {{ entity.chasis }}</td>
+            <td class="th">Modelo: {{ entity.modelo }}</td>            
+        </tr>
+        <tr>            
+            <td class="th">Dominio: {{ entity.dominio }}</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<br>
+<table class="table-bordered">
+    <tbody>
+        <tr>            
+            <td colspan="5" align="center" class="th">Consumo de Repuestos y Lubricantes</td>
+        </tr> 
+        <tr>            
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Cantidad</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Codigo</td>
+            <td class="th" align="center" style="font-weight: bold; width: 40%">Denominacion</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%">P. Unit.</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Subtotal</td>
+        </tr>
+        {% set suma = 0 %}
+        {% for consumos in entity.consumos %}
+        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}        
+        <tr>            
+            <td>{{ consumos.cantidad }}</td>
+            <td>{{ consumos.idRepvolvo.codigo }}</td>
+            <td>{{ consumos.idRepvolvo }}</td>
+            <td>${{ pesos|number_format(2, '.', ',') }}</td>
+            <td>${{ consumos.subtotal }}</td>
+        </tr>
+        {% set suma = suma + consumos.subtotal %}
+        {% endfor %}
+        <tr>            
+            <td colspan="4" class="th" align="right" style="font-weight: bold; width: 85%">Total Sin IVA</td>
+            <td class="th" align="left" style="font-weight: bold; width: 15%">${{ suma }}</td>
+        </tr>
+        
+    </tbody>
+</table>
+<br>
+<br>
+<table>    
+        <tr>
+            <td align="left" style="font-weight: bold">Aclaración: {{ entity.aclaracion }}</td>
+            <td align="center" style="font-weight: bold"></td>
+        </tr>        
+</table>
+<br>
+<br>
+<table>    
+        <tr>
+            <td align="left" style="font-weight: bold">Observaciones: {{ entity.observaciones }}</td>
+            <td align="center" style="font-weight: bold"></td>
+        </tr>        
+</table>
+<br>
+<br>
+<table>    
+        <tr>            
+            <td align="center" style="font-weight: bold"></td>
+            <td align="left" style="font-weight: bold">Envia: {{ entity.envia }}</td>
+        </tr>        
+</table>
+
+

@@ -19,6 +19,26 @@ class AppKernel extends Kernel
             new JMS\AopBundle\JMSAopBundle(),
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
+            //BUNDLES SISTEMA
+            new Sistema\AdminBundle\SistemaAdminBundle(),
+            new Sistema\UsuarioBundle\SistemaUsuarioBundle(),
+            //BUNDLES TERCEROS
+            //FOS USER BUNDLE
+            new FOS\UserBundle\FOSUserBundle(),
+            //CRUD GENERATOR
+            new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle(),
+            new JordiLlonch\Bundle\CrudGeneratorBundle\JordiLlonchCrudGeneratorBundle(),
+            //FORMULARIOS COPETES
+            new Craue\FormFlowBundle\CraueFormFlowBundle(),
+            //RESIZE IMAGEN
+            new Avalanche\Bundle\ImagineBundle\AvalancheImagineBundle(),
+            new Sistema\FrontendBundle\SistemaFrontendBundle(),
+            //FORM VARIOS AUTOCOMPLETE
+            new Genemu\Bundle\FormBundle\GenemuFormBundle(),
+            //GENERA LOS PDF
+            new Io\TcpdfBundle\IoTcpdfBundle(),
+            new Sistema\TcpdfBundle\SistemaTcpdfBundle(),//Bundle Propio - sobreescribo el bundle
+            new OS\ExcelBundle\OSExcelBundle,
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

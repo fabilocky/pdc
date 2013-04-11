@@ -1,0 +1,134 @@
+{% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
+
+{% block title %}
+{{ parent() }} - Remitovolvo {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{% endblock %}
+
+{% block page %}
+<style>
+        form.well ul li div div{
+            float: left;
+            margin: 0 10px;
+        }
+        form.well ul li {
+            height: 40px;
+        }
+        .titulos {
+            height: 20px;
+        }
+        .titulos div{
+            float: left;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .tituloproducto{
+            margin: 0 40px;
+        }
+        .titulocodigo{
+            margin: 0 40px;
+        }
+        .tituloprecio{
+            margin-left: 80px;
+            margin-right: 40px;
+        }
+        .tituloprecio2{
+            margin-right: 35px;
+        }
+        .titulocantidad{
+            margin: 0 20px;
+        }
+        .titulototal{
+            margin: 0 50px;
+        }
+        .tituloperaciones{
+            margin-left: 40px;
+            margin-right: 160px;
+        }
+        .titulohs{        
+            margin-right: 100px;
+        }
+        .titulopreciohs{        
+            margin-right: 50px;
+        }
+        .titulocant{
+            margin-left: 75px;
+            margin-right: 60px;
+        }
+        .titulopunit{        
+            margin-right: 60px;
+        }
+        .add_tag_link,
+        .del_tag_link{
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+    </style>
+<h1>Remitovolvo {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+
+<form class="well" action="{{ path('remitovolvo_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(form) }}>
+    <table>
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ form_row(form.fecha) }}</td> 
+                    <td></td>
+                    <td></td>
+                    <td>{{ form_row(form.cotizacion) }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form_row(form.cliente) }}</td>                    
+                </tr>
+                <tr>                 
+                    <td>{{ form_row(form.chasis) }}</td>
+                    <td>{{ form_row(form.modelo) }}</td>
+                    <td>{{ form_row(form.dominio) }}</td>
+                </tr>
+            </tbody>
+        </table>
+         <div class="titulos">                
+                <div class="titulocodigo">Repuesto</div>                
+                <div class="titulocantidad">Cantidad</div>
+                <div class="titulototal">SubTotal</div>
+            </div>
+    {#<h3>Lineas de Factura</h3>#}
+            <ul class="tags" data-prototype="{{ form_widget(form.consumos.vars.prototype)|e }}">       
+        {# iterate over each existing tag and render its only field: name #}
+        {% for consumos in form.consumos %}
+                    <table>
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ form_row(consumos.idRepvolvo) }}</td>                    
+                    <td>{{ form_row(consumos.cantidad) }}</td>
+                    <td>{{ form_row(consumos.subtotal) }}</td>
+                </tr>               
+            </tbody>
+        </table>                  
+        {% endfor %}            
+                </ul>
+    {{ form_row(form.neto) }}
+    {{ form_row(form.aclaracion) }}
+    {{ form_row(form.observaciones) }}
+            {{ form_row(form.envia) }}
+    <p>
+        <button type="submit" class="btn btn-success">{{ 'views.edit.editbutton'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+    </p>
+</form>
+
+<div>
+    <div class="float-left">
+        <a class="btn" href="{{ path('remitovolvo') }}">
+            {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+        </a>
+    </div>
+    <div class="float-left">
+        <form action="{{ path('remitovolvo_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button class="btn btn-danger" type="submit" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}');">{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

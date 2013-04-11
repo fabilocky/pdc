@@ -1,0 +1,38 @@
+/*definimos variables*/
+@color_azul: #0040FF;
+@color_blanco: #FFFFFF;
+@color_rojo: #FF0000;
+
+
+/*definimos nuestro estilos aplicando las variables*/
+h1 {color: @color_azul;}
+
+p {color: @color_blanco;}
+
+h2 {color: @color_rojo}
+
+/*Declaramos una funcion para establecer bordes redondeados*/
+.borde-redondeado (@radio: 10px){
+    border-radius: @radio;
+    -webkit-border-radius: @radio;
+    -moz-border-radius: @radio;
+}
+
+/*Declaramos una funcion para establecer las propiedades del fondo de nuestro parrafo*/
+.propiedades-fondo (@color: #424242, @ancho: 500px, @padding: 10px){
+    background-color: @color;
+    width: @ancho;
+    padding: @padding;
+}
+
+/*llamamos al id columna y llamamos a las funciones definidas*/
+#columna{
+    .propiedades-fondo;
+    .borde-redondeado
+}
+
+/*llamamos a la clase columnas y llamamos a las funciones definidas pasandole parametros*/
+.columnas{
+    .propiedades-fondo;
+    .borde-redondeado (40px);
+}
