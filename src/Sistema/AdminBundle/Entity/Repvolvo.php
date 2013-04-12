@@ -48,6 +48,13 @@ class Repvolvo
      * @ORM\Column(name="precio", type="float")
      */
     private $precio;
+    
+    /**
+     * @var integer $cantidad
+     *
+     * @ORM\Column(name="cantidad", type="integer", nullable=true)
+     */
+    private $cantidad;
 
     public function __toString() {
 //        return $this->codigo." - ".$this->descripcion;
@@ -154,5 +161,28 @@ class Repvolvo
     public function getPrecio()
     {
         return $this->precio;
+    }
+    
+    /**
+     * Set cantidad
+     *
+     * @param integer $cantidad
+     * @return Repvolvo
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get cantidad
+     *
+     * @return integer 
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
     }
 }
