@@ -39,6 +39,7 @@ class AppKernel extends Kernel
             new Io\TcpdfBundle\IoTcpdfBundle(),
             new Sistema\TcpdfBundle\SistemaTcpdfBundle(),//Bundle Propio - sobreescribo el bundle
             new OS\ExcelBundle\OSExcelBundle,
+            new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
