@@ -24,7 +24,8 @@
         "avalanche123/imagine-bundle": "*",
         "gergelypolonkai/tcpdfbundle": "*",
         "genemu/form-bundle": "2.1.*",
-        "os/excel-bundle": "dev-master",       
+        "os/excel-bundle": "dev-master",
+        "liuggio/excelbundle": ">=1.0.4"
     },
     "scripts": {
         "post-install-cmd": [
