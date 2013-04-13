@@ -189,7 +189,7 @@ class OrdvolvoController extends Controller
  
         return $this->render('SistemaAdminBundle:Ordvolvo:new.html.twig', array(
             'form' => $form->createView(),
-            'dolar'=> $fa
+            'dolar'=> 5,19
         ));
     }
 
@@ -218,6 +218,12 @@ class OrdvolvoController extends Controller
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
             foreach($consumos as $consumo) {
+               
+                $id1=$consumo["idRepvolvo"];
+                $em1 = $this->getDoctrine()->getManager();
+                $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($id1);
+                $rep->setCantidad($rep->getCantidad()-1);
+                $em1->persist($rep);
                 $sumaNeto= $sumaNeto + $consumo['subtotal'];
                 $str = $consumo['subtotal'];
                 $fa=str_replace(".", ",",$str);
@@ -225,11 +231,10 @@ class OrdvolvoController extends Controller
                 $cont=$cont+1;
                 
             }
-            for ($i = 0; $i <= $cont; $i++) {
-                $consumos[$i] = new Consumo();
-                //$consumoremito[$i] = new \Sistema\AdminBundle\Entity\Consumoremito();
+            for ($i = 0; $i <= $cont; $i++) {               
+                $consumos[$i] = new Consumo();            
                 $ord->addConsumos($consumos[$i],$rem);
-                //$rem->addConsumos($consumoremito[$i]);
+                
             }
         }       
         
@@ -454,15 +459,32 @@ class OrdvolvoController extends Controller
      /**
      * Finds and displays a precio Tipo Producto entity.
      *
-     * @Route("/repvolvo/precio", name="orden_repvolvo_precio")
+     * @Route("/repvolvo/stock", name="orden_repvolvo_precio")
      */
     public function retornaPrecioRepvolvo() {
         $isAjax = $this->getRequest()->isXMLHttpRequest();
         if ($isAjax) {
             $id = $this->getRequest()->get('id');
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);
+            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);            
             return new Response($entity->getPrecio());
+        }
+        return new Response('Error. This is not ajax!', 400);
+    }
+    
+    
+     /**
+     * Finds and displays a precio Tipo Producto entity.
+     *
+     * @Route("/repvolvo/precio", name="orden_repvolvo_stock")
+     */
+    public function retornaStockRepvolvo() {
+        $isAjax = $this->getRequest()->isXMLHttpRequest();
+        if ($isAjax) {
+            $id = $this->getRequest()->get('id');
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);            
+            return new Response($entity->getCantidad());
         }
         return new Response('Error. This is not ajax!', 400);
     }

@@ -273,8 +273,11 @@
                                     //$newLinkLi.before($newAddTwig);
                                     var $addJs =
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaNombre($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                            "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"+
+                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaNombre($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "});"+                                        
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_cantidad').change(function() {"+
                                             "calculaTotal("+cantidadAddJs+")"+
                                         "});"+
@@ -300,6 +303,22 @@
                             //                }
                             //        });
                             //        $newLinkLi.before($div3);
+                                }
+                                
+                                function consultaStock(id, cantidadAddJs){
+                                    $.ajax({
+                                      url: '{{ path('orden_repvolvo_stock') }}',
+                                      type: "POST",
+                                      data: { "id" : id },
+                                      success: function(data) {
+                                        //$('.result').html(data);            
+                                        if(data==9){
+                                            alert("Hola mundo!");
+                                            .die();
+                                                 
+                                            }
+                                      }
+                                    });
                                 }
     
                                 function consultaPrecio(id, cantidadAddJs){
@@ -361,7 +380,8 @@
                                         $('#ordvolvo_consumos_'+cantidadAddJs+'_idRepvolvo').val(data);            
                                       }
                                     });
-                                }
+                                }                               
+                                
     
                                 function calculaTotal(cantidadAddJs){
                                     cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        

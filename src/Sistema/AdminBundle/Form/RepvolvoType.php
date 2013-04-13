@@ -15,6 +15,7 @@ class RepvolvoType extends AbstractType
             ->add('descripcion')
             ->add('cd')
             ->add('precio')
+            ->add('cantidad')
         ;
     }
 
