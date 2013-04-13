@@ -308,12 +308,12 @@ class RepvolvoController extends Controller {
        $excel = $this->get('os.excel');
        $excel->loadFile("excel.xlsx");
        $num=$excel->getRowCount();
-       $con = pg_connect("host=localhost port=5432 dbname=pescarolo user=admin_postgres password=admpostgres");
+       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");
        $query="TRUNCATE repvolvo CASCADE";
        $result=pg_query($con, $query)or die('ERROR AL INSERTAR DATOS: ' . pg_last_error());
        for ($i = 1; $i <= $num; $i++) {
        $hola=$excel->getRowData($i);
-       $query ="INSERT INTO repvolvo (id, codigo, descripcion, cd, precio) VALUES ('$i', '$hola[0]', '$hola[1]','$hola[2]','$hola[3]')"; 
+       $query ="INSERT INTO repvolvo (id, codigo, descripcion, cd, precio, cantidad) VALUES ('$i', '$hola[0]', '$hola[1]','$hola[2]','$hola[3]','0')"; 
        $result=pg_query($con, $query);
 //       echo $hola[0].",".$hola[1].",".$hola[2].",".$hola[3];       
        }

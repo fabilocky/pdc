@@ -167,7 +167,7 @@ class Repvolvo
      * Set cantidad
      *
      * @param integer $cantidad
-     * @return Consumo
+     * @return Repvolvo
      */
     public function setCantidad($cantidad)
     {
