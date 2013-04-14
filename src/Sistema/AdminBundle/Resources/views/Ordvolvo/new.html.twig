@@ -271,7 +271,7 @@
                                     //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
                                     //var $newAddTwig = $('<div><\/div>').append($addTwig);
                                     //$newLinkLi.before($newAddTwig);
-                                    var $addJs =
+                                    var $addJs = 
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"+
@@ -283,7 +283,7 @@
                                         "});"+
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaPrecio($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        "});"
+                                        "});"                                 
                                     ;
                                     var $newAddJs = $('<script><\/script>').append($addJs);
                                     //$('<div></div>').append($newAddJs);
@@ -312,11 +312,7 @@
                                       data: { "id" : id },
                                       success: function(data) {
                                         //$('.result').html(data);            
-                                        if(data==9){
-                                            alert("Hola mundo!");
-                                            .die();
-                                                 
-                                            }
+                                       $('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(data);
                                       }
                                     });
                                 }
@@ -330,10 +326,19 @@
                                         //$('.result').html(data);
                                         cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10)
                                         porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)
+                                        stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
+                                        if(isNaN(stock)){
+                                          alert('Sin Stock');
+                                          die();                                          
+                                        }
                                         if(isNaN(cotizacion)){
                                                  alert('indique cotizacion y realice nuevamente la acción');
                                                  die();
-                                            }else{                                        
+                                                 }
+                                        if(stock==0){
+                                           alert('Sin Stock');
+                                           die();
+                                        }else{                                                                                
                                         porc=porc/100;
                                         precioPesos = data * cotizacion;
                                         precioPesos = precioPesos + (precioPesos * porc);

@@ -192,7 +192,7 @@ class OrdvolvoController extends Controller
  
         return $this->render('SistemaAdminBundle:Ordvolvo:new.html.twig', array(
             'form' => $form->createView(),
-            'dolar'=> 5,19
+            'dolar'=> $fa,
         ));
     }
 

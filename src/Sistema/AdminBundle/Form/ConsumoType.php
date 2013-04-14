@@ -18,6 +18,13 @@ class ConsumoType extends AbstractType
                     'required'=> false,
 //                    'empty_value' => 'Seleccionar repuesto',                
                 ))
+            ->add('stock', 'hidden', array(                    
+                    'label' => ' ',
+                    'property_path' => false,
+                    'attr' => array('style' => 'width:110px'),
+                    'required'=> false,
+//                    'empty_value' => 'Seleccionar repuesto',                
+                ))
             ->add('idRepvolvo', null, array(                    
                     'label' => ' ',
                     'empty_value' => 'Seleccionar repuesto',
