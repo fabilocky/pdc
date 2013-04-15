@@ -1,0 +1,22 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Symfony - AJAX{% endblock %}
+
+{% block body %}
+
+<div id="articulos"></div>
+<a id="link_articulos" href="#">Cargar articulos</a>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+
+$(document).ready(function(){
+        $('#link_articulos').click(function(){
+                $('#articulos').load('{{ path('new_ordvolvo') }}');
+        });
+});
+
+</script>
+{% endblock %}

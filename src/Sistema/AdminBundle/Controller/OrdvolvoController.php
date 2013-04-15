@@ -701,5 +701,14 @@ EOD;
         $response->headers->set('Cache-Control', 'maxage=1');
         return $response;        
     }
+    
+    /**
+     * @Route("/verarticulos", name="ver_articulos")
+     * @Template()
+     */
+    public function verArticulosAction()
+{
+        return $this->render('SistemaAdminBundle:Cliente:new.html.twig', array());
+}
  
 }

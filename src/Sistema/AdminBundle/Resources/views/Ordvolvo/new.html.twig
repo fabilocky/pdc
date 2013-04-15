@@ -127,6 +127,8 @@
                 </tr>
             </tbody>
         </table>
+            <div id="articulos"></div>
+            <a id="link_articulos" href="#">Cargar articulos</a>
         <div class="titulos">
             <div class="tituloproducto">Solicitud de Reparación</div>        
         </div>  
@@ -751,6 +753,15 @@
                                                     $('#ordvolvo_total').val(total33.toFixed(2));
                                                 }
                                                 </script>
+                                                <script>
+
+$(document).ready(function(){
+        $('#link_articulos').click(function(){
+                $('#articulos').load('{{ path('cliente_new') }}');
+        });
+});
+
+</script>
 {#<script type="text/javascript">
     jQuery(document).ready(function($) {
         var $autocompleter = $('#sistema_adminbundle_facturatype_idCliente');
