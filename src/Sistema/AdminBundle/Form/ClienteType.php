@@ -12,6 +12,8 @@ class ClienteType extends AbstractType
     {
         $builder
             ->add('nombre')
+            ->add('cuit')
+            ->add('telefono')
         ;
     }
 

@@ -37,32 +37,21 @@ class Ordvolvo
     private $cotizacion;
 
     /**
-     * @var string $cliente
+     * @var Cliente
      *
-     * @ORM\Column(name="cliente", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Cliente")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_cliente", referencedColumnName="id")
+     * })
      */
-    private $cliente;
-
-    /**
-     * @var string $cuit
-     *
-     * @ORM\Column(name="cuit", type="string", length=255)
-     */
-    private $cuit;
+    private $cliente;    
 
     /**
      * @var string $chofer
      *
      * @ORM\Column(name="chofer", type="string", length=255)
      */
-    private $chofer;
-
-    /**
-     * @var string $telefono
-     *
-     * @ORM\Column(name="telefono", type="string", length=255, nullable=true)
-     */
-    private $telefono;
+    private $chofer;    
 
     /**
      * @var string $chasis
@@ -160,6 +149,9 @@ class Ordvolvo
         $this->fecha =  new \DateTime();
     }
 
+    
+    
+
     /**
      * Get id
      *
@@ -196,7 +188,7 @@ class Ordvolvo
     /**
      * Set cotizacion
      *
-     * @param float $cotizacion
+     * @param string $cotizacion
      * @return Ordvolvo
      */
     public function setCotizacion($cotizacion)
@@ -209,57 +201,11 @@ class Ordvolvo
     /**
      * Get cotizacion
      *
-     * @return float 
+     * @return string 
      */
     public function getCotizacion()
     {
         return $this->cotizacion;
-    }
-
-    /**
-     * Set cliente
-     *
-     * @param string $cliente
-     * @return Ordvolvo
-     */
-    public function setCliente($cliente)
-    {
-        $this->cliente = $cliente;
-    
-        return $this;
-    }
-
-    /**
-     * Get cliente
-     *
-     * @return string 
-     */
-    public function getCliente()
-    {
-        return $this->cliente;
-    }
-
-    /**
-     * Set cuit
-     *
-     * @param string $cuit
-     * @return Ordvolvo
-     */
-    public function setCuit($cuit)
-    {
-        $this->cuit = $cuit;
-    
-        return $this;
-    }
-
-    /**
-     * Get cuit
-     *
-     * @return string 
-     */
-    public function getCuit()
-    {
-        return $this->cuit;
     }
 
     /**
@@ -283,29 +229,6 @@ class Ordvolvo
     public function getChofer()
     {
         return $this->chofer;
-    }
-
-    /**
-     * Set telefono
-     *
-     * @param string $telefono
-     * @return Ordvolvo
-     */
-    public function setTelefono($telefono)
-    {
-        $this->telefono = $telefono;
-    
-        return $this;
-    }
-
-    /**
-     * Get telefono
-     *
-     * @return string 
-     */
-    public function getTelefono()
-    {
-        return $this->telefono;
     }
 
     /**
@@ -449,7 +372,7 @@ class Ordvolvo
     /**
      * Set neto
      *
-     * @param float $neto
+     * @param string $neto
      * @return Ordvolvo
      */
     public function setNeto($neto)
@@ -462,7 +385,7 @@ class Ordvolvo
     /**
      * Get neto
      *
-     * @return float 
+     * @return string 
      */
     public function getNeto()
     {
@@ -472,7 +395,7 @@ class Ordvolvo
     /**
      * Set iva
      *
-     * @param float $iva
+     * @param string $iva
      * @return Ordvolvo
      */
     public function setIva($iva)
@@ -485,7 +408,7 @@ class Ordvolvo
     /**
      * Get iva
      *
-     * @return float 
+     * @return string 
      */
     public function getIva()
     {
@@ -495,7 +418,7 @@ class Ordvolvo
     /**
      * Set total
      *
-     * @param float $total
+     * @param string $total
      * @return Ordvolvo
      */
     public function setTotal($total)
@@ -508,136 +431,165 @@ class Ordvolvo
     /**
      * Get total
      *
-     * @return float 
+     * @return string 
      */
     public function getTotal()
     {
         return $this->total;
     }
-    
+
     /**
-     * Get Solicitudes
-     * 
-     * @return type 
+     * Set cliente
+     *
+     * @param Sistema\AdminBundle\Entity\Cliente $cliente
+     * @return Ordvolvo
+     */
+    public function setCliente(\Sistema\AdminBundle\Entity\Cliente $cliente = null)
+    {
+        $this->cliente = $cliente;
+    
+        return $this;
+    }
+
+    /**
+     * Get cliente
+     *
+     * @return Sistema\AdminBundle\Entity\Cliente 
+     */
+    public function getCliente()
+    {
+        return $this->cliente;
+    }
+
+    /**
+     * Add solicitudes
+     *
+     * @param Sistema\AdminBundle\Entity\Solicrep $solicitudes
+     * @return Ordvolvo
+     */
+    public function addSolicitude(\Sistema\AdminBundle\Entity\Solicrep $solicitudes)
+    {
+        $this->solicitudes[] = $solicitudes;
+    
+        return $this;
+    }
+
+    /**
+     * Remove solicitudes
+     *
+     * @param Sistema\AdminBundle\Entity\Solicrep $solicitudes
+     */
+    public function removeSolicitude(\Sistema\AdminBundle\Entity\Solicrep $solicitudes)
+    {
+        $this->solicitudes->removeElement($solicitudes);
+    }
+
+    /**
+     * Get solicitudes
+     *
+     * @return Doctrine\Common\Collections\Collection 
      */
     public function getSolicitudes()
     {
         return $this->solicitudes;
     }
- 
+
     /**
-     * Set Solicitudes
-     * 
-     * @param ArrayCollection $solicitudes 
-     */
-    public function setSolicitudes(ArrayCollection $solicitudes)
-    {
-        $this->solicitudes = $solicitudes;
-    }
- 
-    /**
-     * Add solicitudes
+     * Add consumos
      *
-     * @param Sistema\AdminBundle\Entity\Solicrep $solicitudes
+     * @param Sistema\AdminBundle\Entity\Consumo $consumos
+     * @return Ordvolvo
      */
-    public function addSolicitudes(\Sistema\AdminBundle\Entity\Solicrep $solicitudes)
+    public function addConsumo(\Sistema\AdminBundle\Entity\Consumo $consumos)
     {
-        $this->solicitudes[] = $solicitudes;
-        $solicitudes->setOrdvolvo($this);
-    }
+        $this->consumos[] = $consumos;
     
+        return $this;
+    }
+
     /**
-     * Get Consumos
-     * 
-     * @return type 
+     * Remove consumos
+     *
+     * @param Sistema\AdminBundle\Entity\Consumo $consumos
+     */
+    public function removeConsumo(\Sistema\AdminBundle\Entity\Consumo $consumos)
+    {
+        $this->consumos->removeElement($consumos);
+    }
+
+    /**
+     * Get consumos
+     *
+     * @return Doctrine\Common\Collections\Collection 
      */
     public function getConsumos()
     {
         return $this->consumos;
     }
- 
+
     /**
-     * Set Consumos
-     * 
-     * @param ArrayCollection $consumos 
-     */
-    public function setConsumos(ArrayCollection $consumos)
-    {
-        $this->consumos = $consumos;
-    }
- 
-    /**
-     * Add consumos
+     * Add operaciones
      *
-     * @param Sistema\AdminBundle\Entity\Consumo $consumos
+     * @param Sistema\AdminBundle\Entity\Operaciones $operaciones
+     * @return Ordvolvo
      */
-    public function addConsumos(\Sistema\AdminBundle\Entity\Consumo $consumos, \Sistema\AdminBundle\Entity\Remitovolvo $remitovolvo)
+    public function addOperacione(\Sistema\AdminBundle\Entity\Operaciones $operaciones)
     {
-        $this->consumos[] = $consumos;
-        $consumos->setOrdvolvo($this);
-        $consumos->setRemitovolvo($remitovolvo);
-    }
+        $this->operaciones[] = $operaciones;
     
+        return $this;
+    }
+
     /**
-     * Get Operaciones
-     * 
-     * @return type 
+     * Remove operaciones
+     *
+     * @param Sistema\AdminBundle\Entity\Operaciones $operaciones
+     */
+    public function removeOperacione(\Sistema\AdminBundle\Entity\Operaciones $operaciones)
+    {
+        $this->operaciones->removeElement($operaciones);
+    }
+
+    /**
+     * Get operaciones
+     *
+     * @return Doctrine\Common\Collections\Collection 
      */
     public function getOperaciones()
     {
         return $this->operaciones;
     }
- 
+
     /**
-     * Set Operaciones
-     * 
-     * @param ArrayCollection $operaciones
-     */
-    public function setOperaciones(ArrayCollection $operaciones)
-    {
-        $this->operaciones = $operaciones;
-    }
- 
-    /**
-     * Add operaciones
+     * Add terceros
      *
-     * @param Sistema\AdminBundle\Entity\Operaciones $operaciones
+     * @param Sistema\AdminBundle\Entity\Terceros $terceros
+     * @return Ordvolvo
      */
-    public function addOperaciones(\Sistema\AdminBundle\Entity\Operaciones $operaciones)
+    public function addTercero(\Sistema\AdminBundle\Entity\Terceros $terceros)
     {
-        $this->operaciones[] = $operaciones;
-        $operaciones->setOrdvolvo($this);
-    }
+        $this->terceros[] = $terceros;
     
+        return $this;
+    }
+
     /**
-     * Get Terceros
-     * 
-     * @return type 
+     * Remove terceros
+     *
+     * @param Sistema\AdminBundle\Entity\Terceros $terceros
+     */
+    public function removeTercero(\Sistema\AdminBundle\Entity\Terceros $terceros)
+    {
+        $this->terceros->removeElement($terceros);
+    }
+
+    /**
+     * Get terceros
+     *
+     * @return Doctrine\Common\Collections\Collection 
      */
     public function getTerceros()
     {
         return $this->terceros;
     }
- 
-    /**
-     * Set Terceros
-     * 
-     * @param ArrayCollection $terceros
-     */
-    public function setTerceros(ArrayCollection $terceros)
-    {
-        $this->terceros = $terceros;
-    }
- 
-    /**
-     * Add terceros
-     *
-     * @param Sistema\AdminBundle\Entity\Terceros $terceros
-     */
-    public function addTerceros(\Sistema\AdminBundle\Entity\Terceros $terceros)
-    {
-        $this->terceros[] = $terceros;
-        $terceros->setOrdvolvo($this);
-    }    
-    
 }

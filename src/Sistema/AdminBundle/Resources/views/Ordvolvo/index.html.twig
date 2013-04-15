@@ -89,9 +89,9 @@
             <td>{% if entity.fecha %}{{ entity.fecha|date('Y-m-d H:i:s') }}{% endif %}</td>
             <td>{{ entity.cotizacion }}</td>
             <td>{{ entity.cliente }}</td>
-            <td>{{ entity.cuit }}</td>
+            <td>{{ entity.cliente.cuit }}</td>
             <td>{{ entity.chofer }}</td>
-            <td>{{ entity.telefono }}</td>
+            <td>{{ entity.cliente.telefono }}</td>
             <td>{{ entity.chasis }}</td>
             <td>{{ entity.modelo }}</td>
             <td>{{ entity.dominio }}</td>

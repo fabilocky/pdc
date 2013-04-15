@@ -205,9 +205,15 @@ class OrdvolvoController extends Controller
      */
      public function createAction(Request $request)
     { 
-        $ord = new Ordvolvo();
+        $ord = new Ordvolvo();     
         $rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
-        $ords = $request->request->get('ordvolvo', array());
+        $ords = $request->request->get('ordvolvo', array());        
+        $cliente=$ords['cliente'];
+        
+        $em2 = $this->getDoctrine()->getManager();
+        $cli = $em2->getReference('Sistema\AdminBundle\Entity\Cliente',$cliente);
+        var_dump($cli);die();
+        $ord->setCliente($cli);
         if (isset($ords['solicitudes'])) {
             $solicitudes = $ords['solicitudes'];
             foreach($solicitudes as $solicitud) {                
@@ -282,8 +288,8 @@ class OrdvolvoController extends Controller
         $form = $this->createForm(new OrdvolvoType(), $ord);        
         $form->bindRequest($request);
         
-        if ($form->isValid()) {
-        $rem->setCliente($ord->getCliente());
+        if ($form->isValid()) {      
+//        $rem->setCliente($ord->getCliente());
         $rem->setChasis($ord->getChasis());
         $rem->setCotizacion($ord->getCotizacion());
         $rem->setDominio($ord->getDominio());
@@ -710,5 +716,29 @@ EOD;
 {
         return $this->render('SistemaAdminBundle:Cliente:new.html.twig', array());
 }
+
+/**
+* @Route("/ajax_agente", name="ajax_agente")
+*/
+public function ajaxAgenteAction() {
+        $request = $this->getRequest();
+        $value = $request->get('term');
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $members = $em->getRepository('SistemaAdminBundle:Cliente')->findAjaxCliente($value);
+
+        $json = array();
+        foreach ($members as $member) {
+            $json[] = array(
+                'label' => $member->getNombre(),
+                'value' => $member->getId()
+            );
+        }
+
+        $response = new Response();
+        $response->setContent(json_encode($json));
+
+        return $response;
+    }
  
 }

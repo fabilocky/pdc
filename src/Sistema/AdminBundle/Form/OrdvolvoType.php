@@ -20,10 +20,19 @@ class OrdvolvoType extends AbstractType
                     'attr' => array('class' => 'date')
                 ))
             ->add('cotizacion')
-            ->add('cliente')
-            ->add('cuit')
+            //->add('cliente')
+            ->add('cliente', 'genemu_jqueryautocomplete_entity', array(
+            'class' => 'Sistema\AdminBundle\Entity\Cliente',
+            'data_class' => 'Sistema\AdminBundle\Entity\Cliente',
+            'route_name' => 'ajax_agente'
+//            'property' => 'nombre',
+//                'property_path' => false,
+            )
+                
+        )
+//                ->add('cliente')
             ->add('chofer')
-            ->add('telefono')
+            
             ->add('chasis')
             ->add('modelo')
             ->add('dominio')
