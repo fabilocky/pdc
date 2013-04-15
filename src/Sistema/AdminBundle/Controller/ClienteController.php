@@ -14,6 +14,9 @@ use Sistema\AdminBundle\Entity\Cliente;
 use Sistema\AdminBundle\Form\ClienteType;
 use Sistema\AdminBundle\Form\ClienteFilterType;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * Cliente controller.
  *
@@ -165,7 +168,7 @@ class ClienteController extends Controller
     public function createAction()
     {
         $entity  = new Cliente();
-        $request = $this->getRequest();
+        $request = $this->getRequest();        
         $form    = $this->createForm(new ClienteType(), $entity);
         $form->bind($request);
 
@@ -287,5 +290,30 @@ class ClienteController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+    
+     /**
+     * Finds and displays a precio Tipo Producto entity.
+     *
+     * @Route("/cliente/crearajax", name="cliente_crearajax")
+     * @Method("post")
+     */
+    public function retornaCliente(Request $request) {
+        $isAjax = $this->getRequest()->isXMLHttpRequest();
+        if ($isAjax) {
+           $entity  = new Cliente();
+        $request = $this->getRequest();        
+        $form    = $this->createForm(new ClienteType(), $entity);
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+        }
+            return new Response($entity->getNombre());
+        }
+        return new Response('Error. This is not ajax!', 400);        
+       
     }
 }

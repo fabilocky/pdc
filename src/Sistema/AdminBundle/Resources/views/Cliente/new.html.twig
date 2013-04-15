@@ -1,25 +1,48 @@
-{% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
-
 {% block title %}
-{{ parent() }} - Cliente {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
+<script src="{{ asset('js/jquery-1.8.2.min.js') }}"></script>
+<script src="{{ asset('js/jquery-ui-1.9.0.custom.min.js') }}"></script>
+<h1>Crear cliente</h1>
 
-<h1>Cliente {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
-
-<form class="well" action="{{ path('cliente_create') }}" method="post" {{ form_enctype(form) }}>
+<form id=myForm class="well" action="{{ path('cliente_crearajax') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
     <p>
-        <button type="submit" class="btn btn-success">{{ 'views.new.create'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+        <button type="submit" class="btn btn-success">crear</button>
     </p>
+    <div id="ajax_loader"><img id="loader_gif" src="/loader_50x50.gif" style=" display:none;"/></div>
 </form>
 
-<div>
-    <div class="float-left">
-        <a class="btn" href="{{ path('cliente') }}">
-            {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
-        </a>
-    </div>
-</div>
+<script>
+$(document).ready(function() { 
+ 
+          $('#myForm').submit(function(){ //en el evento submit del fomulario
+	          event.preventDefault();  //detenemos el comportamiento por default
+ 
+			  var url = $(this).attr('action');  //la url del action del formulario
+			  var datos = $(this).serialize(); // los datos del formulario
+			  $.ajax({
+				  type: 'POST',
+				  url: url,
+				  data: datos,
+                                  beforeSend: mostrarLoader, //funciones que definimos más abajo
+				  success: mostrarRespuesta  //funciones que definimos más abajo
+			   });
+ 
+          });
+ 
+        });
+ 
+ 
+        function mostrarLoader(){
+              $('#loader_gif').fadeIn("slow"); //muestro el loader de ajax
+        };
+        function mostrarRespuesta (responseText){
+	          //alert("Cliente Creado: "+responseText);  //responseText es lo que devuelve la página contacto.php. Si en contacto.php hacemos echo "Hola" , la variable responseText = "Hola" . Aca hago un alert con el valor de response text
+	          $("#loader_gif").fadeOut("slow"); // Hago desaparecer el loader de ajax
+	          $("#ajax_loader").append("<br>Cliente creado: "+responseText); // Aca utilizo la función append de JQuery para añadir el responseText  dentro del div "ajax_loader"
+        };
+</script>
 {% endblock %}
+
