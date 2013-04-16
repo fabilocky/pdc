@@ -743,6 +743,77 @@ EOD;
         return $this->render('SistemaAdminBundle:Cliente:new.html.twig', array());
 }
 
+     /**
+     * Edits an existing Ordvolvo entity.
+     *
+     * @Route("/{id}/generaremito", name="ordvolvo_remito")     
+     * @Template()
+     */
+    public function GenerarRemitoAction($id, Request $request)
+{
+    $em = $this->getDoctrine()->getManager();
+    $ord = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
+    //$deleteForm = $this->createDeleteForm($id);
+    $rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
+    
+    if (!$ord) {
+        throw $this->createNotFoundException('No ord found for is '.$id);
+    }
+    $originalSolic= array();    
+    foreach ($ord->getSolicitudes() as $solicitud) {
+        $originalSolic[] = $solicitud;       
+    }
+    $originalCons= array();    
+    foreach ($ord->getConsumos() as $consumo) {
+        $originalCons[] = $consumo;
+        $consremito= new Consumo();
+        $consremito->setCantidad($consumo->getCantidad());
+        $consremito->setGarantia($consumo->getGarantia());
+        $consremito->setIdRepvolvo($consumo->getIdRepvolvo());
+        $consremito->setRemitovolvo($rem);
+        $consremito->setSubtotal($consumo->getSubtotal());
+        $rem->addConsumos($consremito);
+    }
+    $originalOper= array();    
+    foreach ($ord->getOperaciones() as $operacion) {
+        $originalOper[] = $operacion;       
+    }
+    $originalTerc= array();    
+    foreach ($ord->getTerceros() as $tercero) {
+        $originalTerc[] = $tercero;       
+    }
+    //var_dump($originalCons[0]);die();
+    
+    
+//    $editForm = $this->createForm(new RemitovolvoType(), $ord);
+            
+           
+        $rem->setCliente($ord->getCliente());
+        $rem->setChasis($ord->getChasis());
+        $rem->setCotizacion($ord->getCotizacion());
+        $rem->setDominio($ord->getDominio());
+        $rem->setFecha($ord->getFecha());
+        $rem->setModelo($ord->getModelo());
+        $rem->setNeto($ord->getNeto());
+        $rem->setEnvia('María Antonella Pescarolo');
+        //$rem->setConsumos($originalCons);
+            $em->persist($rem);
+            $em->flush();
+                   
+
+            
+            $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
+
+            return $this->redirect($this->generateUrl('remitovolvo_show', array('id' => $rem->getId())));
+        
+    
+//    return array(
+//            'entity'      => $ord,
+//            'edit_form'   => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
+//        );
+        }
+
 
  
 }
