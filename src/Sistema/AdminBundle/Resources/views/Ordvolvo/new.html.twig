@@ -89,12 +89,21 @@
                 euro, real, peso uruguayo, peso chileno en
                 Argentina">COTIZACION DOLAR</a>
         </small></div>
+    
+   
 
     <form class="well" action="{{ path('ordvolvo_create') }}" method="post" {{ form_enctype(form) }}>
+       
         <table>
             <thead>
             </thead>
             <tbody>
+                <tr>
+                    <td colspan="2"><div id="articulos"></div></td> 
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 <tr>
                     <td>{{ form_row(form.fecha) }}</td> 
                     <td></td>
@@ -102,11 +111,12 @@
                     <td><div><label for="ordvolvo_cotizacion" class="required">Cotizacion</label><input type="text" id="ordvolvo_cotizacion" name="ordvolvo[cotizacion]" required="required" value={{ dolar }}></div></td>
                 </tr>
                 <tr>
-                    <td>{{ form_row(form.cliente) }}</td>
+                    <td>{{ form_row(form.client) }}</td>
                     <td></td>
                     <td>{{ form_row(form.chofer) }}</td>
                     <td></td>
                 </tr>
+                
                 <tr>                 
                     <td>{{ form_row(form.chasis) }}</td>
                     <td>{{ form_row(form.modelo) }}</td>
@@ -127,8 +137,8 @@
                 </tr>
             </tbody>
         </table>
-        {#    <div id="articulos"></div>
-            <a id="link_articulos" href="#">Cargar articulos</a>#}
+            <div id="articulos"></div>
+            <a id="link_articulos" href="#">Cargar articulos</a>
         <div class="titulos">
             <div class="tituloproducto">Solicitud de Reparación</div>        
         </div>  

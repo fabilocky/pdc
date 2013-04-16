@@ -139,12 +139,16 @@ class OrdvolvoController extends Controller
         foreach($consumos as $consumo) {               
                 $hola=$consumo->getRemitovolvo();
                 //var_dump($hola);die();
-                $num=$hola->getId();
+                //$num=$hola->getId();
                 //var_dump($num);die();
             }
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Ordvolvo entity.');
+        }
+        
+        if ($num = NULL){
+            $num=0;
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -208,12 +212,7 @@ class OrdvolvoController extends Controller
         $ord = new Ordvolvo();     
         $rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
         $ords = $request->request->get('ordvolvo', array());        
-        $cliente=$ords['cliente'];
-        
-        $em2 = $this->getDoctrine()->getManager();
-        $cli = $em2->getReference('Sistema\AdminBundle\Entity\Cliente',$cliente);
-        var_dump($cli);die();
-        $ord->setCliente($cli);
+        $cliente=$ords['client'];        
         if (isset($ords['solicitudes'])) {
             $solicitudes = $ords['solicitudes'];
             foreach($solicitudes as $solicitud) {                
@@ -226,8 +225,7 @@ class OrdvolvoController extends Controller
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
-            foreach($consumos as $consumo) {
-               
+            foreach($consumos as $consumo) {               
                 $id1=$consumo["idRepvolvo"];
                 $em1 = $this->getDoctrine()->getManager();
                 $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($id1);
@@ -288,8 +286,12 @@ class OrdvolvoController extends Controller
         $form = $this->createForm(new OrdvolvoType(), $ord);        
         $form->bindRequest($request);
         
-        if ($form->isValid()) {      
-//        $rem->setCliente($ord->getCliente());
+        if ($form->isValid()) {
+//            var_dump($ord);die();
+        $em2 = $this->getDoctrine()->getManager();
+        $cli = $em2->getRepository('SistemaAdminBundle:Cliente')->findOneByNombre($cliente);
+        $ord->setCliente($cli);        
+        $rem->setCliente($ord->getCliente());
         $rem->setChasis($ord->getChasis());
         $rem->setCotizacion($ord->getCotizacion());
         $rem->setDominio($ord->getDominio());
@@ -557,6 +559,30 @@ class OrdvolvoController extends Controller
         return $response;
     }
     
+    /**
+* @Route("/ajax_agente", name="ajax_agente")
+*/
+public function ajaxAgenteAction() {
+        $request = $this->getRequest();
+        $value = $request->get('term');
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $members = $em->getRepository('SistemaAdminBundle:Cliente')->findAjaxCliente($value);
+
+        $json = array();
+        foreach ($members as $member) {
+            $json[] = array(
+                'label' => $member->getNombre(),
+                'value' => $member->getNombre()
+            );
+        }
+
+        $response = new Response();
+        $response->setContent(json_encode($json));
+
+        return $response;
+    }
+    
      /**
      * @Route("/ejemploless", name="ejemplo_less")
      * @Template()
@@ -717,28 +743,6 @@ EOD;
         return $this->render('SistemaAdminBundle:Cliente:new.html.twig', array());
 }
 
-/**
-* @Route("/ajax_agente", name="ajax_agente")
-*/
-public function ajaxAgenteAction() {
-        $request = $this->getRequest();
-        $value = $request->get('term');
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $members = $em->getRepository('SistemaAdminBundle:Cliente')->findAjaxCliente($value);
-
-        $json = array();
-        foreach ($members as $member) {
-            $json[] = array(
-                'label' => $member->getNombre(),
-                'value' => $member->getId()
-            );
-        }
-
-        $response = new Response();
-        $response->setContent(json_encode($json));
-
-        return $response;
-    }
  
 }

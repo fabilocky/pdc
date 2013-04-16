@@ -467,11 +467,10 @@ class Ordvolvo
      * @param Sistema\AdminBundle\Entity\Solicrep $solicitudes
      * @return Ordvolvo
      */
-    public function addSolicitude(\Sistema\AdminBundle\Entity\Solicrep $solicitudes)
+    public function addSolicitudes(\Sistema\AdminBundle\Entity\Solicrep $solicitudes)
     {
         $this->solicitudes[] = $solicitudes;
-    
-        return $this;
+        $solicitudes->setOrdvolvo($this);
     }
 
     /**
@@ -479,7 +478,7 @@ class Ordvolvo
      *
      * @param Sistema\AdminBundle\Entity\Solicrep $solicitudes
      */
-    public function removeSolicitude(\Sistema\AdminBundle\Entity\Solicrep $solicitudes)
+    public function removeSolicitudes(\Sistema\AdminBundle\Entity\Solicrep $solicitudes)
     {
         $this->solicitudes->removeElement($solicitudes);
     }
@@ -493,6 +492,16 @@ class Ordvolvo
     {
         return $this->solicitudes;
     }
+    
+    /**
+     * Set Solicitudes
+     * 
+     * @param ArrayCollection $solicitudes
+     */
+    public function setSolicitudes(ArrayCollection $solicitudes)
+    {
+        $this->solicitudes = $solicitudes;
+    }
 
     /**
      * Add consumos
@@ -500,11 +509,11 @@ class Ordvolvo
      * @param Sistema\AdminBundle\Entity\Consumo $consumos
      * @return Ordvolvo
      */
-    public function addConsumo(\Sistema\AdminBundle\Entity\Consumo $consumos)
+    public function addConsumos(\Sistema\AdminBundle\Entity\Consumo $consumos)
     {
         $this->consumos[] = $consumos;
-    
-        return $this;
+        $consumos->setOrdvolvo($this);
+        
     }
 
     /**
@@ -512,7 +521,7 @@ class Ordvolvo
      *
      * @param Sistema\AdminBundle\Entity\Consumo $consumos
      */
-    public function removeConsumo(\Sistema\AdminBundle\Entity\Consumo $consumos)
+    public function removeConsumos(\Sistema\AdminBundle\Entity\Consumo $consumos)
     {
         $this->consumos->removeElement($consumos);
     }
@@ -526,6 +535,16 @@ class Ordvolvo
     {
         return $this->consumos;
     }
+    
+    /**
+     * Set Consumos
+     * 
+     * @param ArrayCollection $consumos
+     */
+    public function setConsumos(ArrayCollection $consumos)
+    {
+        $this->consumos = $consumos;
+    }
 
     /**
      * Add operaciones
@@ -533,11 +552,10 @@ class Ordvolvo
      * @param Sistema\AdminBundle\Entity\Operaciones $operaciones
      * @return Ordvolvo
      */
-    public function addOperacione(\Sistema\AdminBundle\Entity\Operaciones $operaciones)
+    public function addOperaciones(\Sistema\AdminBundle\Entity\Operaciones $operaciones)
     {
         $this->operaciones[] = $operaciones;
-    
-        return $this;
+        $operaciones->setOrdvolvo($this);
     }
 
     /**
@@ -545,7 +563,7 @@ class Ordvolvo
      *
      * @param Sistema\AdminBundle\Entity\Operaciones $operaciones
      */
-    public function removeOperacione(\Sistema\AdminBundle\Entity\Operaciones $operaciones)
+    public function removeOperaciones(\Sistema\AdminBundle\Entity\Operaciones $operaciones)
     {
         $this->operaciones->removeElement($operaciones);
     }
@@ -559,6 +577,16 @@ class Ordvolvo
     {
         return $this->operaciones;
     }
+    
+    /**
+     * Set Operaciones
+     * 
+     * @param ArrayCollection $operaciones
+     */
+    public function setOperaciones(ArrayCollection $operaciones)
+    {
+        $this->operaciones = $operaciones;
+    }
 
     /**
      * Add terceros
@@ -566,11 +594,10 @@ class Ordvolvo
      * @param Sistema\AdminBundle\Entity\Terceros $terceros
      * @return Ordvolvo
      */
-    public function addTercero(\Sistema\AdminBundle\Entity\Terceros $terceros)
+    public function addTerceros(\Sistema\AdminBundle\Entity\Terceros $terceros)
     {
         $this->terceros[] = $terceros;
-    
-        return $this;
+        $terceros->setOrdvolvo($this);
     }
 
     /**
@@ -578,7 +605,7 @@ class Ordvolvo
      *
      * @param Sistema\AdminBundle\Entity\Terceros $terceros
      */
-    public function removeTercero(\Sistema\AdminBundle\Entity\Terceros $terceros)
+    public function removeTerceros(\Sistema\AdminBundle\Entity\Terceros $terceros)
     {
         $this->terceros->removeElement($terceros);
     }
@@ -591,5 +618,15 @@ class Ordvolvo
     public function getTerceros()
     {
         return $this->terceros;
+    }
+    
+    /**
+     * Set Terceros
+     * 
+     * @param ArrayCollection $terceros
+     */
+    public function setTerceros(ArrayCollection $terceros)
+    {
+        $this->terceros = $terceros;
     }
 }
