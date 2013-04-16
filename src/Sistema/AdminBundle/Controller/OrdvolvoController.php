@@ -210,7 +210,7 @@ class OrdvolvoController extends Controller
      public function createAction(Request $request)
     { 
         $ord = new Ordvolvo();     
-        $rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
+        //$rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
         $ords = $request->request->get('ordvolvo', array());        
         $cliente=$ords['client'];        
         if (isset($ords['solicitudes'])) {
@@ -240,7 +240,7 @@ class OrdvolvoController extends Controller
             }
             for ($i = 0; $i <= $cont; $i++) {               
                 $consumos[$i] = new Consumo();            
-                $ord->addConsumos($consumos[$i],$rem);
+                $ord->addConsumos($consumos[$i]);
                 
             }
         }       
@@ -291,18 +291,18 @@ class OrdvolvoController extends Controller
         $em2 = $this->getDoctrine()->getManager();
         $cli = $em2->getRepository('SistemaAdminBundle:Cliente')->findOneByNombre($cliente);
         $ord->setCliente($cli);        
-        $rem->setCliente($ord->getCliente());
-        $rem->setChasis($ord->getChasis());
-        $rem->setCotizacion($ord->getCotizacion());
-        $rem->setDominio($ord->getDominio());
-        $rem->setFecha($ord->getFecha());
-        $rem->setModelo($ord->getModelo());
-        $rem->setNeto($sumaNeto);
-        $rem->setEnvia('María Antonella Pescarolo');
-        $rem->setConsumos($ord->getConsumos());
+        //$rem->setCliente($ord->getCliente());
+        //$rem->setChasis($ord->getChasis());
+        //$rem->setCotizacion($ord->getCotizacion());
+        //$rem->setDominio($ord->getDominio());
+        //$rem->setFecha($ord->getFecha());
+        //$rem->setModelo($ord->getModelo());
+        //$rem->setNeto($sumaNeto);
+        //$rem->setEnvia('María Antonella Pescarolo');
+        //$rem->setConsumos($ord->getConsumos());
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($ord);
-            $em->persist($rem);
+            //$em->persist($rem);
             $em->flush();
  
             return $this->redirect($this->generateUrl('ordvolvo_show', array('id' => $ord->getId())));   
