@@ -23,6 +23,11 @@ use Sistema\AdminBundle\Entity\Terceros;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use \PHPExcel;
+use \PHPExcel_IOFactory;
+use \PHPExcel_Style_Color;
+use \PHPExcel_Style_Alignment;
+use \PHPExcel_Style_Border;
 /**
  * Ordvolvo controller.
  *
@@ -694,6 +699,94 @@ $contenido
 EOD;
 
         return $this->get('sistema_tcpdf')->quick_pdf($pdf);
+    }
+    
+        /**
+     * REPORTE DE TORNEO GRUPO EQUIPOS
+     * 
+     * @Route("/{id}/ordenexcel", name="orden_imprimir_excel")
+     * @Template()
+     */
+    public function imprimirOrdenExcelAction($id) {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Ordvolvo entity.');
+        }
+
+        // Creamos un objeto PHPExcel
+        $objPHPExcel = new PHPExcel();
+
+        // Leemos un archivo Excel 2007
+        $objReader = PHPExcel_IOFactory::createReader('Excel2007');
+        $objPHPExcel = $objReader->load('archivo.xlsx');
+
+        // Indicamos que se pare en la hoja uno del libro
+        $objPHPExcel->setActiveSheetIndex(0);        
+        //Escribimos en la hoja en la celda B1
+        $objPHPExcel->getActiveSheet()->SetCellValue('K4', $entity->getFecha());
+        $objPHPExcel->getActiveSheet()->SetCellValue('H4', $entity->getId());
+        $objPHPExcel->getActiveSheet()->SetCellValue('C7', $entity->getCliente()->getNombre());
+        $objPHPExcel->getActiveSheet()->SetCellValue('H7', $entity->getCliente()->getCuit());
+        $objPHPExcel->getActiveSheet()->SetCellValue('C8', $entity->getChofer());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J8', $entity->getTelefono());
+        $objPHPExcel->getActiveSheet()->SetCellValue('D9', $entity->getChasis());
+        $objPHPExcel->getActiveSheet()->SetCellValue('H9', $entity->getModelo());
+        $objPHPExcel->getActiveSheet()->SetCellValue('H10', $entity->getColor());
+        $objPHPExcel->getActiveSheet()->SetCellValue('C10', $entity->getDominio());
+        $objPHPExcel->getActiveSheet()->SetCellValue('F10', $entity->getKm());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J10', $entity->getHs());
+        
+        $a=14;
+        foreach ($entity->getSolicitudes() as $solicitud) {
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$a, $solicitud->getDescripcion());
+        $a++;
+        }
+    
+        $b=22;
+        foreach ($entity->getConsumos() as $consumo) {
+        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$b, $consumo->getCantidad());
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$b, $consumo->getIdRepvolvo()->getCodigo());
+        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$b, $consumo->getIdRepvolvo()->getDescripcion());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$b, $consumo->getIdRepvolvo()->getPrecio());
+        $objPHPExcel->getActiveSheet()->SetCellValue('K'.$b, $consumo->getSubtotal());
+        $b++;
+        }
+        
+        $c=39;
+        foreach ($entity->getOperaciones() as $operacion) {
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$c, $operacion->getDenominacion());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$c, $operacion->getHs());
+        $objPHPExcel->getActiveSheet()->SetCellValue('K'.$c, $operacion->getSubtotal());       
+        $c++;
+        }
+        
+        $d=48;
+        foreach ($entity->getOperaciones() as $tercero) {
+        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$d, $tercero->getCantidad());
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$d, $tercero->getCantidad());
+        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$d, $tercero->getDenominacion());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$d, $tercero->getUnitario());
+        $objPHPExcel->getActiveSheet()->SetCellValue('K'.$d, $tercero->getSubtotal());
+        $d++;
+        }
+        
+
+//        // Color rojo al texto
+//        $objPHPExcel->getActiveSheet()->getStyle('C14')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+//        // Texto alineado a la derecha
+//        $objPHPExcel->getActiveSheet()->getStyle('C14')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//        // Damos un borde a la celda
+//        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        //Guardamos el archivo en formato Excel 2007
+        //Si queremos trabajar con Excel 2003, basta cambiar el ‘Excel2007′ por ‘Excel5′ y el nombre del archivo de salida cambiar su formato por ‘.xls’
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save("Archivo_salida.xlsx");
     }
     
      /**
