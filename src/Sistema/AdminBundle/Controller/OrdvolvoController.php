@@ -722,16 +722,17 @@ EOD;
         // Leemos un archivo Excel 2007
         $objReader = PHPExcel_IOFactory::createReader('Excel2007');
         $objPHPExcel = $objReader->load('archivo.xlsx');
-
+        
+        $fecha = $entity->getFecha()->format('d-m-Y');
         // Indicamos que se pare en la hoja uno del libro
         $objPHPExcel->setActiveSheetIndex(0);        
         //Escribimos en la hoja en la celda B1
-        $objPHPExcel->getActiveSheet()->SetCellValue('K4', $entity->getFecha());
+        $objPHPExcel->getActiveSheet()->SetCellValue('K4', $fecha);
         $objPHPExcel->getActiveSheet()->SetCellValue('H4', $entity->getId());
         $objPHPExcel->getActiveSheet()->SetCellValue('C7', $entity->getCliente()->getNombre());
         $objPHPExcel->getActiveSheet()->SetCellValue('H7', $entity->getCliente()->getCuit());
         $objPHPExcel->getActiveSheet()->SetCellValue('C8', $entity->getChofer());
-        $objPHPExcel->getActiveSheet()->SetCellValue('J8', $entity->getTelefono());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J8', $entity->getCliente()->getTelefono());
         $objPHPExcel->getActiveSheet()->SetCellValue('D9', $entity->getChasis());
         $objPHPExcel->getActiveSheet()->SetCellValue('H9', $entity->getModelo());
         $objPHPExcel->getActiveSheet()->SetCellValue('H10', $entity->getColor());
@@ -764,7 +765,7 @@ EOD;
         }
         
         $d=48;
-        foreach ($entity->getOperaciones() as $tercero) {
+        foreach ($entity->getTerceros() as $tercero) {
         $objPHPExcel->getActiveSheet()->SetCellValue('B'.$d, $tercero->getCantidad());
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$d, $tercero->getCantidad());
         $objPHPExcel->getActiveSheet()->SetCellValue('D'.$d, $tercero->getDenominacion());
@@ -773,7 +774,7 @@ EOD;
         $d++;
         }
         
-
+        
 //        // Color rojo al texto
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
 //        // Texto alineado a la derecha
