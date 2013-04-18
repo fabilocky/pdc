@@ -147,9 +147,14 @@
                 </div>
          <div class="float-left">
         <a class="btn btn-success" href="{{ path('orden_imprimir', { 'id': entity.id }) }}">
-            Imprimir Orden
+            Imprimir PDF
         </a>
     </div>
+         <div class="float-left">
+            <a class="btn btn-primary" href="{{ path('orden_imprimir_excel', { 'id': entity.id }) }}">
+            Imprimir Excel
+                </a>
+            </div>
             <div class="float-left">
         <a class="btn btn-success" href="{{ path('ordvolvo_remito', { 'id': entity.id }) }}">
             Generar Remito

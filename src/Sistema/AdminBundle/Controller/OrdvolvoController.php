@@ -727,6 +727,7 @@ EOD;
         // Indicamos que se pare en la hoja uno del libro
         $objPHPExcel->setActiveSheetIndex(0);        
         //Escribimos en la hoja en la celda B1
+        $objPHPExcel->getActiveSheet()->SetCellValue('J6', $entity->getCotizacion());
         $objPHPExcel->getActiveSheet()->SetCellValue('K4', $fecha);
         $objPHPExcel->getActiveSheet()->SetCellValue('H4', $entity->getId());
         $objPHPExcel->getActiveSheet()->SetCellValue('C7', $entity->getCliente()->getNombre());
@@ -738,20 +739,22 @@ EOD;
         $objPHPExcel->getActiveSheet()->SetCellValue('H10', $entity->getColor());
         $objPHPExcel->getActiveSheet()->SetCellValue('C10', $entity->getDominio());
         $objPHPExcel->getActiveSheet()->SetCellValue('F10', $entity->getKm());
-        $objPHPExcel->getActiveSheet()->SetCellValue('J10', $entity->getHs());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J10', 'HS:');
+        $objPHPExcel->getActiveSheet()->SetCellValue('K10', $entity->getHs());
         
         $a=14;
         foreach ($entity->getSolicitudes() as $solicitud) {
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$a, $solicitud->getDescripcion());
         $a++;
         }
-    
+        
         $b=22;
         foreach ($entity->getConsumos() as $consumo) {
+        $precio=$consumo->getSubtotal()/$consumo->getCantidad();
         $objPHPExcel->getActiveSheet()->SetCellValue('B'.$b, $consumo->getCantidad());
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$b, $consumo->getIdRepvolvo()->getCodigo());
         $objPHPExcel->getActiveSheet()->SetCellValue('D'.$b, $consumo->getIdRepvolvo()->getDescripcion());
-        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$b, $consumo->getIdRepvolvo()->getPrecio());
+        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$b, $precio);
         $objPHPExcel->getActiveSheet()->SetCellValue('K'.$b, $consumo->getSubtotal());
         $b++;
         }
@@ -787,7 +790,8 @@ EOD;
         //Guardamos el archivo en formato Excel 2007
         //Si queremos trabajar con Excel 2003, basta cambiar el ‘Excel2007′ por ‘Excel5′ y el nombre del archivo de salida cambiar su formato por ‘.xls’
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save("Archivo_salida.xlsx");
+        $objWriter->save("Orden_volvo".$id.".xlsx");
+        return $this->redirect($this->generateUrl('ordvolvo_show', array('id' => $id)));
     }
     
      /**
