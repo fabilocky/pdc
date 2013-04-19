@@ -733,7 +733,7 @@ EOD;
         $objPHPExcel->getActiveSheet()->SetCellValue('C7', $entity->getCliente()->getNombre());
         $objPHPExcel->getActiveSheet()->SetCellValue('H7', $entity->getCliente()->getCuit());
         $objPHPExcel->getActiveSheet()->SetCellValue('C8', $entity->getChofer());
-        $objPHPExcel->getActiveSheet()->SetCellValue('J8', $entity->getCliente()->getTelefono());
+        $objPHPExcel->getActiveSheet()->SetCellValue('K8', $entity->getCliente()->getTelefono());
         $objPHPExcel->getActiveSheet()->SetCellValue('D9', $entity->getChasis());
         $objPHPExcel->getActiveSheet()->SetCellValue('H9', $entity->getModelo());
         $objPHPExcel->getActiveSheet()->SetCellValue('H10', $entity->getColor());
@@ -759,7 +759,7 @@ EOD;
         $b++;
         }
         
-        $c=39;
+        $c=34;
         foreach ($entity->getOperaciones() as $operacion) {
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$c, $operacion->getDenominacion());
         $objPHPExcel->getActiveSheet()->SetCellValue('J'.$c, $operacion->getHs());
@@ -767,7 +767,7 @@ EOD;
         $c++;
         }
         
-        $d=48;
+        $d=43;
         foreach ($entity->getTerceros() as $tercero) {
         $objPHPExcel->getActiveSheet()->SetCellValue('B'.$d, $tercero->getCantidad());
         $objPHPExcel->getActiveSheet()->SetCellValue('C'.$d, $tercero->getCantidad());
