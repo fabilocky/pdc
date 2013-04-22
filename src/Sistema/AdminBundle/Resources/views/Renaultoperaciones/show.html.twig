@@ -1,0 +1,45 @@
+{% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
+
+{% block title %}
+{{ parent() }} - Renaultoperaciones {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{% endblock %}
+
+{% block page %}
+
+<h1>Renaultoperaciones</h1>
+
+<form class="form-horizontal">
+    <fieldset>        <div class="control-group">
+            <label class="control-label">Id</label>
+            <div class="controls">                <span class="input-xlarge uneditable-input">{{ entity.id }}</span>            </div>
+        </div>        <div class="control-group">
+            <label class="control-label">Denominacion</label>
+            <div class="controls">                <span class="input-xlarge uneditable-input">{{ entity.denominacion }}</span>            </div>
+        </div>        <div class="control-group">
+            <label class="control-label">Hs</label>
+            <div class="controls">                <span class="input-xlarge uneditable-input">{{ entity.hs }}</span>            </div>
+        </div>        <div class="control-group">
+            <label class="control-label">Subtotal</label>
+            <div class="controls">                <span class="input-xlarge uneditable-input">{{ entity.subtotal }}</span>            </div>
+        </div>    </fieldset>
+</form>
+
+<div>
+    <div class="float-left">
+        <a class="btn" href="{{ path('renaultoperaciones') }}">
+            {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+        </a>
+    </div>
+    <div class="float-left">
+        <a class="btn btn-primary" href="{{ path('renaultoperaciones_edit', { 'id': entity.id }) }}">
+            {{ 'views.recordactions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+        </a>
+    </div>
+    <div class="float-left">
+        <form action="{{ path('renaultoperaciones_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button class="btn btn-danger" type="submit" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}');">{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

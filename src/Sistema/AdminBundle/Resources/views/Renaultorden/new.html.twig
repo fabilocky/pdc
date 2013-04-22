@@ -2,7 +2,7 @@
 {% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - Nueva Orden - Volvo 
+{{ parent() }} - Nueva Orden - Renault 
 {% endblock %}
 
 {% block page %}
@@ -75,7 +75,7 @@
     <script src="{{ asset('js/jquery-1.8.2.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui-1.9.0.custom.min.js') }}"></script>
 {{ form_javascript(form) }}
-    <h1>Nueva Orden - Volvo</h1>
+    <h1>Nueva Orden - Renault</h1>
     <!-- cotizacion-dolar.com.ar 234x90px FormalCD -->
     <div style="border: 1px solid rgb(90, 90, 90); background:
          rgb(176, 180, 160) none repeat scroll 0% 50%; text-align: center; width:
@@ -92,7 +92,7 @@
     
    
 
-    <form class="well" action="{{ path('ordvolvo_create') }}" method="post" {{ form_enctype(form) }}>
+    <form class="well" action="{{ path('renaultorden_create') }}" method="post" {{ form_enctype(form) }}>
        
         <table>
             <thead>
@@ -108,7 +108,7 @@
                     <td>{{ form_row(form.fecha) }}</td> 
                     <td></td>
                     <td></td>
-                    <td><div><label for="ordvolvo_cotizacion" class="required">Cotizacion</label><input type="text" id="ordvolvo_cotizacion" name="ordvolvo[cotizacion]" required="required" value={{ dolar }}></div></td>
+                    <td><div><label for="renaultorden_cotizacion" class="required">Cotizacion</label><input type="text" id="renaultorden_cotizacion" name="renaultorden[cotizacion]" required="required" value={{ dolar }}></div></td>
                 </tr>
                 <tr>
                     <td>{{ form_row(form.client) }}</td>
@@ -163,7 +163,7 @@
             <ul class="tags" data-prototype="{{ form_widget(form.consumos.vars.prototype)|e }}">       
         {# iterate over each existing tag and render its only field: name #}
         {% for consumos in form.consumos %}
-                    <li>{{ form_row(consumos.idRepvolvo) }}</li>
+                    <li>{{ form_row(consumos.idRenaultrepuestos) }}</li>
                     <li>{{ form_row(consumos.Precio) }}</li>
                     <li>{{ form_row(consumos.cantidad) }}</li>            
                     <li>{{ form_row(consumos.subtotal) }}</li>
@@ -208,7 +208,7 @@
 
                     <div>
                         <div class="float-left">
-                            <a class="btn" href="{{ path('ordvolvo') }}">
+                            <a class="btn" href="{{ path('renaultorden') }}">
             {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                 </a>
                             </div>
@@ -285,8 +285,8 @@
                                     //var $newAddTwig = $('<div><\/div>').append($addTwig);
                                     //$newLinkLi.before($newAddTwig);
                                     var $addJs = 
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaStock($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"                                 
                                     ;
                                     var $newAddJs = $('<script><\/script>').append($addJs);
@@ -298,17 +298,17 @@
                                     //var $newAddTwig = $('<div><\/div>').append($addTwig);
                                     //$newLinkLi.before($newAddTwig);
                                     var $addJs = 
-                                        //"$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                        //    "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        //"$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                        //   "consultaStock($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         //"});"+
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaNombre($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaNombre($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"+                                        
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_cantidad').change(function() {"+
+                                        "$('#renaultorden_consumos_"+cantidadAddJs+"_cantidad').change(function() {"+
                                             "calculaTotal("+cantidadAddJs+")"+
                                         "});"+
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaPrecio($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaPrecio($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"                                 
                                     ;
                                     var $newAddJs = $('<script><\/script>').append($addJs);
@@ -333,26 +333,26 @@
                                 
                                 function consultaStock(id, cantidadAddJs){
                                     $.ajax({
-                                      url: '{{ path('orden_repvolvo_stock') }}',
+                                      url: '{{ path('orden_renaultrepuestos_stock') }}',
                                       type: "POST",
                                       data: { "id" : id },
                                       success: function(data) {
                                         //$('.result').html(data);            
-                                       $('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(data);
+                                       $('#renaultorden_consumos_'+cantidadAddJs+'_stock').val(data);
                                       }
                                     });
                                 }
     
                                 function consultaPrecio(id, cantidadAddJs){
                                     $.ajax({
-                                      url: '{{ path('orden_repvolvo_precio') }}',
+                                      url: '{{ path('orden_renaultrepuestos_precio') }}',
                                       type: "POST",
                                       data: { "id" : id },
                                       success: function(data) {
                                         //$('.result').html(data);
-                                        cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10)
-                                        porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)
-                                        stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
+                                        cotizacion=parseFloat($('#renaultorden_cotizacion').val(), 10)
+                                        porc=parseFloat($('#renaultorden_porc_rep').val(), 10)
+                                        stock=parseFloat($('#renaultorden_consumos_'+cantidadAddJs+'_stock').val(), 10)
                                         if(isNaN(stock)){
                                           alert('Sin Stock');
                                           die();                                          
@@ -368,34 +368,34 @@
                                         porc=porc/100;
                                         precioPesos = data * cotizacion;
                                         precioPesos = precioPesos + (precioPesos * porc);
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio').val(data);            
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val(1);
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
+                                        $('#renaultorden_consumos_'+cantidadAddJs+'_Precio').val(data);            
+                                        $('#renaultorden_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
+                                        $('#renaultorden_consumos_'+cantidadAddJs+'_cantidad').val(1);
+                                        $('#renaultorden_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
                                         //totalFacturado = $('#sistema_adminbundle_facturatype_total').val();
                                         //totalLinea = $('#sistema_adminbundle_facturatype_idLineaFactura_'+cantidadAddJs+'_total').val();
                                         //totalFacturado = totalFacturado + totalLinea;
                                         //$('#sistema_adminbundle_facturatype_total').val(totalFacturado);
-                                        valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                        valuetotaltotal = parseFloat($('#renaultorden_neto').val(), 10); 
                                     if(isNaN(valuetotaltotal)){
                                                 totalFacturado = 0;
                                             }else{
-                                    totalFacturado = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                    totalFacturado = parseFloat($('#renaultorden_neto').val(), 10); 
                                     }
                                     totalFacturado11 = 0;
                                         collectionHolder.find('li').each(function(index) {
                                             if(index != 0){
-                                                totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
+                                                totalLinea = parseFloat($('#renaultorden_consumos_'+index+'_subtotal').val(), 10)
                                                 if(!isNaN(totalLinea)){
                                                    totalFacturado11 = totalFacturado + totalLinea;
                                                 }
                                             }
                                         });
-                                        $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
+                                        $('#renaultorden_neto').val(totalFacturado11.toFixed(2));
                                         iva11 = totalFacturado11.toFixed(2)*0.21;
-                                        $('#ordvolvo_iva').val(iva11.toFixed(2));
+                                        $('#renaultorden_iva').val(iva11.toFixed(2));
                                         total11= totalFacturado11 + iva11;
-                                        $('#ordvolvo_total').val(total11.toFixed(2));
+                                        $('#renaultorden_total').val(total11.toFixed(2));
                                       }
                                       }
                                     });
@@ -403,38 +403,38 @@
     
                                 function consultaNombre(id, cantidadAddJs){
                                     $.ajax({
-                                      url: '{{ path('orden_repvolvo_nombre') }}',
+                                      url: '{{ path('orden_renaultrepuestos_nombre') }}',
                                       type: "POST",
                                       data: { "id" : id },
                                       success: function(data) {
                                         //$('.result').html(data);            
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_idRepvolvo').val(data);            
+                                        $('#renaultorden_consumos_'+cantidadAddJs+'_idRenaultrepuestos').val(data);            
                                       }
                                     });
                                 }                               
                                 
     
                                 function calculaTotal(cantidadAddJs){
-                                    cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
-                                    valuePrecio = $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio').val();
-                                    valueCantidad = $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val();
-                                    porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)                                                                       
+                                    cotizacion=parseFloat($('#renaultorden_cotizacion').val(), 10);        
+                                    valuePrecio = $('#renaultorden_consumos_'+cantidadAddJs+'_Precio').val();
+                                    valueCantidad = $('#renaultorden_consumos_'+cantidadAddJs+'_cantidad').val();
+                                    porc=parseFloat($('#renaultorden_porc_rep').val(), 10)                                                                       
                                     porc=porc/100;                              
                                     
                                     valuePrecio = valuePrecio * cotizacion;                                    
                                     valueTotal = valuePrecio * valueCantidad;
                                     valueTotal = valueTotal + (valueTotal * porc);
-                                    $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(valueTotal.toFixed(2));
-                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                    $('#renaultorden_consumos_'+cantidadAddJs+'_subtotal').val(valueTotal.toFixed(2));
+                                    valuetotaltotal = parseFloat($('#renaultorden_neto').val(), 10); 
                                     if(isNaN(valuetotaltotal)){
                                                 totalFacturado = 0;
                                             }else{
-                                    totalFacturado = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                    totalFacturado = parseFloat($('#renaultorden_neto').val(), 10); 
                                     }
                                     totalFacturado11 = 0;
                                     collectionHolder.find('li').each(function(index) {
                                         if(index != 0){
-                                            totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
+                                            totalLinea = parseFloat($('#renaultorden_consumos_'+index+'_subtotal').val(), 10)
                                             if(!isNaN(totalLinea)){
                                                 totalFacturado11 = totalFacturado11 + totalLinea;
                                             }
@@ -442,7 +442,7 @@
                                     });
                                     collectionHolder2.find('li').each(function(index) {
                                         if(index != 0){
-                                            totalLinea = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
+                                            totalLinea = parseFloat($('#renaultorden_operaciones_'+index+'_subtotal').val(), 10)
                                             if(!isNaN(totalLinea)){
                                                 totalFacturado11 = totalFacturado11 + totalLinea;
                                             }
@@ -450,17 +450,17 @@
                                     });
                                     collectionHolder3.find('li').each(function(index) {
                                         if(index != 0){
-                                            totalLinea = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
+                                            totalLinea = parseFloat($('#renaultorden_terceros_'+index+'_subtotal').val(), 10)
                                             if(!isNaN(totalLinea)){
                                                 totalFacturado11 = totalFacturado11 + totalLinea;
                                             }
                                         }
                                     });
-                                    $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
+                                    $('#renaultorden_neto').val(totalFacturado11.toFixed(2));
                                     iva11 = totalFacturado11.toFixed(2)*0.21;
-                                    $('#ordvolvo_iva').val(iva11.toFixed(2));
+                                    $('#renaultorden_iva').val(iva11.toFixed(2));
                                     total11= totalFacturado11 + iva11;
-                                    $('#ordvolvo_total').val(total11.toFixed(2));
+                                    $('#renaultorden_total').val(total11.toFixed(2));
                                 }
                                 </script>
 
@@ -569,6 +569,7 @@
     
                                             cantidadAddJs2 = cantidadAddJs2+1;
                                             cargarAddJs2(cantidadAddJs2);
+                                            
                                         }
 
                                             </script>
@@ -579,10 +580,10 @@
                                                     //var $newAddTwig = $('<div><\/div>').append($addTwig);
                                                     //$newLinkLi.before($newAddTwig);
                                                     var $addJs2 =
-                                                        "$('#ordvolvo_operaciones_"+cantidadAddJs2+"_hs').change(function() {"+
+                                                        "$('#renaultorden_operaciones_"+cantidadAddJs2+"_hs').change(function() {"+
                                                             "calculaTotal2("+cantidadAddJs2+")"+
                                                         "});"+  
-                                                        "$('#ordvolvo_operaciones_"+cantidadAddJs2+"_precio_hs').change(function() {"+
+                                                        "$('#renaultorden_operaciones_"+cantidadAddJs2+"_precio_hs').change(function() {"+
                                                             "calculaTotal2("+cantidadAddJs2+")"+
                                                         "});"          
                                                     ;
@@ -607,21 +608,21 @@
                                                 }    
     
                                                 function calculaTotal2(cantidadAddJs2){
-                                                    cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
-                                                    valuePrecioHs = $('#ordvolvo_mo').val();
-                                                    valueHs = $('#ordvolvo_operaciones_'+cantidadAddJs2+'_hs').val();        
+                                                    cotizacion=parseFloat($('#renaultorden_cotizacion').val(), 10);        
+                                                    valuePrecioHs = $('#renaultorden_mo').val();
+                                                    valueHs = $('#renaultorden_operaciones_'+cantidadAddJs2+'_hs').val();        
                                                     valueTotal = valuePrecioHs * valueHs;
-                                                    $('#ordvolvo_operaciones_'+cantidadAddJs2+'_subtotal').val(valueTotal.toFixed(2));
-                                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                                    $('#renaultorden_operaciones_'+cantidadAddJs2+'_subtotal').val(valueTotal.toFixed(2));
+                                                    valuetotaltotal = parseFloat($('#renaultorden_neto').val(), 10); 
                                                     if(isNaN(valuetotaltotal)){
                                                                 totalFacturado2 = 0;
                                                             }else{
-                                                    totalFacturado2 = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                                    totalFacturado2 = parseFloat($('#renaultorden_neto').val(), 10); 
                                                     }
                                                     totalFacturado22 = 0;
                                                     collectionHolder2.find('li').each(function(index) {
                                                         if(index != 0){
-                                                            totalLinea2 = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
+                                                            totalLinea2 = parseFloat($('#renaultorden_operaciones_'+index+'_subtotal').val(), 10)
                                                             if(!isNaN(totalLinea2)){
                                                                 totalFacturado22 = totalFacturado22 + totalLinea2;
                                                             }
@@ -629,7 +630,7 @@
                                                     });
                                                      collectionHolder.find('li').each(function(index) {
                                                         if(index != 0){
-                                                            totalLinea2 = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
+                                                            totalLinea2 = parseFloat($('#renaultorden_consumos_'+index+'_subtotal').val(), 10)
                                                             if(!isNaN(totalLinea2)){
                                                                 totalFacturado22 = totalFacturado22 + totalLinea2;
                                                             }
@@ -637,18 +638,18 @@
                                                     });
                                                       collectionHolder3.find('li').each(function(index) {
                                                         if(index != 0){
-                                                            totalLinea2 = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
+                                                            totalLinea2 = parseFloat($('#renaultorden_terceros_'+index+'_subtotal').val(), 10)
                                                             if(!isNaN(totalLinea2)){
                                                                 totalFacturado22 = totalFacturado22 + totalLinea2;
                                                             }
                                                         }
                                                     });
                                                     //totalFacturado222= totalFacturado2 + totalFacturado22;
-                                                    $('#ordvolvo_neto').val(totalFacturado22.toFixed(2));
+                                                    $('#renaultorden_neto').val(totalFacturado22.toFixed(2));
                                                     iva22 = totalFacturado22.toFixed(2)*0.21;
-                                                    $('#ordvolvo_iva').val(iva22.toFixed(2)); 
+                                                    $('#renaultorden_iva').val(iva22.toFixed(2)); 
                                                     total22= totalFacturado22 + iva22;
-                                                    $('#ordvolvo_total').val(total22.toFixed(2));
+                                                    $('#renaultorden_total').val(total22.toFixed(2));
                                                 }
                                                 </script>
 
@@ -705,10 +706,10 @@
                                                     //var $newAddTwig = $('<div><\/div>').append($addTwig);
                                                     //$newLinkLi.before($newAddTwig);
                                                     var $addJs3 =
-                                                        "$('#ordvolvo_terceros_"+cantidadAddJs3+"_cantidad').change(function() {"+
+                                                        "$('#renaultorden_terceros_"+cantidadAddJs3+"_cantidad').change(function() {"+
                                                             "calculaTotal3("+cantidadAddJs3+")"+
                                                         "});"+  
-                                                        "$('#ordvolvo_terceros_"+cantidadAddJs3+"_unitario').change(function() {"+
+                                                        "$('#renaultorden_terceros_"+cantidadAddJs3+"_unitario').change(function() {"+
                                                             "calculaTotal3("+cantidadAddJs3+")"+
                                                         "});"          
                                                     ;
@@ -733,21 +734,21 @@
                                                 }    
     
                                                 function calculaTotal3(cantidadAddJs3){
-                                                    cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
-                                                    valueCantidad = $('#ordvolvo_terceros_'+cantidadAddJs3+'_cantidad').val();
-                                                    valueUnitario = $('#ordvolvo_terceros_'+cantidadAddJs3+'_unitario').val();        
+                                                    cotizacion=parseFloat($('#renaultorden_cotizacion').val(), 10);        
+                                                    valueCantidad = $('#renaultorden_terceros_'+cantidadAddJs3+'_cantidad').val();
+                                                    valueUnitario = $('#renaultorden_terceros_'+cantidadAddJs3+'_unitario').val();        
                                                     valueTotal = valueCantidad * valueUnitario;
-                                                    $('#ordvolvo_terceros_'+cantidadAddJs3+'_subtotal').val(valueTotal.toFixed(2));
-                                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                                    $('#renaultorden_terceros_'+cantidadAddJs3+'_subtotal').val(valueTotal.toFixed(2));
+                                                    valuetotaltotal = parseFloat($('#renaultorden_neto').val(), 10); 
                                                     if(isNaN(valuetotaltotal)){
                                                                 totalFacturado3 = 0;
                                                             }else{
-                                                    totalFacturado3 = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                                    totalFacturado3 = parseFloat($('#renaultorden_neto').val(), 10); 
                                                     }
                                                     totalFacturado33 = 0;
                                                     collectionHolder3.find('li').each(function(index) {
                                                         if(index != 0){
-                                                            totalLinea3 = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
+                                                            totalLinea3 = parseFloat($('#renaultorden_terceros_'+index+'_subtotal').val(), 10)
                                                             if(!isNaN(totalLinea3)){
                                                                 totalFacturado33 = totalFacturado33 + totalLinea3;
                                                             }
@@ -755,7 +756,7 @@
                                                     });
                                                      collectionHolder.find('li').each(function(index) {
                                                         if(index != 0){
-                                                            totalLinea3 = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
+                                                            totalLinea3 = parseFloat($('#renaultorden_consumos_'+index+'_subtotal').val(), 10)
                                                             if(!isNaN(totalLinea3)){
                                                                 totalFacturado33 = totalFacturado33 + totalLinea3;
                                                             }
@@ -763,18 +764,18 @@
                                                     });
                                                     collectionHolder2.find('li').each(function(index) {
                                                         if(index != 0){
-                                                            totalLinea3 = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
+                                                            totalLinea3 = parseFloat($('#renaultorden_operaciones_'+index+'_subtotal').val(), 10)
                                                             if(!isNaN(totalLinea3)){
                                                                 totalFacturado33 = totalFacturado33 + totalLinea3;
                                                             }
                                                         }
                                                     });
                                                     //totalFacturado333= totalFacturado3 + totalFacturado33;                                                    
-                                                    $('#ordvolvo_neto').val(totalFacturado33.toFixed(2));
+                                                    $('#renaultorden_neto').val(totalFacturado33.toFixed(2));
                                                     iva33 = totalFacturado33.toFixed(2)*0.21;                                                    
-                                                    $('#ordvolvo_iva').val(iva33.toFixed(2));
+                                                    $('#renaultorden_iva').val(iva33.toFixed(2));
                                                     total33= totalFacturado33 + iva33;
-                                                    $('#ordvolvo_total').val(total33.toFixed(2));
+                                                    $('#renaultorden_total').val(total33.toFixed(2));
                                                 }
                                                 </script>
                                                 <script>
