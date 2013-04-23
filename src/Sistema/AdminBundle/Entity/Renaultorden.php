@@ -73,6 +73,20 @@ class Renaultorden
      * @ORM\Column(name="dominio", type="string", length=255)
      */
     private $dominio;
+    
+    /**
+     * @var string $cam
+     *
+     * @ORM\Column(name="cam", type="string", length=255, nullable=true)
+     */
+    private $cam;
+    
+    /**
+     * @var \DateTime $fechafab
+     *
+     * @ORM\Column(name="fechafab", type="date", nullable=true)
+     */
+    private $fechafab;
 
     /**
      * @var float $km
@@ -91,7 +105,7 @@ class Renaultorden
     /**
      * @var string $color
      *
-     * @ORM\Column(name="color", type="string", length=255)
+     * @ORM\Column(name="color", type="string", length=255, nullable=true)
      */
     private $color;
 
@@ -628,5 +642,51 @@ class Renaultorden
     public function setTerceros(ArrayCollection $terceros)
     {
         $this->terceros = $terceros;
+    }
+    
+    /**
+     * Set fechafab
+     *
+     * @param \DateTime $fechafab
+     * @return Renaultorden
+     */
+    public function setFechafab($fechafab)
+    {
+        $this->fechafab = $fechafab;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechafab
+     *
+     * @return \DateTime 
+     */
+    public function getFechafab()
+    {
+        return $this->fechafab;
+    }
+    
+     /**
+     * Set cam
+     *
+     * @param string $cam
+     * @return Renaultorden
+     */
+    public function setCam($cam)
+    {
+        $this->cam = $cam;
+    
+        return $this;
+    }
+
+    /**
+     * Get cam
+     *
+     * @return string 
+     */
+    public function getCam()
+    {
+        return $this->cam;
     }
 }

@@ -1,12 +1,12 @@
 {% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - Renaultconsumo {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Consumor {{ 'views.show.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
 
-<h1>Renaultconsumo</h1>
+<h1>Consumor</h1>
 
 <form class="form-horizontal">
     <fieldset>        <div class="control-group">
@@ -26,17 +26,17 @@
 
 <div>
     <div class="float-left">
-        <a class="btn" href="{{ path('renaultconsumo') }}">
+        <a class="btn" href="{{ path('consumor') }}">
             {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>
     </div>
     <div class="float-left">
-        <a class="btn btn-primary" href="{{ path('renaultconsumo_edit', { 'id': entity.id }) }}">
+        <a class="btn btn-primary" href="{{ path('consumor_edit', { 'id': entity.id }) }}">
             {{ 'views.recordactions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>
     </div>
     <div class="float-left">
-        <form action="{{ path('renaultconsumo_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('consumor_delete', { 'id': entity.id }) }}" method="post">
             {{ form_widget(delete_form) }}
             <button class="btn btn-danger" type="submit" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}');">{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
         </form>

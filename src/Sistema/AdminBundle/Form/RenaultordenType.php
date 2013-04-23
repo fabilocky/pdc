@@ -16,6 +16,11 @@ class RenaultordenType extends AbstractType
                     'format' => 'dd-MM-yyyy',
                     'attr' => array('class' => 'date')
                 ))
+             ->add('fechafab', 'genemu_jquerydate', array(
+                    'widget' => 'single_text',
+                    'format' => 'dd-MM-yyyy',                    
+                    'attr' => array('class' => 'date')
+                ))
              ->add('client', 'genemu_jqueryautocomplete_entity', array(
             'class' => 'Sistema\AdminBundle\Entity\Cliente',
             'data_class' => 'Sistema\AdminBundle\Entity\Cliente',
@@ -69,6 +74,7 @@ class RenaultordenType extends AbstractType
             ->add('km')
             ->add('hs')
             ->add('color')
+                ->add('cam')
             ->add('neto')
             ->add('iva')
             ->add('total')

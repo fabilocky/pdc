@@ -527,6 +527,7 @@ EOD;
         $objPHPExcel = $objReader->load('pantilla_renault.xlsx');
         
         $fecha = $entity->getFecha()->format('d-m-Y');
+        $fechafab = $entity->getFechafab()->format('d-m-Y');        
         // Indicamos que se pare en la hoja uno del libro
         $objPHPExcel->setActiveSheetIndex(0);        
         //Escribimos en la hoja en la celda B1
@@ -542,6 +543,8 @@ EOD;
         $objPHPExcel->getActiveSheet()->SetCellValue('H10', $entity->getColor());
         $objPHPExcel->getActiveSheet()->SetCellValue('C10', $entity->getDominio());
         $objPHPExcel->getActiveSheet()->SetCellValue('F10', $entity->getKm());
+        $objPHPExcel->getActiveSheet()->SetCellValue('K9', $fechafab);
+        $objPHPExcel->getActiveSheet()->SetCellValue('K10', $entity->getCam());
 //        $objPHPExcel->getActiveSheet()->SetCellValue('J10', 'HS:');
 //        $objPHPExcel->getActiveSheet()->SetCellValue('K10', $entity->getHs());
         
@@ -584,7 +587,7 @@ EOD;
 //        // Color rojo al texto
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
 //        // Texto alineado a la derecha
-//        $objPHPExcel->getActiveSheet()->getStyle('C14')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $objPHPExcel->getActiveSheet()->getStyle('K9')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 //        // Damos un borde a la celda
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);

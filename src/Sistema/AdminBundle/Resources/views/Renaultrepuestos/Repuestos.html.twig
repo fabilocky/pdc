@@ -1,0 +1,11 @@
+{% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
+
+
+{% block page %}
+<h1>Cargar planilla Excel</h1>
+<form class="well" action="subir" method="post" enctype="multipart/form-data">    	 
+   	 <input name="userfile" type="file"> 
+   	 <br> 
+   	 <input type="submit" class="btn btn-success" value="Enviar"> 
+</form> 
+{% endblock %}

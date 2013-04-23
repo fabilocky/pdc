@@ -68,6 +68,16 @@
             font-weight: bold;
             color: #FFFFFF;
         }
+        .capital {
+            height: 20px;
+            font-size: 50px;
+        }
+        .capital div{
+            float: left;
+            font-size: 100px;
+            font-weight: bold;
+            color: #0e0e0e
+        }
     </style>
 
     <link href="{{ asset('css/blitzer/jquery-ui-1.9.0.custom.min.css') }}" rel="stylesheet">
@@ -132,13 +142,13 @@
                 <tr> 
                     <td>{{ form_row(form.mo) }}</td>
                     <td>{{ form_row(form.porc_rep) }}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ form_row(form.fechafab) }}</td>
+                    <td>{{ form_row(form.cam) }}</td>
                 </tr>
             </tbody>
         </table>
-            <div id="articulos"></div>
-            
+        <h2>Solicitudes</h2>                     
+        <div id="articulos"></div>        
         <div class="titulos">
             <div class="tituloproducto">Solicitud de Reparación</div>        
         </div>  
@@ -149,6 +159,7 @@
                 <li></li>            
         {% endfor %}            
             </ul>
+        <h2>Consumo de repuestos y lubricantes</h2>        
     {#{{ form_row(form.fecha) }}#}
             <div class="titulos">
                 <div class="tituloproducto">Codigo</div>

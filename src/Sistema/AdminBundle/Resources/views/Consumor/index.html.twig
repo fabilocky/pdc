@@ -1,7 +1,7 @@
 {% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - Renaultsolicrep {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Consumor {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
 {% endblock %}
 
 {% block page %}
@@ -9,7 +9,7 @@
 <div class="row">
 
     <div class="span8">
-        <h1>Renaultsolicrep {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+        <h1>Consumor {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
     </div>
     <div class="span2">
         {% if form_errors(filterForm) %}
@@ -31,9 +31,11 @@
     <div class="span12">
         <div id="filters" class="collapse">
 
-            <form class="well" action="{{ path('renaultsolicrep') }}" method="post" {{ form_enctype(filterForm) }}>
+            <form class="well" action="{{ path('consumor') }}" method="post" {{ form_enctype(filterForm) }}>
                 {{ form_row(filterForm.id) }}
-                {{ form_row(filterForm.descripcion) }}
+                {{ form_row(filterForm.cantidad) }}
+                {{ form_row(filterForm.subtotal) }}
+                {{ form_row(filterForm.garantia) }}
                 {{ form_rest(filterForm) }}
 
                 <p>
@@ -50,20 +52,24 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>Descripcion</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Garantia</th>
             <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
         </tr>
     </thead>
     <tbody>
     {% for entity in entities %}
         <tr>
-            <td><a href="{{ path('renaultsolicrep_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-            <td>{{ entity.descripcion }}</td>
+            <td><a href="{{ path('consumor_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{{ entity.cantidad }}</td>
+            <td>{{ entity.subtotal }}</td>
+            <td>{{ entity.garantia }}</td>
             <td>
-        <a class="btn btn-mini" href="{{ path('renaultsolicrep_show', { 'id': entity.id }) }}">
+        <a class="btn btn-mini" href="{{ path('consumor_show', { 'id': entity.id }) }}">
             {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>
-        <a class="btn btn-mini" href="{{ path('renaultsolicrep_edit', { 'id': entity.id }) }}">
+        <a class="btn btn-mini" href="{{ path('consumor_edit', { 'id': entity.id }) }}">
             {{ 'views.actions.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
         </a>            </td>
         </tr>
@@ -77,8 +83,8 @@
     </div>
 
         <div class="span8">
-    <a class="btn btn-primary likepaginator" href="{{ path('renaultsolicrep_new') }}">
-            {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} Renaultsolicrep
+    <a class="btn btn-primary likepaginator" href="{{ path('consumor_new') }}">
+            {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} Consumor
         </a>
     </div>
     </div>

@@ -6,28 +6,29 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class RenaultrepuestosType extends AbstractType
+class ConsumorType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codigo')
-            ->add('descripcion')
-            ->add('cd')
-            ->add('precio')
             ->add('cantidad')
+            ->add('subtotal')
+            ->add('garantia')
+            ->add('ordvolvo')
+            ->add('remitovolvo')
+            ->add('idRenaultrepuestos')
         ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Sistema\AdminBundle\Entity\Renaultrepuestos'
+            'data_class' => 'Sistema\AdminBundle\Entity\Consumor'
         ));
     }
 
     public function getName()
     {
-        return 'sistema_adminbundle_renaultrepuestostype';
+        return 'sistema_adminbundle_consumortype';
     }
 }

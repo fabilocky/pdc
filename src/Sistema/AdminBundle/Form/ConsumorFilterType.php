@@ -9,17 +9,15 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
 
-class RenaultrepuestosFilterType extends AbstractType
+class ConsumorFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('id', 'filter_number_range')
-            ->add('codigo', 'filter_text')
-            ->add('descripcion', 'filter_text')
-            ->add('cd', 'filter_number_range')
-            ->add('precio', 'filter_number_range')
             ->add('cantidad', 'filter_number_range')
+            ->add('subtotal', 'filter_text')
+            ->add('garantia', 'filter_choice')
         ;
 
         $listener = function(FormEvent $event)
@@ -43,6 +41,6 @@ class RenaultrepuestosFilterType extends AbstractType
 
     public function getName()
     {
-        return 'sistema_adminbundle_renaultrepuestosfiltertype';
+        return 'sistema_adminbundle_consumorfiltertype';
     }
 }

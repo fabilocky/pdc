@@ -284,14 +284,14 @@
                                     //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
                                     //var $newAddTwig = $('<div><\/div>').append($addTwig);
                                     //$newLinkLi.before($newAddTwig);
-                                    var $addJs = 
+                                    var $addJ = 
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"                                 
                                     ;
-                                    var $newAddJs = $('<script><\/script>').append($addJs);
+                                    var $newAddJ = $('<script><\/script>').append($addJ);
                                     //$('<div></div>').append($newAddJs);
-                                    $newLinkLi.before($newAddJs);
+                                    $newLinkLi.before($newAddJ);
                                 }
                                 function cargarAddJs(cantidadAddJs){
                                     //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
@@ -309,7 +309,10 @@
                                         "});"+
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaPrecio($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        "});"                                 
+                                        "});"+
+                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaId($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "});" 
                                     ;
                                     var $newAddJs = $('<script><\/script>').append($addJs);
                                     //$('<div></div>').append($newAddJs);
@@ -408,10 +411,22 @@
                                       data: { "id" : id },
                                       success: function(data) {
                                         //$('.result').html(data);            
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_idRepvolvo').val(data);            
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Repvolvo').val(data);            
                                       }
                                     });
-                                }                               
+                                }  
+                                
+                                function consultaId(id, cantidadAddJs){
+                                    $.ajax({
+                                      url: '{{ path('orden_repvolvo_id') }}',
+                                      type: "POST",
+                                      data: { "id" : id },
+                                      success: function(data) {
+                                        //$('.result').html(data);            
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_idRep').val(data);            
+                                      }
+                                    });
+                                } 
                                 
     
                                 function calculaTotal(cantidadAddJs){

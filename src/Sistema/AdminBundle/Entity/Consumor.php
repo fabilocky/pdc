@@ -5,12 +5,12 @@ namespace Sistema\AdminBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Sistema\AdminBundle\Entity\Renaultconsumo
+ * Sistema\AdminBundle\Entity\Consumor
  *
  * @ORM\Table()
  * @ORM\Entity
  */
-class Renaultconsumo
+class Consumor
 {
     /**
      * @var integer $id
@@ -43,11 +43,11 @@ class Renaultconsumo
     private $garantia;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Renaultorden", inversedBy="consumos")
-     * @ORM\JoinColumn(name="renaultorden_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Ordvolvo", inversedBy="consumos")
+     * @ORM\JoinColumn(name="ordvolvo_id", referencedColumnName="id")
      * @var type 
      */
-    private $renaultorden;
+    private $ordvolvo;
     
     /**
      * @ORM\ManyToOne(targetEntity="Remitovolvo", inversedBy="consumos")
@@ -80,7 +80,7 @@ class Renaultconsumo
      * Set cantidad
      *
      * @param integer $cantidad
-     * @return Renaultconsumo
+     * @return Consumo
      */
     public function setCantidad($cantidad)
     {
@@ -103,7 +103,7 @@ class Renaultconsumo
      * Set garantia
      *
      * @param boolean $garantia
-     * @return Renaultconsumo
+     * @return Consumo
      */
     public function setGarantia($garantia)
     {
@@ -126,7 +126,7 @@ class Renaultconsumo
      * Set subtotal
      *
      * @param float $subtotal
-     * @return Renaultconsumo
+     * @return Consumo
      */
     public function setSubtotal($subtotal)
     {
@@ -146,23 +146,23 @@ class Renaultconsumo
     }
     
     /**
-     * Set renaultorden
+     * Set ordvolvo
      *
-     * @param Sistema\AdminBundle\Entity\Renaultorden $renaultorden
+     * @param Sistema\AdminBundle\Entity\Ordvolvo $ordvolvo
      */
-    public function setRenaultorden(\Sistema\AdminBundle\Entity\Renaultorden $renaultorden)
+    public function setOrdvolvo(\Sistema\AdminBundle\Entity\Ordvolvo $ordvolvo)
     {
-        $this->renaultorden = $renaultorden;
+        $this->ordvolvo = $ordvolvo;
     }
  
     /**
-     * Get renaultorden
+     * Get ordvolvo
      *
-     * @return Sistema\AdminBundle\Entity\Renaultorden 
+     * @return Sistema\AdminBundle\Entity\Ordvolvo 
      */
-    public function getRenaultorden()
+    public function getOrdvolvo()
     {
-        return $this->renaultorden;
+        return $this->ordvolvo;
     }
     
     /**
@@ -189,7 +189,7 @@ class Renaultconsumo
      * Set idRenaultrepuestos
      *
      * @param Sistema\AdminBundle\Entity\Renaultrepuestos $idRenaultrepuestos
-     * @return Renaultconsumo
+     * @return Consumo
      */
     public function setIdRenaultrepuestos(\Sistema\AdminBundle\Entity\Renaultrepuestos $idRenaultrepuestos = null)
     {

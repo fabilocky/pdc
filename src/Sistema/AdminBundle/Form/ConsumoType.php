@@ -25,10 +25,21 @@ class ConsumoType extends AbstractType
                     'required'=> false,
 //                    'empty_value' => 'Seleccionar repuesto',                
                 ))
-            ->add('idRepvolvo', null, array(                    
-                    'label' => ' ',
-                    'empty_value' => 'Seleccionar repuesto',
+//            ->add('Repvolvo', 'text', array(                    
+//                    'label' => ' ',                    
+//                    'attr' => array('style' => 'width:150px'),
+//                    'property_path' => false,
+//                ))
+            ->add('idRep', 'hidden', array(                    
+                    'label' => ' ',                    
                     'attr' => array('style' => 'width:150px'),
+                    'property_path' => false,
+                'required'=> false,
+                ))
+            ->add('Repvolvo', 'text', array(                    
+                    'label' => ' ',                    
+                    'attr' => array('style' => 'width:150px'),
+                    'property_path' => false,
                 ))
 //            ->add('repuesto', 'text', array(                    
 //                    'label' => ' ',

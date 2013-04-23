@@ -10,21 +10,21 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
 
-use Sistema\AdminBundle\Entity\Renaultconsumo;
-use Sistema\AdminBundle\Form\RenaultconsumoType;
-use Sistema\AdminBundle\Form\RenaultconsumoFilterType;
+use Sistema\AdminBundle\Entity\Consumor;
+use Sistema\AdminBundle\Form\ConsumorType;
+use Sistema\AdminBundle\Form\ConsumorFilterType;
 
 /**
- * Renaultconsumo controller.
+ * Consumor controller.
  *
- * @Route("/renaultconsumo")
+ * @Route("/consumor")
  */
-class RenaultconsumoController extends Controller
+class ConsumorController extends Controller
 {
     /**
-     * Lists all Renaultconsumo entities.
+     * Lists all Consumor entities.
      *
-     * @Route("/", name="renaultconsumo")
+     * @Route("/", name="consumor")
      * @Template()
      */
     public function indexAction()
@@ -49,13 +49,13 @@ class RenaultconsumoController extends Controller
     {
         $request = $this->getRequest();
         $session = $request->getSession();
-        $filterForm = $this->createForm(new RenaultconsumoFilterType());
+        $filterForm = $this->createForm(new ConsumorFilterType());
         $em = $this->getDoctrine()->getManager();
-        $queryBuilder = $em->getRepository('SistemaAdminBundle:Renaultconsumo')->createQueryBuilder('e');
+        $queryBuilder = $em->getRepository('SistemaAdminBundle:Consumor')->createQueryBuilder('e');
     
         // Reset filter
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'reset') {
-            $session->remove('RenaultconsumoControllerFilter');
+            $session->remove('ConsumorControllerFilter');
         }
     
         // Filter action
@@ -68,13 +68,13 @@ class RenaultconsumoController extends Controller
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
                 // Save filter to session
                 $filterData = $filterForm->getData();
-                $session->set('RenaultconsumoControllerFilter', $filterData);
+                $session->set('ConsumorControllerFilter', $filterData);
             }
         } else {
             // Get filter from session
-            if ($session->has('RenaultconsumoControllerFilter')) {
-                $filterData = $session->get('RenaultconsumoControllerFilter');
-                $filterForm = $this->createForm(new RenaultconsumoFilterType(), $filterData);
+            if ($session->has('ConsumorControllerFilter')) {
+                $filterData = $session->get('ConsumorControllerFilter');
+                $filterForm = $this->createForm(new ConsumorFilterType(), $filterData);
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
             }
         }
@@ -99,7 +99,7 @@ class RenaultconsumoController extends Controller
         $me = $this;
         $routeGenerator = function($page) use ($me)
         {
-            return $me->generateUrl('renaultconsumo', array('page' => $page));
+            return $me->generateUrl('consumor', array('page' => $page));
         };
     
         // Paginator - view
@@ -115,19 +115,19 @@ class RenaultconsumoController extends Controller
     }
     
     /**
-     * Finds and displays a Renaultconsumo entity.
+     * Finds and displays a Consumor entity.
      *
-     * @Route("/{id}/show", name="renaultconsumo_show")
+     * @Route("/{id}/show", name="consumor_show")
      * @Template()
      */
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaAdminBundle:Renaultconsumo')->find($id);
+        $entity = $em->getRepository('SistemaAdminBundle:Consumor')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Renaultconsumo entity.');
+            throw $this->createNotFoundException('Unable to find Consumor entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -139,15 +139,15 @@ class RenaultconsumoController extends Controller
     }
 
     /**
-     * Displays a form to create a new Renaultconsumo entity.
+     * Displays a form to create a new Consumor entity.
      *
-     * @Route("/new", name="renaultconsumo_new")
+     * @Route("/new", name="consumor_new")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new Renaultconsumo();
-        $form   = $this->createForm(new RenaultconsumoType(), $entity);
+        $entity = new Consumor();
+        $form   = $this->createForm(new ConsumorType(), $entity);
 
         return array(
             'entity' => $entity,
@@ -156,17 +156,17 @@ class RenaultconsumoController extends Controller
     }
 
     /**
-     * Creates a new Renaultconsumo entity.
+     * Creates a new Consumor entity.
      *
-     * @Route("/create", name="renaultconsumo_create")
+     * @Route("/create", name="consumor_create")
      * @Method("post")
-     * @Template("SistemaAdminBundle:Renaultconsumo:new.html.twig")
+     * @Template("SistemaAdminBundle:Consumor:new.html.twig")
      */
     public function createAction()
     {
-        $entity  = new Renaultconsumo();
+        $entity  = new Consumor();
         $request = $this->getRequest();
-        $form    = $this->createForm(new RenaultconsumoType(), $entity);
+        $form    = $this->createForm(new ConsumorType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -175,7 +175,7 @@ class RenaultconsumoController extends Controller
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.create.success');
 
-            return $this->redirect($this->generateUrl('renaultconsumo_show', array('id' => $entity->getId())));        } else {
+            return $this->redirect($this->generateUrl('consumor_show', array('id' => $entity->getId())));        } else {
             $this->get('session')->getFlashBag()->add('error', 'flash.create.error');
         }
 
@@ -185,22 +185,22 @@ class RenaultconsumoController extends Controller
         );
     }
     /**
-     * Displays a form to edit an existing Renaultconsumo entity.
+     * Displays a form to edit an existing Consumor entity.
      *
-     * @Route("/{id}/edit", name="renaultconsumo_edit")
+     * @Route("/{id}/edit", name="consumor_edit")
      * @Template()
      */
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaAdminBundle:Renaultconsumo')->find($id);
+        $entity = $em->getRepository('SistemaAdminBundle:Consumor')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Renaultconsumo entity.');
+            throw $this->createNotFoundException('Unable to find Consumor entity.');
         }
 
-        $editForm = $this->createForm(new RenaultconsumoType(), $entity);
+        $editForm = $this->createForm(new ConsumorType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -211,23 +211,23 @@ class RenaultconsumoController extends Controller
     }
 
     /**
-     * Edits an existing Renaultconsumo entity.
+     * Edits an existing Consumor entity.
      *
-     * @Route("/{id}/update", name="renaultconsumo_update")
+     * @Route("/{id}/update", name="consumor_update")
      * @Method("post")
-     * @Template("SistemaAdminBundle:Renaultconsumo:edit.html.twig")
+     * @Template("SistemaAdminBundle:Consumor:edit.html.twig")
      */
     public function updateAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaAdminBundle:Renaultconsumo')->find($id);
+        $entity = $em->getRepository('SistemaAdminBundle:Consumor')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Renaultconsumo entity.');
+            throw $this->createNotFoundException('Unable to find Consumor entity.');
         }
 
-        $editForm   = $this->createForm(new RenaultconsumoType(), $entity);
+        $editForm   = $this->createForm(new ConsumorType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -239,7 +239,7 @@ class RenaultconsumoController extends Controller
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
 
-            return $this->redirect($this->generateUrl('renaultconsumo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('consumor_edit', array('id' => $id)));
         } else {
             $this->get('session')->getFlashBag()->add('error', 'flash.update.error');
         }
@@ -251,9 +251,9 @@ class RenaultconsumoController extends Controller
         );
     }
     /**
-     * Deletes a Renaultconsumo entity.
+     * Deletes a Consumor entity.
      *
-     * @Route("/{id}/delete", name="renaultconsumo_delete")
+     * @Route("/{id}/delete", name="consumor_delete")
      * @Method("post")
      */
     public function deleteAction($id)
@@ -265,10 +265,10 @@ class RenaultconsumoController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SistemaAdminBundle:Renaultconsumo')->find($id);
+            $entity = $em->getRepository('SistemaAdminBundle:Consumor')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Renaultconsumo entity.');
+                throw $this->createNotFoundException('Unable to find Consumor entity.');
             }
 
             $em->remove($entity);
@@ -278,7 +278,7 @@ class RenaultconsumoController extends Controller
             $this->get('session')->getFlashBag()->add('error', 'flash.delete.error');
         }
 
-        return $this->redirect($this->generateUrl('renaultconsumo'));
+        return $this->redirect($this->generateUrl('consumor'));
     }
 
     private function createDeleteForm($id)

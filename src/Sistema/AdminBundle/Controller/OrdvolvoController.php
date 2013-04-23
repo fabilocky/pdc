@@ -230,8 +230,10 @@ class OrdvolvoController extends Controller
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
+            $ids=array();
             foreach($consumos as $consumo) {               
-                $id1=$consumo["idRepvolvo"];
+                $id1=$consumo["idRep"];
+                $ids[$cont]=$consumo["idRep"];
                 $em1 = $this->getDoctrine()->getManager();
                 $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($id1);
                 $rep->setCantidad($rep->getCantidad()-1);
@@ -243,10 +245,14 @@ class OrdvolvoController extends Controller
                 $cont=$cont+1;
                 
             }
-            for ($i = 0; $i <= $cont; $i++) {               
-                $consumos[$i] = new Consumo();            
-                $ord->addConsumos($consumos[$i]);
-                
+            //var_dump($ids[0]);
+            for ($i = 0; $i < $cont; $i++) {                
+//                var_dump($consumos[2]);die();
+                $em1 = $this->getDoctrine()->getManager();
+                $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($ids[$i]);
+                $consumos[$i] = new Consumo();               
+                $consumos[$i]->setidRepvolvo($rep);
+                $ord->addConsumos($consumos[$i]);                
             }
         }       
         
@@ -511,6 +517,22 @@ class OrdvolvoController extends Controller
      * @Route("/repvolvo/nombre", name="orden_repvolvo_nombre")
      */
     public function retornaNombreRepvolvo() {
+        $isAjax = $this->getRequest()->isXMLHttpRequest();
+        if ($isAjax) {
+            $id = $this->getRequest()->get('id');
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);
+            return new Response($entity->getDescripcion());
+        }
+        return new Response('Error. This is not ajax!', 400);
+    }
+    
+    /**
+     * Finds and displays a precio Tipo Producto entity.
+     *
+     * @Route("/repvolvo/id", name="orden_repvolvo_id")
+     */
+    public function retornaIdRepvolvo() {
         $isAjax = $this->getRequest()->isXMLHttpRequest();
         if ($isAjax) {
             $id = $this->getRequest()->get('id');
