@@ -6,7 +6,7 @@
 
 {% block page %}
 
-<h1>Repvolvo {{ 'views.new.creation'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+<h1>Nuevo Repuesto</h1>
 
 <form class="well" action="{{ path('repvolvo_create') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}

@@ -10,44 +10,41 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
 use Liuggio\ExcelBundle\LiuggioExcelBundle;
-
 use Sistema\AdminBundle\Entity\Ordvolvo;
 use Sistema\AdminBundle\Form\OrdvolvoType;
+use Sistema\AdminBundle\Form\LiquidacionType;
 use Sistema\AdminBundle\Form\OrdvolvoFilterType;
 use Sistema\AdminBundle\Entity\Solicrep;
 use Sistema\AdminBundle\Entity\Consumo;
 use Sistema\AdminBundle\Entity\Operaciones;
 use Sistema\AdminBundle\Entity\Terceros;
-
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use \PHPExcel;
 use \PHPExcel_IOFactory;
 use \PHPExcel_Style_Color;
 use \PHPExcel_Style_Alignment;
 use \PHPExcel_Style_Border;
+
 /**
  * Ordvolvo controller.
  *
  * @Route("/ordvolvo")
  */
-class OrdvolvoController extends Controller
-{
+class OrdvolvoController extends Controller {
+
     /**
      * Lists all Ordvolvo entities.
      *
      * @Route("/", name="ordvolvo")
      * @Template()
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         list($filterForm, $queryBuilder) = $this->filter();
 
         list($entities, $pagerHtml) = $this->paginator($queryBuilder);
 
-    
+
         return array(
             'entities' => $entities,
             'pagerHtml' => $pagerHtml,
@@ -56,22 +53,21 @@ class OrdvolvoController extends Controller
     }
 
     /**
-    * Create filter form and process filter request.
-    *
-    */
-    protected function filter()
-    {
+     * Create filter form and process filter request.
+     *
+     */
+    protected function filter() {
         $request = $this->getRequest();
         $session = $request->getSession();
         $filterForm = $this->createForm(new OrdvolvoFilterType());
         $em = $this->getDoctrine()->getManager();
         $queryBuilder = $em->getRepository('SistemaAdminBundle:Ordvolvo')->createQueryBuilder('e');
-    
+
         // Reset filter
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'reset') {
             $session->remove('OrdvolvoControllerFilter');
         }
-    
+
         // Filter action
         if ($request->getMethod() == 'POST' && $request->get('filter_action') == 'filter') {
             // Bind values from the request
@@ -92,30 +88,28 @@ class OrdvolvoController extends Controller
                 $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($filterForm, $queryBuilder);
             }
         }
-    
+
         return array($filterForm, $queryBuilder);
     }
 
     /**
-    * Get results from paginator and get paginator view.
-    *
-    */
-    protected function paginator($queryBuilder)
-    {
+     * Get results from paginator and get paginator view.
+     *
+     */
+    protected function paginator($queryBuilder) {
         // Paginator
         $adapter = new DoctrineORMAdapter($queryBuilder);
         $pagerfanta = new Pagerfanta($adapter);
         $currentPage = $this->getRequest()->get('page', 1);
         $pagerfanta->setCurrentPage($currentPage);
         $entities = $pagerfanta->getCurrentPageResults();
-    
+
         // Paginator - route generator
         $me = $this;
-        $routeGenerator = function($page) use ($me)
-        {
-            return $me->generateUrl('ordvolvo', array('page' => $page));
-        };
-    
+        $routeGenerator = function($page) use ($me) {
+                    return $me->generateUrl('ordvolvo', array('page' => $page));
+                };
+
         // Paginator - view
         $translator = $this->get('translator');
         $view = new TwitterBootstrapView();
@@ -124,84 +118,80 @@ class OrdvolvoController extends Controller
             'prev_message' => $translator->trans('views.index.pagprev', array(), 'JordiLlonchCrudGeneratorBundle'),
             'next_message' => $translator->trans('views.index.pagnext', array(), 'JordiLlonchCrudGeneratorBundle'),
         ));
-    
+
         return array($entities, $pagerHtml);
     }
-    
+
     /**
      * Finds and displays a Ordvolvo entity.
      *
      * @Route("/{id}/show", name="ordvolvo_show")
      * @Template()
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
-        
-        $consumos=$entity->getConsumos();
-        foreach($consumos as $consumo) {               
-                $hola=$consumo->getRemitovolvo();
-                //var_dump($hola);die();
-                //$num=$hola->getId();
-                //var_dump($num);die();
-            }
+
+        $consumos = $entity->getConsumos();
+        foreach ($consumos as $consumo) {
+            $hola = $consumo->getRemitovolvo();
+            //var_dump($hola);die();
+            //$num=$hola->getId();
+            //var_dump($num);die();
+        }
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Ordvolvo entity.');
         }
-        
-        if ($num = NULL){
-            $num=0;
+
+        if ($num = NULL) {
+            $num = 0;
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
-            'num'         => $num,
+            'num' => $num,
         );
     }
 
-     /**
+    /**
      * Displays a form to create a new OrdVolvo entity.
      *
      * @Route("/new", name="new_ordvolvo")
      * @Template()
      */
-    public function newAction(Request $request)
-    {
+    public function newAction(Request $request) {
         $ord = new Ordvolvo();
 //        $fec= date("d-m-Y");
 //        $ord->setFecha(date("d-m-Y"));
 //        $solicitud1 = new Solicrep();
 //        $ord->addSolicitudes($solicitud1);
 //        $consumo1 = new Consumo();
-//        $ord->addConsumos($consumo1);
-        
+//        $ord->addConsumos($consumo1);        
         $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");
- 
+
 //        if ( preg_match('|<td align="right" class="texto2">UF : </td>\s+<td class="texto2"><b>(.*?)</b></td>|is' , $data , $cap ) )
 //        {
 //        echo "UF ".$cap[1];
 //        }
-        if ( preg_match('|<td style="text-align: left;">Dolar</td>
+        if (preg_match('|<td style="text-align: left;">Dolar</td>
 <td style="text-align: center;">(.*?)</td>
-<td style="text-align: center;">(.*?)</td></tr>|is' , $data , $cap ) )
-        {
-        $str = $cap[2];
-        $fa=str_replace(",", ".",$str);
-        }else{
-            $fa=0;
+<td style="text-align: center;">(.*?)</td></tr>|is', $data, $cap)) {
+            $str = $cap[2];
+            $fa = str_replace(",", ".", $str);
+        } else {
+            $fa = 0;
         }
-        
+
         $form = $this->createForm(new OrdvolvoType(), $ord);
- 
+
         return $this->render('SistemaAdminBundle:Ordvolvo:new.html.twig', array(
-            'form' => $form->createView(),
-            'dolar'=> $fa,
+                    'form' => $form->createView(),
+                    'dolar' => $fa,
         ));
     }
 
@@ -212,125 +202,122 @@ class OrdvolvoController extends Controller
      * @Method("post")
      * @Template("SistemaAdminBundle:Ordvolvo:new.html.twig")
      */
-     public function createAction(Request $request)
-    { 
-        $ord = new Ordvolvo();     
+    public function createAction(Request $request) {
+        $ord = new Ordvolvo();
         //$rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
-        $ords = $request->request->get('ordvolvo', array());        
-        $cliente=$ords['client'];        
+        $ords = $request->request->get('ordvolvo', array());
+        $cliente = $ords['client'];
         if (isset($ords['solicitudes'])) {
             $solicitudes = $ords['solicitudes'];
-            foreach($solicitudes as $solicitud) {                
+            foreach ($solicitudes as $solicitud) {
                 $solicitud = new Solicrep();
                 $ord->addSolicitudes($solicitud);
             }
-        }       
-        $sumaNeto=0;
-        $cont=0;
+        }
+        $sumaNeto = 0;
+        $cont = 0;
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
-            $ids=array();
-            foreach($consumos as $consumo) {               
-                $id1=$consumo["idRep"];
-                $ids[$cont]=$consumo["idRep"];
+            $repuestos = array();            
+            foreach ($consumos as $consumo) {
+                $id1 = $consumo["idRep"];                
                 $em1 = $this->getDoctrine()->getManager();
                 $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($id1);
-                $rep->setCantidad($rep->getCantidad()-1);
+                $rep->setCantidad($rep->getCantidad() - 1);
                 $em1->persist($rep);
-                $sumaNeto= $sumaNeto + $consumo['subtotal'];
+                $sumaNeto = $sumaNeto + $consumo['subtotal'];
                 $str = $consumo['subtotal'];
-                $fa=str_replace(".", ",",$str);
-                $consumo['subtotal']=$fa;                
-                $cont=$cont+1;
-                
+                $fa = str_replace(".", ",", $str);
+                $consumo['subtotal'] = $fa;
+                $cont = $cont + 1;
+                $repuestos[$cont]=$rep;
+                $repuestos[0]=$rep;
             }
             //var_dump($ids[0]);
-            for ($i = 0; $i < $cont; $i++) {                
-//                var_dump($consumos[2]);die();
-                $em1 = $this->getDoctrine()->getManager();
-                $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($ids[$i]);
-                $consumos[$i] = new Consumo();               
-                $consumos[$i]->setidRepvolvo($rep);
-                $ord->addConsumos($consumos[$i]);                
+            for ($i = 0; $i <= $cont; $i++) {
+//                var_dump($consumos[2]);die();                
+                $consumos[$i] = new Consumo();
+                $consumos[$i]->setidRepvolvo($repuestos[$i]);
+                $ord->addConsumos($consumos[$i]);
             }
-        }       
-        
-        $cont1=0;
+        }
+
+        $cont1 = 0;
         if (isset($ords['operaciones'])) {
             $operaciones = $ords['operaciones'];
 //            var_dump($operaciones);die();
-            foreach($operaciones as $operacion) {
+            foreach ($operaciones as $operacion) {
                 $str1 = $operacion['hs'];
-                $fa1=str_replace(".", ",",$str1);
-                $operacion['hs']=$fa1;   
+                $fa1 = str_replace(".", ",", $str1);
+                $operacion['hs'] = $fa1;
                 $str2 = $operacion['subtotal'];
-                $fa2=str_replace(".", ",",$str2);
-                $operacion['subtotal']=$fa2;
-                $cont1=$cont1+1;
+                $fa2 = str_replace(".", ",", $str2);
+                $operacion['subtotal'] = $fa2;
+                $cont1 = $cont1 + 1;
             }
             for ($i = 0; $i <= $cont1; $i++) {
                 $operaciones[$i] = new Operaciones();
-                $ord->addOperaciones($operaciones[$i]);                
+                $ord->addOperaciones($operaciones[$i]);
             }
         }
-        
-        $cont2=0;
+
+        $cont2 = 0;
         if (isset($ords['terceros'])) {
             $terceros = $ords['terceros'];
-            foreach($terceros as $tercero) {
+            foreach ($terceros as $tercero) {
                 $str3 = $tercero['unitario'];
-                $fa3=str_replace(".", ",",$str3);
-                $tercero['unitario']=$fa3;   
+                $fa3 = str_replace(".", ",", $str3);
+                $tercero['unitario'] = $fa3;
                 $str4 = $tercero['subtotal'];
-                $fa4=str_replace(".", ",",$str4);
-                $tercero['subtotal']=$fa4;
-                $cont2=$cont2+1;
+                $fa4 = str_replace(".", ",", $str4);
+                $tercero['subtotal'] = $fa4;
+                $cont2 = $cont2 + 1;
             }
             for ($i = 0; $i <= $cont2; $i++) {
                 $terceros[$i] = new Terceros();
-                $ord->addTerceros($terceros[$i]);                
+                $ord->addTerceros($terceros[$i]);
             }
-        }     
-        
- 
-        $form = $this->createForm(new OrdvolvoType(), $ord);        
+        }
+
+
+        $form = $this->createForm(new OrdvolvoType(), $ord);
         $form->bindRequest($request);
-        
+
         if ($form->isValid()) {
 //            var_dump($ord);die();
-        $em2 = $this->getDoctrine()->getManager();
-        $cli = $em2->getRepository('SistemaAdminBundle:Cliente')->findOneByNombre($cliente);
-        $ord->setCliente($cli);        
-        //$rem->setCliente($ord->getCliente());
-        //$rem->setChasis($ord->getChasis());
-        //$rem->setCotizacion($ord->getCotizacion());
-        //$rem->setDominio($ord->getDominio());
-        //$rem->setFecha($ord->getFecha());
-        //$rem->setModelo($ord->getModelo());
-        //$rem->setNeto($sumaNeto);
-        //$rem->setEnvia('María Antonella Pescarolo');
-        //$rem->setConsumos($ord->getConsumos());
+            $em2 = $this->getDoctrine()->getManager();
+            $cli = $em2->getRepository('SistemaAdminBundle:Cliente')->findOneByNombre($cliente);
+            $ord->setCliente($cli);
+            //$rem->setCliente($ord->getCliente());
+            //$rem->setChasis($ord->getChasis());
+            //$rem->setCotizacion($ord->getCotizacion());
+            //$rem->setDominio($ord->getDominio());
+            //$rem->setFecha($ord->getFecha());
+            //$rem->setModelo($ord->getModelo());
+            //$rem->setNeto($sumaNeto);
+            //$rem->setEnvia('María Antonella Pescarolo');
+            //$rem->setConsumos($ord->getConsumos());
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($ord);
             //$em->persist($rem);
             $em->flush();
- 
-            return $this->redirect($this->generateUrl('ordvolvo_show', array('id' => $ord->getId())));   
+
+            return $this->redirect($this->generateUrl('ordvolvo_show', array('id' => $ord->getId())));
         }
- 
+
         return array(
             'form' => $form->createView()
         );
     }
+
     /**
      * Displays a form to edit an existing Ordvolvo entity.
      *
      * @Route("/{id}/edit", name="ordvolvo_edit")
      * @Template()
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
@@ -343,11 +330,12 @@ class OrdvolvoController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Edits an existing Ordvolvo entity.
      *
@@ -355,61 +343,60 @@ class OrdvolvoController extends Controller
      * @Method("post")
      * @Template("SistemaAdminBundle:Ordvolvo:edit.html.twig")
      */
-    public function editarAction($id, Request $request)
-{
-    $em = $this->getDoctrine()->getManager();
-    $ord = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
-    $deleteForm = $this->createDeleteForm($id);
-    
-    if (!$ord) {
-        throw $this->createNotFoundException('No ord found for is '.$id);
-    }
-    $originalSolic= array();    
-    foreach ($ord->getSolicitudes() as $solicitud) {
-        $originalSolic[] = $solicitud;       
-    }
-    $originalCons= array();    
-    foreach ($ord->getConsumos() as $consumo) {
-        $originalCons[] = $consumo;       
-    }
-    $originalOper= array();    
-    foreach ($ord->getOperaciones() as $operacion) {
-        $originalOper[] = $operacion;       
-    }
-    $originalTerc= array();    
-    foreach ($ord->getTerceros() as $tercero) {
-        $originalTerc[] = $tercero;       
-    }
-    
-    $editForm = $this->createForm(new OrdvolvoType(), $ord);
-            
-            $ords = $request->request->get('ordvolvo', array());
-            if (isset($ords['solicitudes'])) {
-            $solicitudes = $ords['solicitudes'];            
-            $i=0;
-            foreach( $originalSolic as $solicitud ) {
-                $solicitud->setDescripcion($solicitudes[$i]['descripcion']);               
+    public function editarAction($id, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $ord = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
+        $deleteForm = $this->createDeleteForm($id);
+
+        if (!$ord) {
+            throw $this->createNotFoundException('No ord found for is ' . $id);
+        }
+        $originalSolic = array();
+        foreach ($ord->getSolicitudes() as $solicitud) {
+            $originalSolic[] = $solicitud;
+        }
+        $originalCons = array();
+        foreach ($ord->getConsumos() as $consumo) {
+            $originalCons[] = $consumo;
+        }
+        $originalOper = array();
+        foreach ($ord->getOperaciones() as $operacion) {
+            $originalOper[] = $operacion;
+        }
+        $originalTerc = array();
+        foreach ($ord->getTerceros() as $tercero) {
+            $originalTerc[] = $tercero;
+        }
+
+        $editForm = $this->createForm(new OrdvolvoType(), $ord);
+
+        $ords = $request->request->get('ordvolvo', array());
+        if (isset($ords['solicitudes'])) {
+            $solicitudes = $ords['solicitudes'];
+            $i = 0;
+            foreach ($originalSolic as $solicitud) {
+                $solicitud->setDescripcion($solicitudes[$i]['descripcion']);
                 $em->persist($solicitud);
                 $i++;
             }
-            }
-            if (isset($ords['operaciones'])) {
-            $operaciones = $ords['operaciones'];            
-            $i=0;
-            foreach( $originalOper as $operacion ) {
+        }
+        if (isset($ords['operaciones'])) {
+            $operaciones = $ords['operaciones'];
+            $i = 0;
+            foreach ($originalOper as $operacion) {
                 $operacion->setDenominacion($operaciones[$i]['denominacion']);
                 $operacion->setHs($operaciones[$i]['hs']);
                 $operacion->setSubtotal($operaciones[$i]['subtotal']);
                 $em->persist($operacion);
                 $i++;
             }
-            }
-            if (isset($ords['consumos'])) {
-            $consumos = $ords['consumos'];            
-            $i=0;
-            foreach( $originalCons as $consumo ) {
+        }
+        if (isset($ords['consumos'])) {
+            $consumos = $ords['consumos'];
+            $i = 0;
+            foreach ($originalCons as $consumo) {
 //                $consumo=new Consumo();
-                $id1=$consumos[$i]['idRepvolvo'];
+                $id1 = $consumos[$i]['idRepvolvo'];
                 $em1 = $this->getDoctrine()->getManager();
                 $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($id1);
 //                var_dump($rep); die;
@@ -420,33 +407,31 @@ class OrdvolvoController extends Controller
                 $em->persist($consumo);
                 $i++;
             }
-            }
-            $em->persist($ord);
-            $em->flush();
-                   
+        }
+        $em->persist($ord);
+        $em->flush();
 
-            
-            $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
 
-            return $this->redirect($this->generateUrl('ordvolvo_edit', array('id' => $id)));
-        
-    
-    return array(
-            'entity'      => $ord,
-            'edit_form'   => $editForm->createView(),
+
+        $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
+
+        return $this->redirect($this->generateUrl('ordvolvo_edit', array('id' => $id)));
+
+
+        return array(
+            'entity' => $ord,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
-        }
+    }
 
-    
     /**
      * Deletes a Ordvolvo entity.
      *
      * @Route("/{id}/delete", name="ordvolvo_delete")
      * @Method("post")
      */
-    public function deleteAction($id)
-    {
+    public function deleteAction($id) {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
@@ -470,15 +455,14 @@ class OrdvolvoController extends Controller
         return $this->redirect($this->generateUrl('ordvolvo'));
     }
 
-    private function createDeleteForm($id)
-    {
+    private function createDeleteForm($id) {
         return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm()
+                        ->add('id', 'hidden')
+                        ->getForm()
         ;
     }
-    
-     /**
+
+    /**
      * Finds and displays a precio Tipo Producto entity.
      *
      * @Route("/repvolvo/stock", name="orden_repvolvo_precio")
@@ -488,14 +472,13 @@ class OrdvolvoController extends Controller
         if ($isAjax) {
             $id = $this->getRequest()->get('id');
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);            
+            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);
             return new Response($entity->getPrecio());
         }
         return new Response('Error. This is not ajax!', 400);
     }
-    
-    
-     /**
+
+    /**
      * Finds and displays a precio Tipo Producto entity.
      *
      * @Route("/repvolvo/precio", name="orden_repvolvo_stock")
@@ -505,13 +488,13 @@ class OrdvolvoController extends Controller
         if ($isAjax) {
             $id = $this->getRequest()->get('id');
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);            
+            $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);
             return new Response($entity->getCantidad());
         }
         return new Response('Error. This is not ajax!', 400);
     }
-    
-     /**
+
+    /**
      * Finds and displays a precio Tipo Producto entity.
      *
      * @Route("/repvolvo/nombre", name="orden_repvolvo_nombre")
@@ -526,7 +509,7 @@ class OrdvolvoController extends Controller
         }
         return new Response('Error. This is not ajax!', 400);
     }
-    
+
     /**
      * Finds and displays a precio Tipo Producto entity.
      *
@@ -542,12 +525,11 @@ class OrdvolvoController extends Controller
         }
         return new Response('Error. This is not ajax!', 400);
     }
-    
+
     /**
      * @Route("/ajax_member", name="ajax_member")
      */
-    public function ajaxMemberAction(Request $request)
-    {
+    public function ajaxMemberAction(Request $request) {
         $value = $request->get('term');
 
         $em = $this->getDoctrine()->getEntityManager();
@@ -566,12 +548,11 @@ class OrdvolvoController extends Controller
 
         return $response;
     }
-    
+
     /**
      * @Route("/ajax", name="ajax")
      */
-    public function ajaxAction(Request $request)
-    {
+    public function ajaxAction(Request $request) {
         $value = $request->get('term');
 
         // .... (Search values)
@@ -585,11 +566,11 @@ class OrdvolvoController extends Controller
 
         return $response;
     }
-    
+
     /**
-* @Route("/ajax_agente", name="ajax_agente")
-*/
-public function ajaxAgenteAction() {
+     * @Route("/ajax_agente", name="ajax_agente")
+     */
+    public function ajaxAgenteAction() {
         $request = $this->getRequest();
         $value = $request->get('term');
 
@@ -609,34 +590,32 @@ public function ajaxAgenteAction() {
 
         return $response;
     }
-    
-     /**
+
+    /**
      * @Route("/ejemploless", name="ejemplo_less")
      * @Template()
      */
-    public function ejemplolessAction()
-    {
+    public function ejemplolessAction() {
         return array();
     }
-    
-        /**
+
+    /**
      * REPORTE DE TORNEO GRUPO EQUIPOS
      * 
      * @Route("/{id}/reporte", name="orden_imprimir")
      * @Template()
      */
-    public function imprimirOrdenAction($id)
-    {
+    public function imprimirOrdenAction($id) {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);        
-       
+        $entity = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Ordvolvo entity.');
         }
-        
+
         $contenido = $this->renderView('SistemaAdminBundle:Ordvolvo:imprimirOrden.pdf.twig', array(
-            'entity'    => $entity,            
+            'entity' => $entity,
         ));
 
         $pdf = <<<EOD
@@ -670,25 +649,24 @@ EOD;
 
         return $this->get('sistema_tcpdf')->quick_pdf($pdf);
     }
-    
-        /**
-     * REPORTE DE TORNEO GRUPO EQUIPOS
+
+    /**
+     * REPORTE
      * 
      * @Route("/{id}/remito", name="remito_imprimir")
      * @Template()
      */
-    public function imprimirRemitoAction($id)
-    {
+    public function imprimirRemitoAction($id) {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);        
-       
+        $entity = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
+
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Ordvolvo entity.');
         }
-        
+
         $contenido = $this->renderView('SistemaAdminBundle:Ordvolvo:imprimirRemito.pdf.twig', array(
-            'entity'    => $entity,            
+            'entity' => $entity,
         ));
 
         $pdf = <<<EOD
@@ -722,8 +700,8 @@ EOD;
 
         return $this->get('sistema_tcpdf')->quick_pdf($pdf);
     }
-    
-        /**
+
+    /**
      * REPORTE DE TORNEO GRUPO EQUIPOS
      * 
      * @Route("/{id}/ordenexcel", name="orden_imprimir_excel")
@@ -744,10 +722,10 @@ EOD;
         // Leemos un archivo Excel 2007
         $objReader = PHPExcel_IOFactory::createReader('Excel2007');
         $objPHPExcel = $objReader->load('archivo.xlsx');
-        
+
         $fecha = $entity->getFecha()->format('d-m-Y');
         // Indicamos que se pare en la hoja uno del libro
-        $objPHPExcel->setActiveSheetIndex(0);        
+        $objPHPExcel->setActiveSheetIndex(0);
         //Escribimos en la hoja en la celda B1
         $objPHPExcel->getActiveSheet()->SetCellValue('J6', $entity->getCotizacion());
         $objPHPExcel->getActiveSheet()->SetCellValue('K4', $fecha);
@@ -763,43 +741,43 @@ EOD;
         $objPHPExcel->getActiveSheet()->SetCellValue('F10', $entity->getKm());
         $objPHPExcel->getActiveSheet()->SetCellValue('J10', 'HS:');
         $objPHPExcel->getActiveSheet()->SetCellValue('K10', $entity->getHs());
-        
-        $a=14;
+
+        $a = 14;
         foreach ($entity->getSolicitudes() as $solicitud) {
-        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$a, $solicitud->getDescripcion());
-        $a++;
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $a, $solicitud->getDescripcion());
+            $a++;
         }
-        
-        $b=22;
+
+        $b = 22;
         foreach ($entity->getConsumos() as $consumo) {
-        $precio=$consumo->getSubtotal()/$consumo->getCantidad();
-        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$b, $consumo->getCantidad());
-        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$b, $consumo->getIdRepvolvo()->getCodigo());
-        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$b, $consumo->getIdRepvolvo()->getDescripcion());
-        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$b, $precio);
-        $objPHPExcel->getActiveSheet()->SetCellValue('K'.$b, $consumo->getSubtotal());
-        $b++;
+            $precio = $consumo->getSubtotal() / $consumo->getCantidad();
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $b, $consumo->getCantidad());
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $b, $consumo->getIdRepvolvo()->getCodigo());
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $b, $consumo->getIdRepvolvo()->getDescripcion());
+            $objPHPExcel->getActiveSheet()->SetCellValue('J' . $b, $precio);
+            $objPHPExcel->getActiveSheet()->SetCellValue('K' . $b, $consumo->getSubtotal());
+            $b++;
         }
-        
-        $c=34;
+
+        $c = 34;
         foreach ($entity->getOperaciones() as $operacion) {
-        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$c, $operacion->getDenominacion());
-        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$c, $operacion->getHs());
-        $objPHPExcel->getActiveSheet()->SetCellValue('K'.$c, $operacion->getSubtotal());       
-        $c++;
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $c, $operacion->getDenominacion());
+            $objPHPExcel->getActiveSheet()->SetCellValue('J' . $c, $operacion->getHs());
+            $objPHPExcel->getActiveSheet()->SetCellValue('K' . $c, $operacion->getSubtotal());
+            $c++;
         }
-        
-        $d=43;
+
+        $d = 43;
         foreach ($entity->getTerceros() as $tercero) {
-        $objPHPExcel->getActiveSheet()->SetCellValue('B'.$d, $tercero->getCantidad());
-        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$d, $tercero->getCantidad());
-        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$d, $tercero->getDenominacion());
-        $objPHPExcel->getActiveSheet()->SetCellValue('J'.$d, $tercero->getUnitario());
-        $objPHPExcel->getActiveSheet()->SetCellValue('K'.$d, $tercero->getSubtotal());
-        $d++;
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $d, $tercero->getCantidad());
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $d, $tercero->getCantidad());
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $d, $tercero->getDenominacion());
+            $objPHPExcel->getActiveSheet()->SetCellValue('J' . $d, $tercero->getUnitario());
+            $objPHPExcel->getActiveSheet()->SetCellValue('K' . $d, $tercero->getSubtotal());
+            $d++;
         }
-        
-        
+
+
 //        // Color rojo al texto
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
 //        // Texto alineado a la derecha
@@ -808,37 +786,34 @@ EOD;
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 //        $objPHPExcel->getActiveSheet()->getStyle('C14')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
         //Guardamos el archivo en formato Excel 2007
         //Si queremos trabajar con Excel 2003, basta cambiar el ‘Excel2007′ por ‘Excel5′ y el nombre del archivo de salida cambiar su formato por ‘.xls’
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save("Orden_volvo".$id.".xlsx");
+        $objWriter->save("Orden_volvo" . $id . ".xlsx");
         return $this->redirect($this->generateUrl('ordvolvo_show', array('id' => $id)));
     }
-    
-     /**
+
+    /**
      * @Route("/excel", name="excel")
      * @Template()
      */
-    public function excelAction($name="hola")
-    {       
+    public function excelAction($name = "hola") {
 
         // ask the service for a Excel5
         $excelService = $this->get('xls.service_xls5');
         // or $this->get('xls.service_pdf');
         // or create your own is easy just modify services.yml
-       
         // create the object see http://phpexcel.codeplex.com documentation
         $excelService->excelObj->getProperties()->setCreator("Maarten Balliauw")
-                            ->setLastModifiedBy("Maarten Balliauw")
-                            ->setTitle("Office 2005 XLSX Test Document")
-                            ->setSubject("Office 2005 XLSX Test Document")
-                            ->setDescription("Test document for Office 2005 XLSX, generated using PHP classes.")
-                            ->setKeywords("office 2005 openxml php")
-                            ->setCategory("Test result file");
+                ->setLastModifiedBy("Maarten Balliauw")
+                ->setTitle("Office 2005 XLSX Test Document")
+                ->setSubject("Office 2005 XLSX Test Document")
+                ->setDescription("Test document for Office 2005 XLSX, generated using PHP classes.")
+                ->setKeywords("office 2005 openxml php")
+                ->setCategory("Test result file");
         $excelService->excelObj->setActiveSheetIndex(0)
-                    ->setCellValue('A1', 'Hello')
-                    ->setCellValue('B2', 'world!');                    
+                ->setCellValue('A1', 'Hello')
+                ->setCellValue('B2', 'world!');
         $excelService->excelObj->getActiveSheet()->setTitle('Simple');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $excelService->excelObj->setActiveSheetIndex(0);
@@ -851,63 +826,59 @@ EOD;
         // If you are using a https connection, you have to set those two headers for compatibility with IE <9
         $response->headers->set('Pragma', 'public');
         $response->headers->set('Cache-Control', 'maxage=1');
-        return $response;        
+        return $response;
     }
-    
+
     /**
      * @Route("/verarticulos", name="ver_articulos")
      * @Template()
      */
-    public function verArticulosAction()
-{
+    public function verArticulosAction() {
         return $this->render('SistemaAdminBundle:Cliente:new.html.twig', array());
-}
+    }
 
-     /**
+    /**
      * Edits an existing Ordvolvo entity.
      *
      * @Route("/{id}/generaremito", name="ordvolvo_remito")     
      * @Template()
      */
-    public function GenerarRemitoAction($id, Request $request)
-{
-    $em = $this->getDoctrine()->getManager();
-    $ord = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
-    //$deleteForm = $this->createDeleteForm($id);
-    $rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
-    
-    if (!$ord) {
-        throw $this->createNotFoundException('No ord found for is '.$id);
-    }
-    $originalSolic= array();    
-    foreach ($ord->getSolicitudes() as $solicitud) {
-        $originalSolic[] = $solicitud;       
-    }
-    $originalCons= array();    
-    foreach ($ord->getConsumos() as $consumo) {
-        $originalCons[] = $consumo;
-        $consremito= new Consumo();
-        $consremito->setCantidad($consumo->getCantidad());
-        $consremito->setGarantia($consumo->getGarantia());
-        $consremito->setIdRepvolvo($consumo->getIdRepvolvo());
-        $consremito->setRemitovolvo($rem);
-        $consremito->setSubtotal($consumo->getSubtotal());
-        $rem->addConsumos($consremito);
-    }
-    $originalOper= array();    
-    foreach ($ord->getOperaciones() as $operacion) {
-        $originalOper[] = $operacion;       
-    }
-    $originalTerc= array();    
-    foreach ($ord->getTerceros() as $tercero) {
-        $originalTerc[] = $tercero;       
-    }
-    //var_dump($originalCons[0]);die();
-    
-    
+    public function GenerarRemitoAction($id, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $ord = $em->getRepository('SistemaAdminBundle:Ordvolvo')->find($id);
+        //$deleteForm = $this->createDeleteForm($id);
+        $rem = new \Sistema\AdminBundle\Entity\Remitovolvo();
+
+        if (!$ord) {
+            throw $this->createNotFoundException('No ord found for is ' . $id);
+        }
+        $originalSolic = array();
+        foreach ($ord->getSolicitudes() as $solicitud) {
+            $originalSolic[] = $solicitud;
+        }
+        $originalCons = array();
+        foreach ($ord->getConsumos() as $consumo) {
+            $originalCons[] = $consumo;
+            $consremito = new Consumo();
+            $consremito->setCantidad($consumo->getCantidad());
+            $consremito->setGarantia($consumo->getGarantia());
+            $consremito->setIdRepvolvo($consumo->getIdRepvolvo());
+            $consremito->setRemitovolvo($rem);
+            $consremito->setSubtotal($consumo->getSubtotal());
+            $rem->addConsumos($consremito);
+        }
+        $originalOper = array();
+        foreach ($ord->getOperaciones() as $operacion) {
+            $originalOper[] = $operacion;
+        }
+        $originalTerc = array();
+        foreach ($ord->getTerceros() as $tercero) {
+            $originalTerc[] = $tercero;
+        }
+        //var_dump($originalCons[0]);die();
 //    $editForm = $this->createForm(new RemitovolvoType(), $ord);
-            
-           
+
+
         $rem->setCliente($ord->getCliente());
         $rem->setChasis($ord->getChasis());
         $rem->setCotizacion($ord->getCotizacion());
@@ -917,23 +888,94 @@ EOD;
         $rem->setNeto($ord->getNeto());
         $rem->setEnvia('María Antonella Pescarolo');
         //$rem->setConsumos($originalCons);
-            $em->persist($rem);
-            $em->flush();
-                   
+        $em->persist($rem);
+        $em->flush();
 
-            
-            $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
 
-            return $this->redirect($this->generateUrl('remitovolvo_show', array('id' => $rem->getId())));
-        
-    
+
+        $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
+
+        return $this->redirect($this->generateUrl('remitovolvo_show', array('id' => $rem->getId())));
+
+
 //    return array(
 //            'entity'      => $ord,
 //            'edit_form'   => $editForm->createView(),
 //            'delete_form' => $deleteForm->createView(),
 //        );
-        }
+    }
 
+    /**
+     * @Route("/liquidacion", name="liquidacion")
+     * @Template()
+     */
+    public function LiquidacionAction() {
+        $form = $this->createForm(new LiquidacionType());
 
- 
+        return $this->render('SistemaAdminBundle:Ordvolvo:liquidacion.html.twig', array(
+                    'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/reporteliquidacion", name="reporteliquidacion")
+     * @Method("post")
+     * @Template()
+     */
+    public function ReporteliquidacionAction(Request $request) {
+        $ords = $request->request->get('liquidacion', array());
+        $fecha1 = $ords['fecha1'];
+        $fecha2 = $ords['fecha2'];
+        $em = $this->getDoctrine()->getEntityManager();
+        $query = $em->createQuery(
+                        'SELECT p FROM SistemaAdminBundle:Ordvolvo p WHERE p.fecha >= :fecha1 AND p.fecha <= :fecha2'
+                )->setParameter('fecha1', $fecha1)
+                 ->setParameter('fecha2', $fecha2);
+
+        $ordenes = $query->getResult();                
+        
+        $em1 = $this->getDoctrine()->getEntityManager();
+        $query1 = $em1->createQuery(
+                        'SELECT p FROM SistemaAdminBundle:Remitovolvo p WHERE p.fecha >= :fecha1 AND p.fecha <= :fecha2'
+                )->setParameter('fecha1', $fecha1)
+                 ->setParameter('fecha2', $fecha2);
+
+        $remitos = $query1->getResult();
+        $contenido = $this->renderView('SistemaAdminBundle:Ordvolvo:imprimirLiquidacion.pdf.twig', array(
+            'entity' => $ordenes,
+            'remitos' => $remitos,
+        ));
+
+        $pdf = <<<EOD
+<style>
+table {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 10pt;
+}
+.table-bordered {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-collapse: separate;
+    border-color: #DDDDDD;
+    border-image: none;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+}
+.table-bordered td {
+    border: solid thin #DDDDDD;
+}
+.table-bordered td.th {
+    font-weight: bold;
+}
+</style>
+$contenido
+EOD;
+
+        return $this->get('sistema_tcpdf')->quick_pdf($pdf);
+    }
+
 }

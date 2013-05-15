@@ -1,0 +1,20 @@
+{% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
+
+
+{% block page %}
+<link href="{{ asset('css/blitzer/jquery-ui-1.9.0.custom.min.css') }}" rel="stylesheet">
+{{ form_stylesheet(form) }}
+    <script src="{{ asset('js/jquery-1.8.2.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui-1.9.0.custom.min.js') }}"></script>
+    {{ form_javascript(form) }}
+<h2>Seleccionar Período a Liquidar</h2>
+<form class="well" action="{{ path('reporteliquidacion') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_row(form.fecha1) }}
+    {{ form_row(form.fecha2) }}
+    {{ form_rest(form) }}    
+    <p>
+        <button type="submit" class="btn btn-success">Liquidar</button>
+    </p>
+</form> 
+{% endblock %}
+

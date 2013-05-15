@@ -308,7 +308,7 @@ class RepvolvoController extends Controller {
        $excel = $this->get('os.excel');
        $excel->loadFile("excel.xlsx");
        $num=$excel->getRowCount();
-       $con = pg_connect("host=localhost port=5432 dbname=pescarolo user=admin_postgres password=admpostgres");
+       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");
        $query="TRUNCATE repvolvo CASCADE";
        $result=pg_query($con, $query)or die('ERROR AL INSERTAR DATOS: ' . pg_last_error());
        for ($i = 1; $i <= $num; $i++) {
@@ -318,7 +318,8 @@ class RepvolvoController extends Controller {
 //       echo $hola[0].",".$hola[1].",".$hola[2].",".$hola[3];       
        }
        $pedidos="Carga Exitosa";
-       return array('entities' => $pedidos);
+       //return array('entities' => $pedidos);
+       return $this->redirect($this->generateUrl('repvolvo', array()));
     }
     
 }

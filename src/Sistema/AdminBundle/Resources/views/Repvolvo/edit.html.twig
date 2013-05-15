@@ -6,7 +6,7 @@
 
 {% block page %}
 
-<h1>Repvolvo {{ 'views.edit.edit'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+<h1>Editar Repuesto</h1>
 
 <form class="well" action="{{ path('repvolvo_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
     {{ form_widget(edit_form) }}

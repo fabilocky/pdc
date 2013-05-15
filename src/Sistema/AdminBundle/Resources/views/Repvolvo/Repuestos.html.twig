@@ -2,10 +2,12 @@
 
 
 {% block page %}
-<h1>Cargar planilla Excel</h1>
+<h2>Cargar planilla Excel</h2>
 <form class="well" action="subir" method="post" enctype="multipart/form-data">    	 
-   	 <input name="userfile" type="file"> 
-   	 <br> 
+   	 <input class="btn btn-file" name="userfile" type="file"> 
+   	 <br>
+         <br>
+         <br>
    	 <input type="submit" class="btn btn-success" value="Enviar"> 
 </form> 
 {% endblock %}

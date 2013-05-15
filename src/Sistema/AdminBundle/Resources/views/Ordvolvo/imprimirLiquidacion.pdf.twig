@@ -1,0 +1,131 @@
+<table>    
+        {% for ent in entity %}
+        <tr>
+            <td align="right" style="font-weight: bold">Orden Nro: {{ ent.id }}</td>
+            <td align="right" style="font-weight: bold">Fecha: {{ ent.fecha|date('d-m-Y') }}</td>
+        </tr>
+        {% endfor %}
+                       
+</table>
+<table class="table-bordered">
+    <tbody>
+        <tr>            
+            <td align="center" class="th"></td>
+            <td align="center" class="th">ORDENES</td>
+            <td align="center" class="th">FECHA</td>
+            <td align="center" class="th">CHASIS</td>
+            <td align="center" class="th">MANO DE OBRA</td>
+            <td align="center" class="th">TERCEROS</td>
+            <td align="center" class="th">% REPUESTOS</td>
+        </tr>       
+        {% set i = 1 %}
+        {% set totop = 0 %}
+        {% set toter = 0 %}
+        {% set totrep = 0 %}
+        {% for entity in entity %}
+        <tr>            
+            <td>{{ entity.id }}</td>
+            <td>{{ entity.cliente }}</td>
+            <td>{{ entity.fecha|date('d-m-Y') }}</td>
+            <td>{{ entity.chasis }}</td>
+            {% set op = 0 %}
+            {% for operacion in entity.operaciones %}
+                {% set op = op + operacion.subtotal %}                
+            {% endfor %}
+            {% set totop = totop + op %}
+            <td>{{ op }}</td>
+            {% set ter = 0 %}
+            {% for tercero in entity.terceros %}
+                {% set ter = ter + tercero.subtotal %}
+            {% endfor %}
+            {% set toter = toter + ter %}
+            <td>{{ ter }}</td>
+            {% set rep = 0 %}
+            {% for repuesto in entity.consumos %}
+                {% set rep = rep + repuesto.idRepvolvo.precio %}
+                {% set rep = rep * entity.cotizacion %}
+                {% set rep = rep * 0.15 %}                
+            {% endfor %}
+            {% set totrep = totrep + rep %}
+            <td>{{ rep|number_format(2, '.', ',') }}</td>
+            {% set i = i + 1 %}
+        </tr>
+        {% endfor %}
+        <tr>            
+            <td class="th"></td> 
+            <td class="th"></td>
+            <td class="th"></td>
+            <td class="th"></td>
+            <td class="th" style="background-color: greenyellow">{{ totop }}</td>
+            <td class="th" style="background-color: greenyellow">{{ toter }}</td>
+            <td class="th" style="background-color: greenyellow">{{ totrep|number_format(2, '.', ',') }}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<table class="table-bordered">
+    <tbody>
+        <tr>            
+            <td align="center" class="th"></td>
+            <td align="center" class="th">REMITOS</td>
+            <td align="center" class="th">FECHA</td>            
+            <td align="center" class="th">REPUESTOS</td>
+        </tr>       
+        {% set i = 1 %}        
+        {% set totreprem = 0 %}
+        {% for remito in remitos %}
+        <tr>            
+            <td>{{ remito.id }}</td>
+            <td>{{ remito.cliente }}</td>
+            <td>{{ remito.fecha|date('d-m-Y') }}</td>                        
+            {% set rep = 0 %}
+            {% for repuesto in remito.consumos %}
+                {% set rep = rep + repuesto.idRepvolvo.precio %}
+                {% set rep = rep * remito.cotizacion %}                                
+            {% endfor %}
+            {% set totreprem = totreprem + rep %}
+            <td>{{ rep|number_format(2, '.', ',') }}</td>
+            {% set i = i + 1 %}
+        </tr>
+        {% endfor %}
+        <tr>            
+            <td class="th"></td> 
+            <td class="th"></td>
+            <td class="th"></td>            
+            <td class="th" style="background-color: red">{{ totreprem|number_format(2, '.', ',') }}</td>
+        </tr>
+    </tbody>
+</table>
+{% set totordenes = totop + totrep + toter %}
+<br>
+<br>
+<table class="table-bordered">
+    <tbody>
+        <tr>            
+            <td class="th">Total Ordenes</td>
+            <td class="th" style="background-color: greenyellow">{{ totordenes|number_format(2, '.', ',') }}</td>            
+        </tr>
+        <tr>            
+            <td class="th">Total Remitos</td>
+            <td class="th" style="background-color: lightcoral">{{ totreprem|number_format(2, '.', ',') }}</td>            
+        </tr>
+        <br>
+        {% set resta = totordenes - totreprem %}
+        <tr> 
+            <td class="th">Neto</td>            
+            <td class="th" style="background-color: lightblue">{{ resta|number_format(2, '.', ',') }}</td>
+        </tr>
+        {% set iva = resta * 0.21 %}
+        <tr> 
+            <td class="th">IVA</td>            
+            <td class="th" style="background-color: lightblue">{{ iva|number_format(2, '.', ',') }}</td>
+        </tr>
+        <br>
+        {% set total = resta + iva %}
+        <tr> 
+            <td class="th">Total</td>            
+            <td class="th" style="background-color: yellow">{{ total|number_format(2, '.', ',') }}</td>
+        </tr>
+    </tbody>
+</table>
+

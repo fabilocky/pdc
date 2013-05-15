@@ -138,7 +138,7 @@
             </tbody>
         </table>
             <div id="articulos"></div>
-            
+        <h2>Solicitudes</h2>     
         <div class="titulos">
             <div class="tituloproducto">Solicitud de Reparación</div>        
         </div>  
@@ -149,6 +149,7 @@
                 <li></li>            
         {% endfor %}            
             </ul>
+        <h2>Consumo de Repuestos y Lubricantes</h2> 
     {#{{ form_row(form.fecha) }}#}
             <div class="titulos">
                 <div class="tituloproducto">Codigo</div>
@@ -169,6 +170,7 @@
                     <li>{{ form_row(consumos.subtotal) }}</li>
         {% endfor %}            
                 </ul>
+        <h2>Operaciones</h2> 
                 <div class="titulos">
                     <div class="tituloperaciones">Denominación</div>
                     <div class="titulohs">Hs</div>                    
@@ -182,6 +184,7 @@
                         <li>{{ form_row(operaciones.subtotal) }}</li>            
         {% endfor %}            
                     </ul>
+        <h2>Operaciones de terceros</h2> 
                     <div class="titulos">
                         <div class="tituloperaciones">Denominación</div>
                         <div class="titulocant">Cantidad</div>
@@ -358,16 +361,13 @@
                                         stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
                                         if(isNaN(stock)){
                                           alert('Sin Stock');
-                                          die();                                          
+                                          //die();                                        
                                         }
                                         if(isNaN(cotizacion)){
                                                  alert('indique cotizacion y realice nuevamente la acción');
-                                                 die();
+                                                 //die();
                                                  }
-                                        if(stock==0){
-                                           alert('Sin Stock');
-                                           die();
-                                        }else{                                                                                
+                                        else{                                                                                
                                         porc=porc/100;
                                         precioPesos = data * cotizacion;
                                         precioPesos = precioPesos + (precioPesos * porc);

@@ -1,7 +1,7 @@
 {% extends 'JordiLlonchCrudGeneratorBundle::layout.html.twig' %}
 
 {% block title %}
-{{ parent() }} - Ordvolvo {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
+{{ parent() }} - Lista de Ordenes - Volvo
 {% endblock %}
 
 {% block page %}
@@ -9,7 +9,7 @@
 <div class="row">
 
     <div class="span8">
-        <h1>Ordvolvo {{ 'views.index.list'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</h1>
+        <h1>Lista de Ordenes - Volvo</h1>
     </div>
     <div class="span2">
         {% if form_errors(filterForm) %}
@@ -68,14 +68,9 @@
             <th>Cotizacion</th>
             <th>Cliente</th>
             <th>Cuit</th>
-            <th>Chofer</th>
-            <th>Telefono</th>
+            <th>Chofer</th>           
             <th>Chasis</th>
-            <th>Modelo</th>
-            <th>Dominio</th>
-            <th>Km</th>
-            <th>Hs</th>
-            <th>Color</th>
+            <th>Modelo</th>           
             <th>Neto</th>
             <th>Iva</th>
             <th>Total</th>
@@ -90,14 +85,9 @@
             <td>{{ entity.cotizacion }}</td>
             <td>{{ entity.cliente }}</td>
             <td>{{ entity.cliente.cuit }}</td>
-            <td>{{ entity.chofer }}</td>
-            <td>{{ entity.cliente.telefono }}</td>
+            <td>{{ entity.chofer }}</td>            
             <td>{{ entity.chasis }}</td>
-            <td>{{ entity.modelo }}</td>
-            <td>{{ entity.dominio }}</td>
-            <td>{{ entity.km }}</td>
-            <td>{{ entity.hs }}</td>
-            <td>{{ entity.color }}</td>
+            <td>{{ entity.modelo }}</td>            
             <td>{{ entity.neto }}</td>
             <td>{{ entity.iva }}</td>
             <td>{{ entity.total }}</td>
