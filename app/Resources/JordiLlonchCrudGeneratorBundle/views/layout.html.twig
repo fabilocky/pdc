@@ -81,7 +81,11 @@
 							<li {% if app.request.pathinfo ==  '/admin/remitovolvo/' %} class="active" {% endif %}>
                                                             <a href="{{ path('remitovolvo') }}">Remitos - Volvo</a></li>
                                                         <li {% if app.request.pathinfo ==  '/admin/repvolvo/' %} class="active" {% endif %}>
-                                                            <a href="{{ path('repvolvo') }}">Repuestos - Volvo</a></li>                                                       
+                                                            <a href="{{ path('repvolvo') }}">Repuestos - Volvo</a></li>
+                                                        <li {% if app.request.pathinfo ==  '/admin/ordvolvo/liquidacion' %} class="active" {% endif %}>
+                                                            <a href="{{ path('liquidacion') }}">Liquidacion - Volvo</a></li>
+                                                        <li {% if app.request.pathinfo ==  '/admin/renaultorden/' %} class="active" {% endif %}>
+                                                            <a href="{{ path('renaultorden') }}">Ordenes - Renault</a></li>
                                                     {% elseif is_granted('ROLE_CAJERO') %}
                                                         <li {% if app.request.pathinfo ==  '/admin/caja/' %} class="active" {% endif %}>
                                                             <a href="{{ path('admin_index') }}">Inicio</a></li>
@@ -124,7 +128,7 @@
 			<footer>
 				<div class="wrapper">
 					<section class="col1 pad_left1">
-						<h3>Hecho por: <span>Fabián Serafini</span></h3>
+						<h3>Hecho por: <span>Fabián Serafini y Emanuel Duprat</span></h3>
 					</section>
 					<section class="col2 pad_left1">
 						<h3>Seguinos </h3>
