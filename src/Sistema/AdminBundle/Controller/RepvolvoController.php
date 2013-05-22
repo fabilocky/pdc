@@ -313,7 +313,7 @@ class RepvolvoController extends Controller {
        $result=pg_query($con, $query)or die('ERROR AL INSERTAR DATOS: ' . pg_last_error());
        for ($i = 1; $i <= $num; $i++) {
        $hola=$excel->getRowData($i);
-       $query ="INSERT INTO repvolvo (id, codigo, descripcion, cd, precio, cantidad) VALUES ('$i', '$hola[0]', '$hola[1]','$hola[2]','$hola[3]','0')"; 
+       $query ="INSERT INTO repvolvo (id, codigo, descripcion, cd, precio, cantidad, tipo) VALUES ('$i', '$hola[0]', '$hola[1]','$hola[2]','$hola[3]','0', 'Volvo')"; 
        $result=pg_query($con, $query);
 //       echo $hola[0].",".$hola[1].",".$hola[2].",".$hola[3];       
        }

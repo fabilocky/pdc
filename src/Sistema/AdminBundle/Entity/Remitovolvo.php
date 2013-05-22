@@ -98,9 +98,16 @@ class Remitovolvo
      */
     private $consumos;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Renaultconsumo", mappedBy="remitovolvo", cascade={"persist"})
+     * @var type 
+     */
+    private $consumosrenault;
+    
     public function __construct()
     {        
-        $this->consumos = new \Doctrine\Common\Collections\ArrayCollection();       
+        $this->consumos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->consumosrenault = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fecha =  new \DateTime();
     }
 
@@ -373,6 +380,37 @@ class Remitovolvo
     public function addConsumos(\Sistema\AdminBundle\Entity\Consumo $consumos)
     {
         $this->consumos[] = $consumos;
+        $consumos->setRemitovolvo($this);
+    }
+    
+     /**
+     * Get ConsumosRenault
+     * 
+     * @return type 
+     */
+    public function getConsumosRenault()
+    {
+        return $this->consumosrenault;
+    }
+ 
+    /**
+     * Set ConsumosRenault
+     * 
+     * @param ArrayCollection $consumosrenault 
+     */
+    public function setConsumosRenault(ArrayCollection $consumosrenault)
+    {
+        $this->consumosrenault = $consumosrenault;
+    }
+    
+    /**
+     * Add consumos
+     *
+     * @param Sistema\AdminBundle\Entity\Renaultconsumo $consumos
+     */
+    public function addConsumosRenault(\Sistema\AdminBundle\Entity\Renaultconsumo $consumos)
+    {
+        $this->consumosrenault[] = $consumos;
         $consumos->setRemitovolvo($this);
     }
 }

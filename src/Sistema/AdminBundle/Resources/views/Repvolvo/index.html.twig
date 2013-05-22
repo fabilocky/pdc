@@ -57,6 +57,7 @@
             <th>Descripcion</th>
             <th>Cd</th>
             <th>Precio</th>
+            <th>Tipo</th>
             <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
         </tr>
     </thead>
@@ -68,6 +69,7 @@
             <td>{{ entity.descripcion }}</td>
             <td>{{ entity.cd }}</td>
             <td>{{ entity.precio }}</td>
+            <td>{{ entity.tipo }}</td>
             <td>
         <a class="btn btn-mini" href="{{ path('repvolvo_show', { 'id': entity.id }) }}">
             {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}

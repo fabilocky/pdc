@@ -57,14 +57,14 @@ class Renaultconsumo
     private $remitovolvo;
     
     /**
-     * @var Renaultrepuestos
+     * @var Repvolvo
      *
-     * @ORM\ManyToOne(targetEntity="Renaultrepuestos")
+     * @ORM\ManyToOne(targetEntity="Repvolvo")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_repvolvo", referencedColumnName="id")
      * })
      */
-    private $idRenaultrepuestos;
+    private $idRepvolvo;
         
     /**
      * Get id
@@ -186,26 +186,26 @@ class Renaultconsumo
     }
     
     /**
-     * Set idRenaultrepuestos
+     * Set idRepvolvo
      *
-     * @param Sistema\AdminBundle\Entity\Renaultrepuestos $idRenaultrepuestos
+     * @param Sistema\AdminBundle\Entity\Repvolvo $idRepvolvo
      * @return Renaultconsumo
      */
-    public function setIdRenaultrepuestos(\Sistema\AdminBundle\Entity\Renaultrepuestos $idRenaultrepuestos = null)
+    public function setIdRepvolvo(\Sistema\AdminBundle\Entity\Repvolvo $idRepvolvo = null)
     {
-        $this->idRenaultrepuestos = $idRenaultrepuestos;
+        $this->idRepvolvo = $idRepvolvo;
     
         return $this;
     }
 
     /**
-     * Get idRenaultrepuestos
+     * Get idRepvolvo
      *
-     * @return Sistema\AdminBundle\Entity\Renaultrepuestos
+     * @return Sistema\AdminBundle\Entity\Repvolvo
      */
-    public function getIdRenaultrepuestos()
+    public function getIdRepvolvo()
     {
-        return $this->idRenaultrepuestos;
+        return $this->idRepvolvo;
     }
     
 }

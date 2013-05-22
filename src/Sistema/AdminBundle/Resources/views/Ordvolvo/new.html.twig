@@ -347,6 +347,11 @@
                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(data);
                                       }
                                     });
+                                    stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
+                                        if(isNaN(stock)){
+                                          alert('Sin Stock');
+                                          //die();                                        
+                                        }
                                 }
     
                                 function consultaPrecio(id, cantidadAddJs){
@@ -357,12 +362,7 @@
                                       success: function(data) {
                                         //$('.result').html(data);
                                         cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10)
-                                        porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)
-                                        stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
-                                        if(isNaN(stock)){
-                                          alert('Sin Stock');
-                                          //die();                                        
-                                        }
+                                        porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)                                        
                                         if(isNaN(cotizacion)){
                                                  alert('indique cotizacion y realice nuevamente la acción');
                                                  //die();

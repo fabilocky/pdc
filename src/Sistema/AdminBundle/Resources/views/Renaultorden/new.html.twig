@@ -149,7 +149,7 @@
         </table>
         <h2>Solicitudes</h2>                     
         <div id="articulos"></div>        
-        <div class="titulos">
+<div class="titulos">
             <div class="tituloproducto">Solicitud de Reparación</div>        
         </div>  
         <ul class="tags1" data-prototype1="{{ form_widget(form.solicitudes.vars.prototype)|e }}">       
@@ -159,7 +159,7 @@
                 <li></li>            
         {% endfor %}            
             </ul>
-        <h2>Consumo de repuestos y lubricantes</h2>        
+        <h2>Consumo de Repuestos y Lubricantes</h2> 
     {#{{ form_row(form.fecha) }}#}
             <div class="titulos">
                 <div class="tituloproducto">Codigo</div>
@@ -174,12 +174,13 @@
             <ul class="tags" data-prototype="{{ form_widget(form.consumos.vars.prototype)|e }}">       
         {# iterate over each existing tag and render its only field: name #}
         {% for consumos in form.consumos %}
-                    <li>{{ form_row(consumos.idRenaultrepuestos) }}</li>
+                    <li>{{ form_row(consumos.idRepvolvo) }}</li>
                     <li>{{ form_row(consumos.Precio) }}</li>
                     <li>{{ form_row(consumos.cantidad) }}</li>            
                     <li>{{ form_row(consumos.subtotal) }}</li>
         {% endfor %}            
                 </ul>
+        <h2>Operaciones</h2> 
                 <div class="titulos">
                     <div class="tituloperaciones">Denominación</div>
                     <div class="titulohs">Hs</div>                    
@@ -193,6 +194,7 @@
                         <li>{{ form_row(operaciones.subtotal) }}</li>            
         {% endfor %}            
                     </ul>
+        <h2>Operaciones de terceros</h2> 
                     <div class="titulos">
                         <div class="tituloperaciones">Denominación</div>
                         <div class="titulocant">Cantidad</div>
@@ -224,13 +226,6 @@
                                 </a>
                             </div>
                         </div>
-
-{#<script src="{{ asset('js/jquery-ui-timepicker-addon.js') }}"></script>
-<script>
-    $('.date').datetimepicker({ dateFormat: 'dd-mm-yy',changeMonth: true,
-            changeYear: true, showSecond: true, timeFormat: 'hh:mm:ss', })
-    
-</script>#}
                         <script>
                         var cantidadAddJs = 0;
                         var collectionHolder = $('ul.tags');
@@ -295,14 +290,14 @@
                                     //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
                                     //var $newAddTwig = $('<div><\/div>').append($addTwig);
                                     //$newLinkLi.before($newAddTwig);
-                                    var $addJs = 
+                                    var $addJ = 
                                         "$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaStock($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"                                 
                                     ;
-                                    var $newAddJs = $('<script><\/script>').append($addJs);
+                                    var $newAddJ = $('<script><\/script>').append($addJ);
                                     //$('<div></div>').append($newAddJs);
-                                    $newLinkLi.before($newAddJs);
+                                    $newLinkLi.before($newAddJ);
                                 }
                                 function cargarAddJs(cantidadAddJs){
                                     //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
@@ -310,7 +305,7 @@
                                     //$newLinkLi.before($newAddTwig);
                                     var $addJs = 
                                         //"$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                        //   "consultaStock($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        //    "consultaStock($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         //"});"+
                                         "$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaNombre($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
@@ -320,7 +315,10 @@
                                         "});"+
                                         "$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaPrecio($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        "});"                                 
+                                        "});"+
+                                        "$('#renaultorden_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaId($('#renaultorden_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "});" 
                                     ;
                                     var $newAddJs = $('<script><\/script>').append($addJs);
                                     //$('<div></div>').append($newAddJs);
@@ -344,7 +342,7 @@
                                 
                                 function consultaStock(id, cantidadAddJs){
                                     $.ajax({
-                                      url: '{{ path('orden_renaultrepuestos_stock') }}',
+                                      url: '{{ path('orden_repvolvo_stock') }}',
                                       type: "POST",
                                       data: { "id" : id },
                                       success: function(data) {
@@ -352,30 +350,27 @@
                                        $('#renaultorden_consumos_'+cantidadAddJs+'_stock').val(data);
                                       }
                                     });
+                                    stock=parseFloat($('#renaultorden_consumos_'+cantidadAddJs+'_stock').val(), 10)
+                                        if(isNaN(stock)){
+                                          alert('Sin Stock');
+                                          //die();                                        
+                                        }
                                 }
     
                                 function consultaPrecio(id, cantidadAddJs){
                                     $.ajax({
-                                      url: '{{ path('orden_renaultrepuestos_precio') }}',
+                                      url: '{{ path('orden_repvolvo_precio') }}',
                                       type: "POST",
                                       data: { "id" : id },
                                       success: function(data) {
                                         //$('.result').html(data);
                                         cotizacion=parseFloat($('#renaultorden_cotizacion').val(), 10)
-                                        porc=parseFloat($('#renaultorden_porc_rep').val(), 10)
-                                        stock=parseFloat($('#renaultorden_consumos_'+cantidadAddJs+'_stock').val(), 10)
-                                        if(isNaN(stock)){
-                                          alert('Sin Stock');
-                                          die();                                          
-                                        }
+                                        porc=parseFloat($('#renaultorden_porc_rep').val(), 10)                                        
                                         if(isNaN(cotizacion)){
                                                  alert('indique cotizacion y realice nuevamente la acción');
-                                                 die();
+                                                 //die();
                                                  }
-                                        if(stock==0){
-                                           alert('Sin Stock');
-                                           die();
-                                        }else{                                                                                
+                                        else{                                                                                
                                         porc=porc/100;
                                         precioPesos = data * cotizacion;
                                         precioPesos = precioPesos + (precioPesos * porc);
@@ -414,15 +409,27 @@
     
                                 function consultaNombre(id, cantidadAddJs){
                                     $.ajax({
-                                      url: '{{ path('orden_renaultrepuestos_nombre') }}',
+                                      url: '{{ path('orden_repvolvo_nombre') }}',
                                       type: "POST",
                                       data: { "id" : id },
                                       success: function(data) {
                                         //$('.result').html(data);            
-                                        $('#renaultorden_consumos_'+cantidadAddJs+'_idRenaultrepuestos').val(data);            
+                                        $('#renaultorden_consumos_'+cantidadAddJs+'_Repvolvo').val(data);            
                                       }
                                     });
-                                }                               
+                                }  
+                                
+                                function consultaId(id, cantidadAddJs){
+                                    $.ajax({
+                                      url: '{{ path('orden_repvolvo_id') }}',
+                                      type: "POST",
+                                      data: { "id" : id },
+                                      success: function(data) {
+                                        //$('.result').html(data);            
+                                        $('#renaultorden_consumos_'+cantidadAddJs+'_idRep').val(data);            
+                                      }
+                                    });
+                                } 
                                 
     
                                 function calculaTotal(cantidadAddJs){
@@ -580,7 +587,6 @@
     
                                             cantidadAddJs2 = cantidadAddJs2+1;
                                             cargarAddJs2(cantidadAddJs2);
-                                            
                                         }
 
                                             </script>

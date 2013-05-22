@@ -16,6 +16,11 @@ class RepvolvoType extends AbstractType
             ->add('cd')
             ->add('precio')
             ->add('cantidad')
+            ->add('tipo', 'choice', array(
+    'choices'   => array('volvo' => 'Volvo', 'renault' => 'Renault', 'pdc' => 'PDC'),
+    'required'  => false,
+));
+                
         ;
     }
 

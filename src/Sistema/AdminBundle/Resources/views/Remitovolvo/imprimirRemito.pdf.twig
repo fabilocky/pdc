@@ -51,6 +51,17 @@
             <td>${{ consumos.subtotal }}</td>
         </tr>
         {% set suma = suma + consumos.subtotal %}
+        {% endfor %}        
+        {% for consumos in entity.consumosrenault %}
+        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}        
+        <tr>            
+            <td>{{ consumos.cantidad }}</td>
+            <td>{{ consumos.idRepvolvo.codigo }}</td>
+            <td>{{ consumos.idRepvolvo }}</td>
+            <td>${{ pesos|number_format(2, '.', ',') }}</td>
+            <td>${{ consumos.subtotal }}</td>
+        </tr>
+        {% set suma = suma + consumos.subtotal %}
         {% endfor %}
         <tr>            
             <td colspan="4" class="th" align="right" style="font-weight: bold; width: 85%">Total Sin IVA</td>

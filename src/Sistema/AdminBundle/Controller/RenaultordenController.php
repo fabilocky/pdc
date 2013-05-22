@@ -13,7 +13,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 use Sistema\AdminBundle\Entity\Renaultorden;
 use Sistema\AdminBundle\Form\RenaultordenType;
 use Sistema\AdminBundle\Form\RenaultordenFilterType;
-
+use Sistema\AdminBundle\Entity\Renaultconsumo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -206,30 +206,34 @@ class RenaultordenController extends Controller
                 $ord->addSolicitudes($solicitud);
             }
         }       
-        $sumaNeto=0;
-        $cont=0;
+        $sumaNeto = 0;
+        $cont = 0;
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
-            foreach($consumos as $consumo) {               
-                $id1=$consumo["idRenaultrepuestos"];
+            $repuestos = array();            
+            foreach ($consumos as $consumo) {
+                $id1 = $consumo["idRep"];                
                 $em1 = $this->getDoctrine()->getManager();
-                $rep = $em1->getRepository('SistemaAdminBundle:Renaultrepuestos')->find($id1);
-                $rep->setCantidad($rep->getCantidad()-1);
+                $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($id1);
+                $rep->setCantidad($rep->getCantidad() - 1);
                 $em1->persist($rep);
-                $sumaNeto= $sumaNeto + $consumo['subtotal'];
+                $sumaNeto = $sumaNeto + $consumo['subtotal'];
                 $str = $consumo['subtotal'];
-                $fa=str_replace(".", ",",$str);
-                $consumo['subtotal']=$fa;                
-                $cont=$cont+1;
-                
+                $fa = str_replace(".", ",", $str);
+                $consumo['subtotal'] = $fa;
+                $cont = $cont + 1;
+                $repuestos[$cont]=$rep;
+                $repuestos[0]=$rep;
             }
-            for ($i = 0; $i <= $cont; $i++) {               
-                $consumos[$i] = new \Sistema\AdminBundle\Entity\Renaultconsumo();            
+            //var_dump($ids[0]);
+            for ($i = 0; $i <= $cont; $i++) {
+//                var_dump($consumos[2]);die();                
+                $consumos[$i] = new Renaultconsumo();
+                $consumos[$i]->setidRepvolvo($repuestos[$i]);
                 $ord->addConsumos($consumos[$i]);
-                
             }
-        }       
+        }
         
         $cont1=0;
         if (isset($ords['operaciones'])) {
@@ -623,13 +627,13 @@ EOD;
     $originalCons= array();    
     foreach ($ord->getConsumos() as $consumo) {
         $originalCons[] = $consumo;
-        $consremito= new Consumo();
+        $consremito= new \Sistema\AdminBundle\Entity\Renaultconsumo();
         $consremito->setCantidad($consumo->getCantidad());
         $consremito->setGarantia($consumo->getGarantia());
         $consremito->setIdRepvolvo($consumo->getIdRepvolvo());
         $consremito->setRemitovolvo($rem);
         $consremito->setSubtotal($consumo->getSubtotal());
-        $rem->addConsumos($consremito);
+        $rem->addConsumosRenault($consremito);
     }
     $originalOper= array();    
     foreach ($ord->getOperaciones() as $operacion) {

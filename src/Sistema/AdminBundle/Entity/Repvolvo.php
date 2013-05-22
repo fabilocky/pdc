@@ -55,6 +55,13 @@ class Repvolvo
      * @ORM\Column(name="cantidad", type="integer", nullable=true)
      */
     private $cantidad;
+    
+    /**
+     * @var string $tipo
+     *
+     * @ORM\Column(name="tipo", type="string", length=255, nullable=true)
+     */
+    private $tipo;
 
     public function __toString() {
 //        return $this->codigo." - ".$this->descripcion;
@@ -184,5 +191,28 @@ class Repvolvo
     public function getCantidad()
     {
         return $this->cantidad;
+    }
+    
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     * @return Repvolvo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string 
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
     }
 }
