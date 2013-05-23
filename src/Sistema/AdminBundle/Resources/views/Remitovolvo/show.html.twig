@@ -60,6 +60,15 @@
                 <td>{{ consumos.subtotal }}</td>                
             </tr>
         {% endfor %}
+        {% for consumos in entity.consumosrenault %}
+            <tr>            
+                <td>{{ consumos.cantidad }}</td>
+                <td>{{ consumos.idRepvolvo.codigo }}</td>
+                <td>{{ consumos.idRepvolvo }}</td>
+                <td>{{ consumos.idRepvolvo.precio }}</td>
+                <td>{{ consumos.subtotal }}</td>                
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 

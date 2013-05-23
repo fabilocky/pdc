@@ -624,17 +624,22 @@ EOD;
     foreach ($ord->getSolicitudes() as $solicitud) {
         $originalSolic[] = $solicitud;       
     }
-    $originalCons= array();    
+    $originalCons= array();
+    $count=0;
     foreach ($ord->getConsumos() as $consumo) {
-        $originalCons[] = $consumo;
-        $consremito= new \Sistema\AdminBundle\Entity\Renaultconsumo();
-        $consremito->setCantidad($consumo->getCantidad());
-        $consremito->setGarantia($consumo->getGarantia());
-        $consremito->setIdRepvolvo($consumo->getIdRepvolvo());
-        $consremito->setRemitovolvo($rem);
-        $consremito->setSubtotal($consumo->getSubtotal());
-        $rem->addConsumosRenault($consremito);
-    }
+            if ($consumo->getIdRepvolvo()->getTipo() == 'volvo') {
+                $originalCons[] = $consumo;
+                $consremito = new \Sistema\AdminBundle\Entity\Renaultconsumo();
+                $consremito->setCantidad($consumo->getCantidad());
+                $consremito->setGarantia($consumo->getGarantia());
+                $consremito->setIdRepvolvo($consumo->getIdRepvolvo());
+                $consremito->setIdRepvolvo($consumo->getIdRepvolvo());
+                $consremito->setRemitovolvo($rem);
+                $consremito->setSubtotal($consumo->getSubtotal());
+                $rem->addConsumosRenault($consremito);
+                $count++;
+            }
+        }
     $originalOper= array();    
     foreach ($ord->getOperaciones() as $operacion) {
         $originalOper[] = $operacion;       
@@ -643,31 +648,30 @@ EOD;
     foreach ($ord->getTerceros() as $tercero) {
         $originalTerc[] = $tercero;       
     }
-    //var_dump($originalCons[0]);die();
-    
-    
-//    $editForm = $this->createForm(new RemitovolvoType(), $ord);
-            
-           
-        $rem->setCliente($ord->getCliente());
-        $rem->setChasis($ord->getChasis());
-        $rem->setCotizacion($ord->getCotizacion());
-        $rem->setDominio($ord->getDominio());
-        $rem->setFecha($ord->getFecha());
-        $rem->setModelo($ord->getModelo());
-        $rem->setNeto($ord->getNeto());
-        $rem->setEnvia('María Antonella Pescarolo');
-        //$rem->setConsumos($originalCons);
+     
+        if ($count != 0) {
+            $rem->setCliente($ord->getCliente());
+            $rem->setChasis($ord->getChasis());
+            $rem->setCotizacion($ord->getCotizacion());
+            $rem->setDominio($ord->getDominio());
+            $rem->setFecha($ord->getFecha());
+            $rem->setModelo($ord->getModelo());
+            $rem->setNeto($ord->getNeto());
+            $rem->setEnvia('María Antonella Pescarolo');
+            //$rem->setConsumos($originalCons);
+            $ord->setIdRemito($rem);
             $em->persist($rem);
+            $em->persist($ord);
             $em->flush();
-                   
-
-            
             $this->get('session')->getFlashBag()->add('success', 'flash.update.success');
-
             return $this->redirect($this->generateUrl('remitovolvo_show', array('id' => $rem->getId())));
-        
-    
+        }else{
+            $this->get('session')->getFlashBag()->add('error', 'ERROR! NO TIENE CONSUMOS DE VOLVO');
+            return $this->redirect($this->generateUrl('renaultorden_show', array('id' => $ord->getId())));
+        }
+
+
+
 //    return array(
 //            'entity'      => $ord,
 //            'edit_form'   => $editForm->createView(),

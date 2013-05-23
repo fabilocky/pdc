@@ -977,5 +977,53 @@ EOD;
 
         return $this->get('sistema_tcpdf')->quick_pdf($pdf);
     }
+    
+     /**
+     * LIQUIDACION MENSUAL
+     * 
+     * @Route("/liquidacionexcel", name="liquidacion_imprimir_excel")
+     * @Template()
+     */
+    public function imprimirLiquidacionExcelAction(Request $request) {
+       $ords = $request->request->get('liquidacion', array());
+        $fecha1 = $ords['fecha1'];
+        $fecha2 = $ords['fecha2'];
+        $em = $this->getDoctrine()->getEntityManager();
+        $query = $em->createQuery(
+                        'SELECT p FROM SistemaAdminBundle:Ordvolvo p WHERE p.fecha >= :fecha1 AND p.fecha <= :fecha2'
+                )->setParameter('fecha1', $fecha1)
+                 ->setParameter('fecha2', $fecha2);
+
+        $ordenes = $query->getResult();                
+        
+        $em1 = $this->getDoctrine()->getEntityManager();
+        $query1 = $em1->createQuery(
+                        'SELECT p FROM SistemaAdminBundle:Remitovolvo p WHERE p.fecha >= :fecha1 AND p.fecha <= :fecha2'
+                )->setParameter('fecha1', $fecha1)
+                 ->setParameter('fecha2', $fecha2);
+
+        $remitos = $query1->getResult();
+        $contenido = $this->renderView('SistemaAdminBundle:Ordvolvo:imprimirLiquidacion.pdf.twig', array(
+            'entity' => $ordenes,
+            'remitos' => $remitos,
+        ));
+        
+
+        // Creamos un objeto PHPExcel
+        $objPHPExcel = new PHPExcel();
+
+        // Leemos un archivo Excel 2007
+        $objReader = PHPExcel_IOFactory::createReader('Excel2007');
+        $objPHPExcel = $objReader->load('plantilla_liquidacion.xlsx');
+       
+        // Indicamos que se pare en la hoja uno del libro
+        $objPHPExcel->setActiveSheetIndex(0);
+        //Escribimos en la hoja en la celda B1
+        $objPHPExcel->getActiveSheet()->SetCellValue('J6', $fecha1);
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save("Orden_volvo" . $fecha1. ".xlsx");
+        return $this->redirect($this->generateUrl('liquidacion'));
+    }
 
 }

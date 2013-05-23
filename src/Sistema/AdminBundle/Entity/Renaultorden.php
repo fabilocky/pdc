@@ -131,6 +131,16 @@ class Renaultorden
     private $total;
     
     /**
+     * @var Repvolvo
+     *
+     * @ORM\OneToOne(targetEntity="Remitovolvo", cascade={"persist"})
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_remitovolvo", referencedColumnName="id")
+     * })
+     */
+    private $idRemito;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Renaultsolicrep", mappedBy="renaultorden", cascade={"persist"})
      * @var type 
      */
@@ -688,5 +698,28 @@ class Renaultorden
     public function getCam()
     {
         return $this->cam;
+    }
+    
+    /**
+     * Set idRemito
+     *
+     * @param Sistema\AdminBundle\Entity\Remitovolvo $idRemito
+     * @return Consumo
+     */
+    public function setIdRemito(\Sistema\AdminBundle\Entity\Remitovolvo $idRemito = null)
+    {
+        $this->idRemito = $idRemito;
+    
+        return $this;
+    }
+
+    /**
+     * Get idRemito
+     *
+     * @return Sistema\AdminBundle\Entity\Remitovolvo
+     */
+    public function getIdRemito()
+    {
+        return $this->idRemito;
     }
 }

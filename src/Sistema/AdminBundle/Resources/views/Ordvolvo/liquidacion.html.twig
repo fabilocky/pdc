@@ -8,7 +8,7 @@
     <script src="{{ asset('js/jquery-ui-1.9.0.custom.min.js') }}"></script>
     {{ form_javascript(form) }}
 <h2>Seleccionar Período a Liquidar</h2>
-<form class="well" action="{{ path('reporteliquidacion') }}" method="post" {{ form_enctype(form) }}>
+<form class="well" action="{{ path('liquidacion_imprimir_excel') }}" method="post" {{ form_enctype(form) }}>
     {{ form_row(form.fecha1) }}
     {{ form_row(form.fecha2) }}
     {{ form_rest(form) }}    
