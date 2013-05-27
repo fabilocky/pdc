@@ -151,10 +151,21 @@ class RemitovolvoController extends Controller
     {
         $entity = new Remitovolvo();
         $form   = $this->createForm(new RemitovolvoType(), $entity);
+         $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");
 
+
+        if (preg_match('|<td style="text-align: left;">Dolar</td>
+<td style="text-align: center;">(.*?)</td>
+<td style="text-align: center;">(.*?)</td></tr>|is', $data, $cap)) {
+            $str = $cap[2];
+            $fa = str_replace(",", ".", $str);
+        } else {
+            $fa = 0;
+        }
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'dolar' => $fa,
         );
     }
 

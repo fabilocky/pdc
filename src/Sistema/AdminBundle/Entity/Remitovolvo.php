@@ -93,6 +93,13 @@ class Remitovolvo
     private $envia;
     
     /**
+     * @var string $ctacte
+     *
+     * @ORM\Column(name="ctacte", type="boolean", nullable=true)
+     */
+    private $ctacte;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Consumo", mappedBy="remitovolvo", cascade={"persist"})
      * @var type 
      */
@@ -412,5 +419,28 @@ class Remitovolvo
     {
         $this->consumosrenault[] = $consumos;
         $consumos->setRemitovolvo($this);
+    }
+    
+    /**
+     * Set ctacte
+     *
+     * @param string $ctacte
+     * @return Remitovolvo
+     */
+    public function setCtacte($ctacte)
+    {
+        $this->ctacte = $ctacte;
+    
+        return $this;
+    }
+
+    /**
+     * Get ctacte
+     *
+     * @return string 
+     */
+    public function getCtacte()
+    {
+        return $this->ctacte;
     }
 }

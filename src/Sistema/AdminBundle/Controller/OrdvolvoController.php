@@ -25,6 +25,7 @@ use \PHPExcel_IOFactory;
 use \PHPExcel_Style_Color;
 use \PHPExcel_Style_Alignment;
 use \PHPExcel_Style_Border;
+use \PHPExcel_Style_Fill;
 
 /**
  * Ordvolvo controller.
@@ -1010,19 +1011,187 @@ EOD;
         
 
         // Creamos un objeto PHPExcel
-        $objPHPExcel = new PHPExcel();
-
-        // Leemos un archivo Excel 2007
+        $objPHPExcel = new PHPExcel();       
         $objReader = PHPExcel_IOFactory::createReader('Excel2007');
-        $objPHPExcel = $objReader->load('plantilla_liquidacion.xlsx');
-       
-        // Indicamos que se pare en la hoja uno del libro
+        $objPHPExcel = $objReader->load('plantilla_liquidacion.xlsx');        
         $objPHPExcel->setActiveSheetIndex(0);
-        //Escribimos en la hoja en la celda B1
-        $objPHPExcel->getActiveSheet()->SetCellValue('J6', $fecha1);
-
+        $styleArray = array(            
+            'borders' => array(
+                'top' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'bottom' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'left' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+                'right' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                ),
+            ),            
+        );
+        $alineacion = array('alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+        );
+        $negrita = array(
+            'font' => array(
+                'bold' => true,
+                'name' => 'Calibri',
+                'size' => '11',
+                'Alignement' => 'center',
+            ),            
+        );
+        $fuente = array(
+            'font' => array(                
+                'name' => 'Calibri',
+                'size' => '11',
+                'Alignement' => 'center',
+            ),            
+        );
+        $numeros = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array(
+                    'rgb' => '045FB4',
+                ),
+            ),
+        );
+        $fuentetot = array(
+            'font' => array(
+                'bold' => TRUE,
+                'italic' => TRUE,
+                'name' => 'Calibri',
+                'size' => '14',
+                'Alignement' => 'center',
+            ),            
+        );
+        $objPHPExcel->getActiveSheet()->getStyle('A6')->applyFromArray($numeros);
+        $a = 7;
+        $totmo=0;
+        $toter=0;
+        $totporc=0;
+        //ORDENES
+        foreach ($ordenes as $orden) {
+            $cotizacion=$orden->getCotizacion();
+            $repctacte=0;
+            $mo=0;
+            $ter=0;
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $a, $orden->getId());
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, $orden->getCliente()->getNombre());
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $a, $orden->getFecha()->format('d-m-Y'));
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $a, $orden->getChasis());
+            foreach ($orden->getConsumos() as $consumo) {                
+                $repctacte+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();                
+            }
+            $repctacte=number_format($repctacte, 2);
+            $porc=$repctacte*0.15;
+            $porc=number_format($porc, 2);            
+            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $a, $repctacte);
+            foreach ($orden->getOperaciones() as $operacion) {                
+                $mo+=$operacion->getSubtotal();
+            }
+            $totmo+=$mo;
+            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, $mo);
+            foreach ($orden->getTerceros() as $tercero) {                
+                $ter+=$tercero->getSubtotal();
+            }
+            $toter+=$ter;
+            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $a, $ter);
+            $totporc+=$porc;
+            $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $porc);
+            $objPHPExcel->getActiveSheet()->getStyle('A' . $a.':I' . $a)->applyFromArray($fuente);            
+            $objPHPExcel->getActiveSheet()->getStyle('A' . $a)->applyFromArray($numeros);
+            $objPHPExcel->getActiveSheet()->getStyle('A' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('B' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('C' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('D' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('E' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('F' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('H' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($styleArray);
+            $a++;
+        }
+        //REMITOS
+        $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, 'REMITOS');
+        $objPHPExcel->getActiveSheet()->getStyle('B' . $a)->applyFromArray($negrita);
+        $objPHPExcel->getActiveSheet()->getStyle('B' . $a)->applyFromArray($alineacion);
+        $a++;        
+        $totreppdc=0;
+        foreach ($remitos as $remito) {
+            $cotizacion=$remito->getCotizacion();
+            $reppdc=0;            
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $a, $remito->getId());
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, $remito->getCliente());
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $a, $remito->getFecha()->format('d-m-Y'));            
+            foreach ($remito->getConsumosRenault() as $consumo) {                
+                $reppdc+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();                
+            }
+            $reppdc=number_format($reppdc, 2);
+            $totreppdc+=$reppdc;
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $a, $reppdc);           
+            $objPHPExcel->getActiveSheet()->getStyle('A' . $a.':I' . $a)->applyFromArray($fuente);
+            
+            $objPHPExcel->getActiveSheet()->getStyle('A' . $a)->applyFromArray($numeros);
+            $objPHPExcel->getActiveSheet()->getStyle('A' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('B' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('C' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('D' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('E' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('F' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('H' . $a)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($styleArray);
+            $a++;
+        }
+        //Sumatoria Ordenes
+        $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, $totmo);
+        $objPHPExcel->getActiveSheet()->SetCellValue('H' . $a, $toter);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $totporc);        
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a.':I' . $a)->getFill()
+                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a.':I' . $a)->getFill()->getStartColor()
+                ->setARGB('04B404');
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a.':I' . $a)->applyFromArray($fuente);
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('H' . $a)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($styleArray);
+        //Sumatoria Remitos
+        $objPHPExcel->getActiveSheet()->SetCellValue('E' . $a, $totreppdc);
+        $objPHPExcel->getActiveSheet()->getStyle('E' . $a)->applyFromArray($styleArray);
+         $objPHPExcel->getActiveSheet()->getStyle('E' . $a)->getFill()
+                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $objPHPExcel->getActiveSheet()->getStyle('E' . $a)->getFill()->getStartColor()
+                ->setARGB('FF0000');
+        $a++;
+        //TOTALES
+        $neto= $toter+$totmo+$totporc-$totreppdc;
+        $iva=$neto * 0.15; 
+        $iva=number_format($iva, 2);
+        $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, 'NETO $');
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($fuentetot);
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($alineacion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $neto);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($fuentetot);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($alineacion);
+        $a++;
+        $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, 'IVA $');
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($fuentetot);
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($alineacion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $iva);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($fuentetot);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($alineacion);
+        $a++;
+        $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, 'TOTAL $');
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($fuentetot);
+        $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($alineacion);
+        $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $neto + $iva);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($fuentetot);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($alineacion);
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save("Orden_volvo" . $fecha1. ".xlsx");
+        $objWriter->save("Liquidacion_" . $fecha1. ".xlsx");
         return $this->redirect($this->generateUrl('liquidacion'));
     }
 

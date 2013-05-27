@@ -22,11 +22,27 @@ class RemitovolvoType extends AbstractType
             'allow_delete' => true,
             'by_reference' => false,
             ))
-            ->add('cliente')
+             ->add('client', 'genemu_jqueryautocomplete_entity', array(
+            'class' => 'Sistema\AdminBundle\Entity\Cliente',
+            'data_class' => 'Sistema\AdminBundle\Entity\Cliente',
+            'route_name' => 'ajax_agente',
+//            'property' => 'nombre',
+                'property_path' => false,
+            )
+                
+        )
+             ->add('porc_rep', 'text', array(                    
+                    'label' => 'Porcentaje de Repuestos',
+                    'property_path' => false,
+                    'attr' => array('style' => 'width:110px'),
+                    'required'=> false,
+//                    'empty_value' => 'Seleccionar repuesto',                
+                ))   
             ->add('chasis')
             ->add('cotizacion')
             ->add('modelo')
             ->add('dominio')
+            ->add('ctacte')
             ->add('neto')
             ->add('aclaracion')
             ->add('observaciones')
