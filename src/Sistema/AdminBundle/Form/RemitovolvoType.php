@@ -42,7 +42,9 @@ class RemitovolvoType extends AbstractType
             ->add('cotizacion')
             ->add('modelo')
             ->add('dominio')
-            ->add('ctacte')
+            ->add('ctacte', null, array(                    
+                    'label' => 'Cuenta Corriente',                            
+                ))   
             ->add('neto')
             ->add('aclaracion')
             ->add('observaciones')

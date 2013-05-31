@@ -107,8 +107,8 @@
                 <tr>
                     <td>{{ form_row(form.fecha) }}</td> 
                     <td></td>
-                    <td></td>
-                    <td><div><label for="ordvolvo_cotizacion" class="required">Cotizacion</label><input type="text" id="ordvolvo_cotizacion" name="ordvolvo[cotizacion]" required="required" value={{ dolar }}></div></td>
+                    <td>{{ form_row(form.ctacte) }}</td>
+                    <td><div><label for="remitovolvo_cotizacion" class="required">Cotizacion</label><input type="text" id="remitovolvo_cotizacion" name="remitovolvo[cotizacion]" required="required" value={{ dolar }}></div></td>
                 </tr>
                 <tr>
                     <td>{{ form_row(form.client) }}</td>
@@ -160,7 +160,7 @@
 
                     <div>
                         <div class="float-left">
-                            <a class="btn" href="{{ path('ordvolvo') }}">
+                            <a class="btn" href="{{ path('remitovolvo') }}">
             {{ 'views.recordactions.backtothelist'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
                                 </a>
                             </div>
@@ -172,595 +172,282 @@
             changeYear: true, showSecond: true, timeFormat: 'hh:mm:ss', })
     
 </script>#}
-                        <script>
-                        var cantidadAddJs = 0;
-                        var collectionHolder = $('ul.tags');
+<script>
+var cantidadAddJs = 0;
+var collectionHolder = $('ul.tags');
 
-                        // setup an "add a tag" link
-                        var $addTagLink = $('<a href="#" class="add_tag_link">Agregar Linea</a>');
-                        var $newLinkLi = $('<li></li>').append($addTagLink);
+// setup an "add a tag" link
+var $addTagLink = $('<a href="#" class="add_tag_link">Agregar Linea</a>');
+var $newLinkLi = $('<li></li>').append($addTagLink);
 
-                        jQuery(document).ready(function() {
-                            // add a delete link to all of the existing tag form li elements
-                            //collectionHolder.find('li').each(function() {
-                            //    addTagFormDeleteLink($(this));
-                            //});
-                            // add the "add a tag" anchor and li to the tags ul
-                            collectionHolder.append($newLinkLi);
+jQuery(document).ready(function() {
+// add a delete link to all of the existing tag form li elements
+//collectionHolder.find('li').each(function() {
+//    addTagFormDeleteLink($(this));
+//});
+// add the "add a tag" anchor and li to the tags ul
+collectionHolder.append($newLinkLi);
 
-                            $addTagLink.on('click', function(e) {
-                                // prevent the link from creating a "#" on the URL
-                                e.preventDefault();
+$addTagLink.on('click', function(e) {
+// prevent the link from creating a "#" on the URL
+e.preventDefault();
 
-                                // add a new tag form (see next code block)
-                                addTagForm(collectionHolder, $newLinkLi);
-                            });
-                        });
-
-                        function addTagForm(collectionHolder, $newLinkLi) {
-                            // Get the data-prototype we explained earlier
-                            var prototype = collectionHolder.attr('data-prototype');
-
-                            // Replace '__name__' in the prototype's HTML to
-                            // instead be a number based on the current collection's length.
-                            var newForm = prototype.replace(/__name__/g, collectionHolder.children().length);
-
-                            // Display the form in the page in an li, before the "Add a tag" link li
-                            var $newFormLi = $('<li></li>').append(newForm);
-                            $newLinkLi.before($newFormLi);
-    
-                            cantidadAddJs = cantidadAddJs+1;
-                            cargarStock(cantidadAddJs);
-                            cargarAddJs(cantidadAddJs);
-                            // add a delete link to the new form
-                            //addTagFormDeleteLink($newFormLi);
-                        }
-
-                        //function addTagFormDeleteLink($tagFormLi) {
-                        //    var $removeFormA = $('<a href="#" class="del_tag_link">Eliminar Linea</a>');
-                        //    $tagFormLi.append($removeFormA);
-                        //
-                        //    $removeFormA.on('click', function(e) {
-                        //        // prevent the link from creating a "#" on the URL
-                        //        e.preventDefault();
-                        //        
-                        //        cantidadAddJs = cantidadAddJs-1;
-                        //        // remove the li for the tag form
-                        //        $tagFormLi.remove();
-                        //    });
-                        //}
-                            </script>
-
-                            <script>
-                                function cargarStock(cantidadAddJs){
-                                    //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
-                                    //var $newAddTwig = $('<div><\/div>').append($addTwig);
-                                    //$newLinkLi.before($newAddTwig);
-                                    var $addJ = 
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        "});"                                 
-                                    ;
-                                    var $newAddJ = $('<script><\/script>').append($addJ);
-                                    //$('<div></div>').append($newAddJs);
-                                    $newLinkLi.before($newAddJ);
-                                }
-                                function cargarAddJs(cantidadAddJs){
-                                    //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
-                                    //var $newAddTwig = $('<div><\/div>').append($addTwig);
-                                    //$newLinkLi.before($newAddTwig);
-                                    var $addJs = 
-                                        //"$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                        //    "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        //"});"+
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaNombre($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        "});"+                                        
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_cantidad').change(function() {"+
-                                            "calculaTotal("+cantidadAddJs+")"+
-                                        "});"+
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaPrecio($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        "});"+
-                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
-                                            "consultaId($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
-                                        "});" 
-                                    ;
-                                    var $newAddJs = $('<script><\/script>').append($addJs);
-                                    //$('<div></div>').append($newAddJs);
-                                    $newLinkLi.before($newAddJs);
-        
-                            //        var $div3 = $("<div />",
-                            //        {
-                            //            id: "Div3", //atributo directo, igual que si fuéramos con attr(“id”)
-                            //            "class": "Div3", //class entre comillas porque es una palabra reservada en javascript
-                            //            text: "Lorem ipsum", //text no es un atributo sino una propiedad de jQuery, por ejemplo: .text("Lorem ipsum")
-                            //            css: //propiedad de jQuery
-                            //                {
-                            //                "font-weight": "bold", "color": "White"
-                            //                },
-                            //            click: function (e) { //evento de jQuery
-                            //                alert("Hola mundo!");
-                            //                }
-                            //        });
-                            //        $newLinkLi.before($div3);
-                                }
-                                
-                                function consultaStock(id, cantidadAddJs){
-                                    $.ajax({
-                                      url: '{{ path('orden_repvolvo_stock') }}',
-                                      type: "POST",
-                                      data: { "id" : id },
-                                      success: function(data) {
-                                        //$('.result').html(data);            
-                                       $('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(data);
-                                      }
-                                    });
-                                    stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
-                                        if(isNaN(stock)){
-                                          alert('Sin Stock');
-                                          //die();                                        
-                                        }
-                                }
-    
-                                function consultaPrecio(id, cantidadAddJs){
-                                    $.ajax({
-                                      url: '{{ path('orden_repvolvo_precio') }}',
-                                      type: "POST",
-                                      data: { "id" : id },
-                                      success: function(data) {
-                                        //$('.result').html(data);
-                                        cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10)
-                                        porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)                                        
-                                        if(isNaN(cotizacion)){
-                                                 alert('indique cotizacion y realice nuevamente la acción');
-                                                 //die();
-                                                 }
-                                        else{                                                                                
-                                        porc=porc/100;
-                                        precioPesos = data * cotizacion;
-                                        precioPesos = precioPesos + (precioPesos * porc);
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio').val(data);            
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val(1);
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
-                                        //totalFacturado = $('#sistema_adminbundle_facturatype_total').val();
-                                        //totalLinea = $('#sistema_adminbundle_facturatype_idLineaFactura_'+cantidadAddJs+'_total').val();
-                                        //totalFacturado = totalFacturado + totalLinea;
-                                        //$('#sistema_adminbundle_facturatype_total').val(totalFacturado);
-                                        valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                    if(isNaN(valuetotaltotal)){
-                                                totalFacturado = 0;
-                                            }else{
-                                    totalFacturado = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                    }
-                                    totalFacturado11 = 0;
-                                        collectionHolder.find('li').each(function(index) {
-                                            if(index != 0){
-                                                totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
-                                                if(!isNaN(totalLinea)){
-                                                   totalFacturado11 = totalFacturado + totalLinea;
-                                                }
-                                            }
-                                        });
-                                        $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
-                                        iva11 = totalFacturado11.toFixed(2)*0.21;
-                                        $('#ordvolvo_iva').val(iva11.toFixed(2));
-                                        total11= totalFacturado11 + iva11;
-                                        $('#ordvolvo_total').val(total11.toFixed(2));
-                                      }
-                                      }
-                                    });
-                                }    
-    
-                                function consultaNombre(id, cantidadAddJs){
-                                    $.ajax({
-                                      url: '{{ path('orden_repvolvo_nombre') }}',
-                                      type: "POST",
-                                      data: { "id" : id },
-                                      success: function(data) {
-                                        //$('.result').html(data);            
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Repvolvo').val(data);            
-                                      }
-                                    });
-                                }  
-                                
-                                function consultaId(id, cantidadAddJs){
-                                    $.ajax({
-                                      url: '{{ path('orden_repvolvo_id') }}',
-                                      type: "POST",
-                                      data: { "id" : id },
-                                      success: function(data) {
-                                        //$('.result').html(data);            
-                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_idRep').val(data);            
-                                      }
-                                    });
-                                } 
-                                
-    
-                                function calculaTotal(cantidadAddJs){
-                                    cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
-                                    valuePrecio = $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio').val();
-                                    valueCantidad = $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val();
-                                    porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)                                                                       
-                                    porc=porc/100;                              
-                                    
-                                    valuePrecio = valuePrecio * cotizacion;                                    
-                                    valueTotal = valuePrecio * valueCantidad;
-                                    valueTotal = valueTotal + (valueTotal * porc);
-                                    $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(valueTotal.toFixed(2));
-                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                    if(isNaN(valuetotaltotal)){
-                                                totalFacturado = 0;
-                                            }else{
-                                    totalFacturado = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                    }
-                                    totalFacturado11 = 0;
-                                    collectionHolder.find('li').each(function(index) {
-                                        if(index != 0){
-                                            totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
-                                            if(!isNaN(totalLinea)){
-                                                totalFacturado11 = totalFacturado11 + totalLinea;
-                                            }
-                                        }
-                                    });
-                                    collectionHolder2.find('li').each(function(index) {
-                                        if(index != 0){
-                                            totalLinea = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
-                                            if(!isNaN(totalLinea)){
-                                                totalFacturado11 = totalFacturado11 + totalLinea;
-                                            }
-                                        }
-                                    });
-                                    collectionHolder3.find('li').each(function(index) {
-                                        if(index != 0){
-                                            totalLinea = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
-                                            if(!isNaN(totalLinea)){
-                                                totalFacturado11 = totalFacturado11 + totalLinea;
-                                            }
-                                        }
-                                    });
-                                    $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
-                                    iva11 = totalFacturado11.toFixed(2)*0.21;
-                                    $('#ordvolvo_iva').val(iva11.toFixed(2));
-                                    total11= totalFacturado11 + iva11;
-                                    $('#ordvolvo_total').val(total11.toFixed(2));
-                                }
-                                </script>
-
-                                <script>
-                                function dump(obj) {
-                                    var out = '';
-                                    for (var i in obj) {
-                                        out += i + ": " + obj[i] + "\n";
-                                    }
-
-                                    alert(out);
-
-                                    // or, if you wanted to avoid alerts...
-
-                                    var pre = document.createElement('pre');
-                                    pre.innerHTML = out;
-                                    document.body.appendChild(pre)
-                                }
-                                    </script>
-
-                                    <script>
-                                    // Obtiene el div que contiene la colección de etiquetas
-                                    var collectionHolder1 = $('ul.tags1');
-
-                                    // configura una enlace "Agregar una etiqueta"
-                                    var $addTagLink1 = $('<a href="#" class="add_tag_link">Agregar solicitud</a>');
-                                    var $newLinkLi1 = $('<li></li>').append($addTagLink1);
-
-                                    jQuery(document).ready(function() {
-                                        // Añade el ancla "Agregar una etiqueta" y las etiquetas li y ul
-                                        collectionHolder1.append($newLinkLi1);
-
-                                        $addTagLink1.on('click', function(e) {
-                                            // evita crear el enlace con una "#" en la URL
-                                            e.preventDefault();
-
-                                            // añade una nueva etiqueta form (ve el siguiente bloque de código)
-                                            addTagForm1(collectionHolder1, $newLinkLi1);
-                                        });
-                                    });
-
-                                    function addTagForm1(collectionHolder1, $newLinkLi1) {
-                                        // Obtiene el data-prototype explicado anteriormente
-                                        var prototype1 = collectionHolder1.attr('data-prototype1');
-
-                                        // cuenta las entradas actuales en el formulario (p. ej. 2),
-                                        // lo usa como el nuevo índice (p. ej. 2)
-                                        var newIndex1 = collectionHolder1.find(':input').length;
-
-                                        // Reemplaza el '__name__' en el prototipo HTML para que
-                                        // en su lugar sea un número basado en cuántos elementos hay
-                                        //var newForm1 = prototype1.replace(/__name__/g, newIndex1);
-    
-                                        // Replace '__name__' in the prototype's HTML to
-                                        // instead be a number based on the current collection's length.
-                                        var newForm1 = prototype1.replace(/__name__/g, collectionHolder1.children().length-1);
-
-                                        // Muestra el formulario en la página en un elemento li,
-                                        // antes del enlace 'Agregar una etiqueta'
-                                        var $newFormLi1 = $('<li></li>').append(newForm1);
-                                        $newLinkLi1.before($newFormLi1);
-                                    }
-
-                                        </script>
-
-                                        <script>
-                                        // Obtiene el div que contiene la colección de etiquetas
-                                        var cantidadAddJs2 = 0;
-                                        var collectionHolder2 = $('ul.tags2');
-
-                                        // configura una enlace "Agregar una etiqueta"
-                                        var $addTagLink2 = $('<a href="#" class="add_tag_link">Agregar operacion</a>');
-                                        var $newLinkLi2 = $('<li></li>').append($addTagLink2);
-
-                                        jQuery(document).ready(function() {
-                                            // Añade el ancla "Agregar una etiqueta" y las etiquetas li y ul
-                                            collectionHolder2.append($newLinkLi2);
-
-                                            $addTagLink2.on('click', function(e) {
-                                                // evita crear el enlace con una "#" en la URL
-                                                e.preventDefault();
-
-                                                // añade una nueva etiqueta form (ve el siguiente bloque de código)
-                                                addTagForm2(collectionHolder2, $newLinkLi2);
-                                            });
-                                        });
-
-                                        function addTagForm2(collectionHolder2, $newLinkLi2) {
-                                            // Obtiene el data-prototype explicado anteriormente
-                                            var prototype2 = collectionHolder2.attr('data-prototype2');
-
-                                            // cuenta las entradas actuales en el formulario (p. ej. 2),
-                                            // lo usa como el nuevo índice (p. ej. 2)
-                                            var newIndex2 = collectionHolder2.find(':input').length;
-
-                                            // Reemplaza el '__name__' en el prototipo HTML para que
-                                            // en su lugar sea un número basado en cuántos elementos hay
-                                            //var newForm2 = prototype2.replace(/__name__/g, newIndex2);
-
-                                              var newForm2 = prototype2.replace(/__name__/g, collectionHolder2.children().length);
-
-                                            // Muestra el formulario en la página en un elemento li,
-                                            // antes del enlace 'Agregar una etiqueta'
-                                            var $newFormLi2 = $('<li></li>').append(newForm2);
-                                            $newLinkLi2.before($newFormLi2);
-    
-                                            cantidadAddJs2 = cantidadAddJs2+1;
-                                            cargarAddJs2(cantidadAddJs2);
-                                        }
-
-                                            </script>
-
-                                            <script>
-                                                function cargarAddJs2(cantidadAddJs2){
-                                                    //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
-                                                    //var $newAddTwig = $('<div><\/div>').append($addTwig);
-                                                    //$newLinkLi.before($newAddTwig);
-                                                    var $addJs2 =
-                                                        "$('#ordvolvo_operaciones_"+cantidadAddJs2+"_hs').change(function() {"+
-                                                            "calculaTotal2("+cantidadAddJs2+")"+
-                                                        "});"+  
-                                                        "$('#ordvolvo_operaciones_"+cantidadAddJs2+"_precio_hs').change(function() {"+
-                                                            "calculaTotal2("+cantidadAddJs2+")"+
-                                                        "});"          
-                                                    ;
-                                                    var $newAddJs2 = $('<script><\/script>').append($addJs2);
-                                                    //$('<div></div>').append($newAddJs);
-                                                    $newLinkLi2.before($newAddJs2);
-        
-                                            //        var $div3 = $("<div />",
-                                            //        {
-                                            //            id: "Div3", //atributo directo, igual que si fuéramos con attr(“id”)
-                                            //            "class": "Div3", //class entre comillas porque es una palabra reservada en javascript
-                                            //            text: "Lorem ipsum", //text no es un atributo sino una propiedad de jQuery, por ejemplo: .text("Lorem ipsum")
-                                            //            css: //propiedad de jQuery
-                                            //                {
-                                            //                "font-weight": "bold", "color": "White"
-                                            //                },
-                                            //            click: function (e) { //evento de jQuery
-                                            //                alert("Hola mundo!");
-                                            //                }
-                                            //        });
-                                            //        $newLinkLi.before($div3);
-                                                }    
-    
-                                                function calculaTotal2(cantidadAddJs2){
-                                                    cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
-                                                    valuePrecioHs = $('#ordvolvo_mo').val();
-                                                    valueHs = $('#ordvolvo_operaciones_'+cantidadAddJs2+'_hs').val();        
-                                                    valueTotal = valuePrecioHs * valueHs;
-                                                    $('#ordvolvo_operaciones_'+cantidadAddJs2+'_subtotal').val(valueTotal.toFixed(2));
-                                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                                    if(isNaN(valuetotaltotal)){
-                                                                totalFacturado2 = 0;
-                                                            }else{
-                                                    totalFacturado2 = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                                    }
-                                                    totalFacturado22 = 0;
-                                                    collectionHolder2.find('li').each(function(index) {
-                                                        if(index != 0){
-                                                            totalLinea2 = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
-                                                            if(!isNaN(totalLinea2)){
-                                                                totalFacturado22 = totalFacturado22 + totalLinea2;
-                                                            }
-                                                        }
-                                                    });
-                                                     collectionHolder.find('li').each(function(index) {
-                                                        if(index != 0){
-                                                            totalLinea2 = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
-                                                            if(!isNaN(totalLinea2)){
-                                                                totalFacturado22 = totalFacturado22 + totalLinea2;
-                                                            }
-                                                        }
-                                                    });
-                                                      collectionHolder3.find('li').each(function(index) {
-                                                        if(index != 0){
-                                                            totalLinea2 = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
-                                                            if(!isNaN(totalLinea2)){
-                                                                totalFacturado22 = totalFacturado22 + totalLinea2;
-                                                            }
-                                                        }
-                                                    });
-                                                    //totalFacturado222= totalFacturado2 + totalFacturado22;
-                                                    $('#ordvolvo_neto').val(totalFacturado22.toFixed(2));
-                                                    iva22 = totalFacturado22.toFixed(2)*0.21;
-                                                    $('#ordvolvo_iva').val(iva22.toFixed(2)); 
-                                                    total22= totalFacturado22 + iva22;
-                                                    $('#ordvolvo_total').val(total22.toFixed(2));
-                                                }
-                                                </script>
-
-                                                                                     <script>
-                                        // Obtiene el div que contiene la colección de etiquetas
-                                        var cantidadAddJs3 = 0;
-                                        var collectionHolder3 = $('ul.tags3');
-
-                                        // configura una enlace "Agregar una etiqueta"
-                                        var $addTagLink3 = $('<a href="#" class="add_tag_link">Agregar tercero</a>');
-                                        var $newLinkLi3 = $('<li></li>').append($addTagLink3);
-
-                                        jQuery(document).ready(function() {
-                                            // Añade el ancla "Agregar una etiqueta" y las etiquetas li y ul
-                                            collectionHolder3.append($newLinkLi3);
-
-                                            $addTagLink3.on('click', function(e) {
-                                                // evita crear el enlace con una "#" en la URL
-                                                e.preventDefault();
-
-                                                // añade una nueva etiqueta form (ve el siguiente bloque de código)
-                                                addTagForm3(collectionHolder3, $newLinkLi3);
-                                            });
-                                        });
-
-                                        function addTagForm3(collectionHolder3, $newLinkLi3) {
-                                            // Obtiene el data-prototype explicado anteriormente
-                                            var prototype3 = collectionHolder3.attr('data-prototype3');
-
-                                            // cuenta las entradas actuales en el formulario (p. ej. 3),
-                                            // lo usa como el nuevo índice (p. ej. 3)
-                                            var newIndex3 = collectionHolder3.find(':input').length;
-
-                                            // Reemplaza el '__name__' en el prototipo HTML para que
-                                            // en su lugar sea un número basado en cuántos elementos hay
-                                            //var newForm3 = prototype3.replace(/__name__/g, newIndex3);
-
-                                              var newForm3 = prototype3.replace(/__name__/g, collectionHolder3.children().length);
-
-                                            // Muestra el formulario en la página en un elemento li,
-                                            // antes del enlace 'Agregar una etiqueta'
-                                            var $newFormLi3 = $('<li></li>').append(newForm3);
-                                            $newLinkLi3.before($newFormLi3);
-    
-                                            cantidadAddJs3 = cantidadAddJs3+1;
-                                            cargarAddJs3(cantidadAddJs3);
-                                        }
-
-                                            </script>
-
-                                            <script>
-                                                function cargarAddJs3(cantidadAddJs3){
-                                                    //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
-                                                    //var $newAddTwig = $('<div><\/div>').append($addTwig);
-                                                    //$newLinkLi.before($newAddTwig);
-                                                    var $addJs3 =
-                                                        "$('#ordvolvo_terceros_"+cantidadAddJs3+"_cantidad').change(function() {"+
-                                                            "calculaTotal3("+cantidadAddJs3+")"+
-                                                        "});"+  
-                                                        "$('#ordvolvo_terceros_"+cantidadAddJs3+"_unitario').change(function() {"+
-                                                            "calculaTotal3("+cantidadAddJs3+")"+
-                                                        "});"          
-                                                    ;
-                                                    var $newAddJs3 = $('<script><\/script>').append($addJs3);
-                                                    //$('<div></div>').append($newAddJs);
-                                                    $newLinkLi3.before($newAddJs3);
-        
-                                            //        var $div3 = $("<div />",
-                                            //        {
-                                            //            id: "Div3", //atributo directo, igual que si fuéramos con attr(“id”)
-                                            //            "class": "Div3", //class entre comillas porque es una palabra reservada en javascript
-                                            //            text: "Lorem ipsum", //text no es un atributo sino una propiedad de jQuery, por ejemplo: .text("Lorem ipsum")
-                                            //            css: //propiedad de jQuery
-                                            //                {
-                                            //                "font-weight": "bold", "color": "White"
-                                            //                },
-                                            //            click: function (e) { //evento de jQuery
-                                            //                alert("Hola mundo!");
-                                            //                }
-                                            //        });
-                                            //        $newLinkLi.before($div3);
-                                                }    
-    
-                                                function calculaTotal3(cantidadAddJs3){
-                                                    cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
-                                                    valueCantidad = $('#ordvolvo_terceros_'+cantidadAddJs3+'_cantidad').val();
-                                                    valueUnitario = $('#ordvolvo_terceros_'+cantidadAddJs3+'_unitario').val();        
-                                                    valueTotal = valueCantidad * valueUnitario;
-                                                    $('#ordvolvo_terceros_'+cantidadAddJs3+'_subtotal').val(valueTotal.toFixed(2));
-                                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                                    if(isNaN(valuetotaltotal)){
-                                                                totalFacturado3 = 0;
-                                                            }else{
-                                                    totalFacturado3 = parseFloat($('#ordvolvo_neto').val(), 10); 
-                                                    }
-                                                    totalFacturado33 = 0;
-                                                    collectionHolder3.find('li').each(function(index) {
-                                                        if(index != 0){
-                                                            totalLinea3 = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
-                                                            if(!isNaN(totalLinea3)){
-                                                                totalFacturado33 = totalFacturado33 + totalLinea3;
-                                                            }
-                                                        }
-                                                    });
-                                                     collectionHolder.find('li').each(function(index) {
-                                                        if(index != 0){
-                                                            totalLinea3 = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
-                                                            if(!isNaN(totalLinea3)){
-                                                                totalFacturado33 = totalFacturado33 + totalLinea3;
-                                                            }
-                                                        }
-                                                    });
-                                                    collectionHolder2.find('li').each(function(index) {
-                                                        if(index != 0){
-                                                            totalLinea3 = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
-                                                            if(!isNaN(totalLinea3)){
-                                                                totalFacturado33 = totalFacturado33 + totalLinea3;
-                                                            }
-                                                        }
-                                                    });
-                                                    //totalFacturado333= totalFacturado3 + totalFacturado33;                                                    
-                                                    $('#ordvolvo_neto').val(totalFacturado33.toFixed(2));
-                                                    iva33 = totalFacturado33.toFixed(2)*0.21;                                                    
-                                                    $('#ordvolvo_iva').val(iva33.toFixed(2));
-                                                    total33= totalFacturado33 + iva33;
-                                                    $('#ordvolvo_total').val(total33.toFixed(2));
-                                                }
-                                                </script>
-                                                <script>
-
-$(document).ready(function(){
-        $('#link_articulos').click(function(){
-                $('#articulos').load('{{ path('cliente_new') }}');
-        });
+// add a new tag form (see next code block)
+addTagForm(collectionHolder, $newLinkLi);
+});
 });
 
+function addTagForm(collectionHolder, $newLinkLi) {
+// Get the data-prototype we explained earlier
+var prototype = collectionHolder.attr('data-prototype');
+
+// Replace '__name__' in the prototype's HTML to
+// instead be a number based on the current collection's length.
+var newForm = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+// Display the form in the page in an li, before the "Add a tag" link li
+var $newFormLi = $('<li></li>').append(newForm);
+$newLinkLi.before($newFormLi);
+
+cantidadAddJs = cantidadAddJs+1;
+cargarStock(cantidadAddJs);
+cargarAddJs(cantidadAddJs);
+// add a delete link to the new form
+//addTagFormDeleteLink($newFormLi);
+}
+
+//function addTagFormDeleteLink($tagFormLi) {
+//    var $removeFormA = $('<a href="#" class="del_tag_link">Eliminar Linea</a>');
+//    $tagFormLi.append($removeFormA);
+//
+//    $removeFormA.on('click', function(e) {
+//        // prevent the link from creating a "#" on the URL
+//        e.preventDefault();
+//        
+//        cantidadAddJs = cantidadAddJs-1;
+//        // remove the li for the tag form
+//        $tagFormLi.remove();
+//    });
+//}
 </script>
-{#<script type="text/javascript">
-    jQuery(document).ready(function($) {
-        var $autocompleter = $('#sistema_adminbundle_facturatype_idCliente');
-        var $configs = [];
-        $configs.source = function(request, response) {
-            $.getJSON('/app_dev.php/admin/factura/id_nombre_ajax', {
-            term: request.term
-            }, response);
-        };
-        $autocompleter.autocomplete($configs);
+
+<script>
+function cargarStock(cantidadAddJs){
+//var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
+//var $newAddTwig = $('<div><\/div>').append($addTwig);
+//$newLinkLi.before($newAddTwig);
+var $addJ = 
+    "$('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+        "consultaStock($('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+    "});"                                 
+;
+var $newAddJ = $('<script><\/script>').append($addJ);
+//$('<div></div>').append($newAddJs);
+$newLinkLi.before($newAddJ);
+}
+function cargarAddJs(cantidadAddJs){
+//var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
+//var $newAddTwig = $('<div><\/div>').append($addTwig);
+//$newLinkLi.before($newAddTwig);
+var $addJs = 
+    //"$('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+    //    "consultaStock($('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+    //"});"+
+    "$('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+        "consultaNombre($('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+    "});"+                                        
+    "$('#remitovolvo_consumos_"+cantidadAddJs+"_cantidad').change(function() {"+
+        "calculaTotal("+cantidadAddJs+")"+
+    "});"+
+    "$('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+        "consultaPrecio($('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+    "});"+
+    "$('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+        "consultaId($('#remitovolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+    "});" 
+;
+var $newAddJs = $('<script><\/script>').append($addJs);
+//$('<div></div>').append($newAddJs);
+$newLinkLi.before($newAddJs);
+
+//        var $div3 = $("<div />",
+//        {
+//            id: "Div3", //atributo directo, igual que si fuéramos con attr(“id”)
+//            "class": "Div3", //class entre comillas porque es una palabra reservada en javascript
+//            text: "Lorem ipsum", //text no es un atributo sino una propiedad de jQuery, por ejemplo: .text("Lorem ipsum")
+//            css: //propiedad de jQuery
+//                {
+//                "font-weight": "bold", "color": "White"
+//                },
+//            click: function (e) { //evento de jQuery
+//                alert("Hola mundo!");
+//                }
+//        });
+//        $newLinkLi.before($div3);
+}
+
+function consultaStock(id, cantidadAddJs){
+$.ajax({
+  url: '{{ path('orden_repvolvo_stock') }}',
+  type: "POST",
+  data: { "id" : id },
+  success: function(data) {
+    //$('.result').html(data);            
+   $('#remitovolvo_consumos_'+cantidadAddJs+'_stock').val(data);
+  }
+});
+stock=parseFloat($('#remitovolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
+    if(isNaN(stock)){
+      alert('Sin Stock');
+      //die();                                        
+    }
+}
+
+function consultaPrecio(id, cantidadAddJs){
+$.ajax({
+  url: '{{ path('remitovolvo_repvolvo_preciorem') }}',
+  type: "POST",
+  data: { "id" : id },
+  success: function(data) {
+    //$('.result').html(data);
+    cotizacion=parseFloat($('#remitovolvo_cotizacion').val(), 10)
+    porc=parseFloat($('#remitovolvo_porc_rep').val(), 10)                                        
+    if(isNaN(cotizacion)){
+             alert('indique cotizacion y realice nuevamente la acción');
+             //die();
+             }
+    else{                                                                                
+    porc=porc/100;
+    precioPesos = data * cotizacion;
+    precioPesos = precioPesos + (precioPesos * porc);
+    $('#remitovolvo_consumos_'+cantidadAddJs+'_Precio').val(data);            
+    $('#remitovolvo_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
+    $('#remitovolvo_consumos_'+cantidadAddJs+'_cantidad').val(1);
+    $('#remitovolvo_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
+    //totalFacturado = $('#sistema_adminbundle_facturatype_total').val();
+    //totalLinea = $('#sistema_adminbundle_facturatype_idLineaFactura_'+cantidadAddJs+'_total').val();
+    //totalFacturado = totalFacturado + totalLinea;
+    //$('#sistema_adminbundle_facturatype_total').val(totalFacturado);
+    valuetotaltotal = parseFloat($('#remitovolvo_neto').val(), 10); 
+if(isNaN(valuetotaltotal)){
+            totalFacturado = 0;
+        }else{
+totalFacturado = parseFloat($('#remitovolvo_neto').val(), 10); 
+}
+totalFacturado11 = 0;
+    collectionHolder.find('li').each(function(index) {
+        if(index != 0){
+            totalLinea = parseFloat($('#remitovolvo_consumos_'+index+'_subtotal').val(), 10)
+            if(!isNaN(totalLinea)){
+               totalFacturado11 = totalFacturado + totalLinea;
+            }
+        }
     });
-</script>#}
+    $('#remitovolvo_neto').val(totalFacturado11.toFixed(2));
+    iva11 = totalFacturado11.toFixed(2)*0.21;
+    $('#remitovolvo_iva').val(iva11.toFixed(2));
+    total11= totalFacturado11 + iva11;
+    $('#remitovolvo_total').val(total11.toFixed(2));
+  }
+  }
+});
+}    
+
+function consultaNombre(id, cantidadAddJs){
+$.ajax({
+  url: '{{ path('orden_repvolvo_nombre') }}',
+  type: "POST",
+  data: { "id" : id },
+  success: function(data) {
+    //$('.result').html(data);            
+    $('#remitovolvo_consumos_'+cantidadAddJs+'_Repvolvo').val(data);            
+  }
+});
+}  
+
+function consultaId(id, cantidadAddJs){
+$.ajax({
+  url: '{{ path('orden_repvolvo_id') }}',
+  type: "POST",
+  data: { "id" : id },
+  success: function(data) {
+    //$('.result').html(data);            
+    $('#remitovolvo_consumos_'+cantidadAddJs+'_idRep').val(data);            
+  }
+});
+} 
+
+
+function calculaTotal(cantidadAddJs){
+cotizacion=parseFloat($('#remitovolvo_cotizacion').val(), 10);        
+valuePrecio = $('#remitovolvo_consumos_'+cantidadAddJs+'_Precio').val();
+valueCantidad = $('#remitovolvo_consumos_'+cantidadAddJs+'_cantidad').val();
+porc=parseFloat($('#remitovolvo_porc_rep').val(), 10)                                                                       
+porc=porc/100;                              
+
+valuePrecio = valuePrecio * cotizacion;                                    
+valueTotal = valuePrecio * valueCantidad;
+valueTotal = valueTotal + (valueTotal * porc);
+$('#remitovolvo_consumos_'+cantidadAddJs+'_subtotal').val(valueTotal.toFixed(2));
+valuetotaltotal = parseFloat($('#remitovolvo_neto').val(), 10); 
+if(isNaN(valuetotaltotal)){
+            totalFacturado = 0;
+        }else{
+totalFacturado = parseFloat($('#remitovolvo_neto').val(), 10); 
+}
+totalFacturado11 = 0;
+collectionHolder.find('li').each(function(index) {
+    if(index != 0){
+        totalLinea = parseFloat($('#remitovolvo_consumos_'+index+'_subtotal').val(), 10)
+        if(!isNaN(totalLinea)){
+            totalFacturado11 = totalFacturado11 + totalLinea;
+        }
+    }
+});
+collectionHolder2.find('li').each(function(index) {
+    if(index != 0){
+        totalLinea = parseFloat($('#remitovolvo_operaciones_'+index+'_subtotal').val(), 10)
+        if(!isNaN(totalLinea)){
+            totalFacturado11 = totalFacturado11 + totalLinea;
+        }
+    }
+});
+collectionHolder3.find('li').each(function(index) {
+    if(index != 0){
+        totalLinea = parseFloat($('#remitovolvo_terceros_'+index+'_subtotal').val(), 10)
+        if(!isNaN(totalLinea)){
+            totalFacturado11 = totalFacturado11 + totalLinea;
+        }
+    }
+});
+$('#remitovolvo_neto').val(totalFacturado11.toFixed(2));
+iva11 = totalFacturado11.toFixed(2)*0.21;
+$('#remitovolvo_iva').val(iva11.toFixed(2));
+total11= totalFacturado11 + iva11;
+$('#remitovolvo_total').val(total11.toFixed(2));
+}
+</script>
+
+<script>
+function dump(obj) {
+var out = '';
+for (var i in obj) {
+out += i + ": " + obj[i] + "\n";
+}
+alert(out);
+var pre = document.createElement('pre');
+pre.innerHTML = out;
+document.body.appendChild(pre)
+}
+</script>
+
+                                   
+<script>
+$(document).ready(function(){
+$('#link_articulos').click(function(){
+$('#articulos').load('{{ path('cliente_new') }}');
+});
+});
+</script>
 {% endblock %}
 

@@ -151,17 +151,15 @@ class RemitovolvoController extends Controller
     {
         $entity = new Remitovolvo();
         $form   = $this->createForm(new RemitovolvoType(), $entity);
-         $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");
-
-
-        if (preg_match('|<td style="text-align: left;">Dolar</td>
-<td style="text-align: center;">(.*?)</td>
-<td style="text-align: center;">(.*?)</td></tr>|is', $data, $cap)) {
-            $str = $cap[2];
-            $fa = str_replace(",", ".", $str);
-        } else {
+//        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");
+//        if (preg_match('|<td style="text-align: left;">Dolar</td>
+//        <td style="text-align: center;">(.*?)</td>
+//        <td style="text-align: center;">(.*?)</td></tr>|is', $data, $cap)) {
+//        $str = $cap[2];
+//        $fa = str_replace(",", ".", $str);
+//        } else {
             $fa = 0;
-        }
+//        }
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
@@ -180,18 +178,29 @@ class RemitovolvoController extends Controller
     {
         $ord = new Remitovolvo();       
         $ords = $request->request->get('remitovolvo', array());            
-        
+        $cliente=$ords['client'];      
         $cont=0;
+        $sumaNeto=0;
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             foreach($consumos as $consumo) {               
+               $id1 = $consumo["idRep"];                
+                $em1 = $this->getDoctrine()->getManager();
+                $rep = $em1->getRepository('SistemaAdminBundle:Repvolvo')->find($id1);
+                $rep->setCantidad($rep->getCantidad() - 1);
+                $em1->persist($rep);
+                $sumaNeto = $sumaNeto + $consumo['subtotal'];
                 $str = $consumo['subtotal'];
-                $fa=str_replace(".", ",",$str);
-                $consumo['subtotal']=$fa;                
-                $cont=$cont+1;
+                $fa = str_replace(".", ",", $str);
+                $consumo['subtotal'] = $fa;
+                $cont = $cont + 1;
+                $repuestos[$cont]=$rep;
+                $repuestos[0]=$rep;
             }
+//            var_dump($consumos[1]['subtotal']);die();
             for ($i = 0; $i <= $cont; $i++) {
-                $consumos[$i] = new \Sistema\AdminBundle\Entity\Consumoremito();
+                $consumos[$i] = new \Sistema\AdminBundle\Entity\Consumo();
+                $consumos[$i]->setidRepvolvo($repuestos[$i]);
                 $ord->addConsumos($consumos[$i]);                
             }
         }
@@ -200,6 +209,9 @@ class RemitovolvoController extends Controller
         $form->bindRequest($request);
         
         if ($form->isValid()) {
+             $em2 = $this->getDoctrine()->getManager();
+        $cli = $em2->getRepository('SistemaAdminBundle:Cliente')->findOneByNombre($cliente);
+        $ord->setCliente($cli);
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($ord);
             $em->flush();

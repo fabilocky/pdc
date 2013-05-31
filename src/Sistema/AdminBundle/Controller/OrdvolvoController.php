@@ -989,6 +989,9 @@ EOD;
        $ords = $request->request->get('liquidacion', array());
         $fecha1 = $ords['fecha1'];
         $fecha2 = $ords['fecha2'];
+        $separa = explode('-', $fecha1);
+        $mes=$separa[1];
+        $periodo= $this->DevuelveMes($mes);        
         $em = $this->getDoctrine()->getEntityManager();
         $query = $em->createQuery(
                         'SELECT p FROM SistemaAdminBundle:Ordvolvo p WHERE p.fecha >= :fecha1 AND p.fecha <= :fecha2'
@@ -1058,6 +1061,22 @@ EOD;
                 ),
             ),
         );
+        $estiloneto = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array(
+                    'rgb' => '81F7D8',
+                ),
+            ),
+        );
+        $estilototal = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => array(
+                    'rgb' => 'FFFF00',
+                ),
+            ),
+        );
         $fuentetot = array(
             'font' => array(
                 'bold' => TRUE,
@@ -1068,11 +1087,19 @@ EOD;
             ),            
         );
         $objPHPExcel->getActiveSheet()->getStyle('A6')->applyFromArray($numeros);
+        $objPHPExcel->getActiveSheet()->SetCellValue('G4', 'LIQUIDACIONES MES DE '.$periodo);
+        $objPHPExcel->getActiveSheet()->getStyle('G4')->applyFromArray($negrita);        
         $a = 7;
         $totmo=0;
         $toter=0;
         $totporc=0;
         //ORDENES
+        $primeraorden=$ordenes[0]->getId();
+        $ultimaorden=  $ordenes[(count($ordenes)-1)]->getId();
+        $primerremito=$remitos[0]->getId();
+        $ultimoremito=  $remitos[(count($remitos)-1)]->getId();
+        $objPHPExcel->getActiveSheet()->SetCellValue('B5', 'ORDENES '.$primeraorden.' --> '.$ultimaorden.' Y REMITOS '.$primerremito.' --> '.$ultimoremito);
+        $objPHPExcel->getActiveSheet()->getStyle('B5')->applyFromArray($fuente);
         foreach ($ordenes as $orden) {
             $cotizacion=$orden->getCotizacion();
             $repctacte=0;
@@ -1122,16 +1149,25 @@ EOD;
         $totreppdc=0;
         foreach ($remitos as $remito) {
             $cotizacion=$remito->getCotizacion();
-            $reppdc=0;            
-            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $a, $remito->getId());
-            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, $remito->getCliente());
+            $repctacter=0;
+            $reppdc=0;
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $a, $remito->getId());            
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $a, $remito->getFecha()->format('d-m-Y'));            
             foreach ($remito->getConsumosRenault() as $consumo) {                
-                $reppdc+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();                
+                $reppdc+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();
+                $objPHPExcel->getActiveSheet()->SetCellValue('E' . $a, $reppdc);
+                $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, 'PESCAROLO DIESEL CENTER');
+            }            
+            foreach ($remito->getConsumos() as $consumo) {
+                $repctacter+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();
+                $objPHPExcel->getActiveSheet()->SetCellValue('F' . $a, $repctacter);
+                $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $repctacter*0.15);
+                $totporc+=$repctacter*0.15;
+                $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, $remito->getCliente());
             }
             $reppdc=number_format($reppdc, 2);
             $totreppdc+=$reppdc;
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $a, $reppdc);           
+//            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $a, $reppdc);           
             $objPHPExcel->getActiveSheet()->getStyle('A' . $a.':I' . $a)->applyFromArray($fuente);
             
             $objPHPExcel->getActiveSheet()->getStyle('A' . $a)->applyFromArray($numeros);
@@ -1176,13 +1212,18 @@ EOD;
         $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $neto);
         $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($fuentetot);
         $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($alineacion);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($estiloneto);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($styleArray);
         $a++;
         $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, 'IVA $');
         $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($fuentetot);
         $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($alineacion);
+        
         $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $iva);
         $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($fuentetot);
         $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($alineacion);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($estiloneto);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($styleArray);
         $a++;
         $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, 'TOTAL $');
         $objPHPExcel->getActiveSheet()->getStyle('G' . $a)->applyFromArray($fuentetot);
@@ -1190,9 +1231,54 @@ EOD;
         $objPHPExcel->getActiveSheet()->SetCellValue('I' . $a, $neto + $iva);
         $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($fuentetot);
         $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($alineacion);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($estilototal);
+        $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($styleArray);
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save("Liquidacion_" . $fecha1. ".xlsx");
+        $objWriter->save("Liquidacion_" . $periodo. ".xlsx");
+        $this->get('session')->getFlashBag()->add('success', 'liquidacion generada en el directorio web');
         return $this->redirect($this->generateUrl('liquidacion'));
+    }
+    
+    public function DevuelveMes($mes){
+        switch ($mes){
+            case 01:
+                return 'ENERO';
+        break;
+    case 02:
+        return 'FEBRERO';
+        break;
+    case 03:
+        return 'MARZO';
+        break;
+     case 04:
+        return 'ABRIL';
+        break;
+     case 05:
+        return 'MAYO';
+        break;
+     case 06:
+        return 'JUNIO';
+        break;
+     case 07:
+        return 'JULIO';
+        break;
+     case 08:
+        return 'AGOSTO';
+        break;
+     case 09:
+        return 'SEPTIEMBRE';
+        break;
+     case 10:
+        return 'OCTUBRE';
+        break;
+     case 11:
+        return 'NOVIEMBRE';
+        break;
+     case 12:
+        return 'DICIEMBRE';
+        break;
+        }
+        
     }
 
 }
