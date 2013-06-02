@@ -78,14 +78,17 @@
 							{#<li class="active"><a href="{{ path('admin_index') }}">Inicio</a></li>#}
 							<li {% if app.request.pathinfo ==  '/admin/ordvolvo/' %} class="active" {% endif %}>
                                                             <a href="{{ path('ordvolvo') }}">Ordenes - Volvo</a></li>
+                                                        <li {% if app.request.pathinfo ==  '/admin/renaultorden/' %} class="active" {% endif %}>
+                                                            <a href="{{ path('renaultorden') }}">Ordenes - Renault</a></li>
+                                                        <li {% if app.request.pathinfo ==  '/admin/pdcorden/' %} class="active" {% endif %}>
+                                                            <a href="{{ path('pdcorden') }}">Ordenes - PDC</a></li>
 							<li {% if app.request.pathinfo ==  '/admin/remitovolvo/' %} class="active" {% endif %}>
                                                             <a href="{{ path('remitovolvo') }}">Remitos - Volvo</a></li>
                                                         <li {% if app.request.pathinfo ==  '/admin/repvolvo/' %} class="active" {% endif %}>
-                                                            <a href="{{ path('repvolvo') }}">Repuestos - Volvo</a></li>
+                                                            <a href="{{ path('repvolvo') }}">Repuestos</a></li>
                                                         <li {% if app.request.pathinfo ==  '/admin/ordvolvo/liquidacion' %} class="active" {% endif %}>
                                                             <a href="{{ path('liquidacion') }}">Liquidacion - Volvo</a></li>
-                                                        <li {% if app.request.pathinfo ==  '/admin/renaultorden/' %} class="active" {% endif %}>
-                                                            <a href="{{ path('renaultorden') }}">Ordenes - Renault</a></li>
+                                                        
                                                     {% elseif is_granted('ROLE_CAJERO') %}
                                                         <li {% if app.request.pathinfo ==  '/admin/caja/' %} class="active" {% endif %}>
                                                             <a href="{{ path('admin_index') }}">Inicio</a></li>
