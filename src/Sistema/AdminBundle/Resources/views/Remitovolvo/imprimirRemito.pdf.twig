@@ -42,26 +42,40 @@
         </tr>
         {% set suma = 0 %}
         {% for consumos in entity.consumos %}
-        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}        
+        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}
+        {% set subt = pesos * consumos.cantidad %}
         <tr>            
             <td>{{ consumos.cantidad }}</td>
             <td>{{ consumos.idRepvolvo.codigo }}</td>
             <td>{{ consumos.idRepvolvo }}</td>
             <td>${{ pesos|number_format(2, '.', ',') }}</td>
-            <td>${{ consumos.subtotal }}</td>
+            <td>${{ subt|number_format(2, '.', ',') }}</td>
         </tr>
-        {% set suma = suma + consumos.subtotal %}
+        {% set suma = suma + subt %}
         {% endfor %}        
         {% for consumos in entity.consumosrenault %}
-        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}        
+        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}
+        {% set subt = pesos * consumos.cantidad %}
         <tr>            
             <td>{{ consumos.cantidad }}</td>
             <td>{{ consumos.idRepvolvo.codigo }}</td>
             <td>{{ consumos.idRepvolvo }}</td>
-            <td>${{ pesos|number_format(2, '.', ',') }}</td>
-            <td>${{ consumos.subtotal }}</td>
+           <td>${{ pesos|number_format(2, '.', ',') }}</td>
+            <td>${{ subt|number_format(2, '.', ',') }}</td>
         </tr>
-        {% set suma = suma + consumos.subtotal %}
+        {% set suma = suma + subt %}
+        {% endfor %}        
+        {% for consumos in entity.consumospdc %}
+        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}
+        {% set subt = pesos * consumos.cantidad %}
+        <tr>            
+            <td>{{ consumos.cantidad }}</td>
+            <td>{{ consumos.idRepvolvo.codigo }}</td>
+            <td>{{ consumos.idRepvolvo }}</td>
+           <td>${{ pesos|number_format(2, '.', ',') }}</td>
+            <td>${{ subt|number_format(2, '.', ',') }}</td>
+        </tr>
+        {% set suma = suma + subt %}
         {% endfor %}
         <tr>            
             <td colspan="4" class="th" align="right" style="font-weight: bold; width: 85%">Total Sin IVA</td>

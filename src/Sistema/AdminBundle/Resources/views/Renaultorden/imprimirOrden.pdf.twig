@@ -69,12 +69,12 @@
         </tr>
         {% set suma = 0 %}
         {% for consumos in entity.consumos %}
-        {% set pesos = consumos.idRenaultrepuestos.precio * entity.cotizacion %}
+        {% set pesos = consumos.idRepvolvo.precio * entity.cotizacion %}
         {% set unit = consumos.subtotal / consumos.cantidad %}
         <tr>            
             <td>{{ consumos.cantidad }}</td>
-            <td>{{ consumos.idRenaultrepuestos.codigo }}</td>
-            <td>{{ consumos.idRenaultrepuestos }}</td>
+            <td>{{ consumos.idRepvolvo.codigo }}</td>
+            <td>{{ consumos.idRepvolvo }}</td>
             <td>${{ unit|number_format(2, '.', ',') }}</td>
             <td>${{ consumos.subtotal }}</td>
         </tr>

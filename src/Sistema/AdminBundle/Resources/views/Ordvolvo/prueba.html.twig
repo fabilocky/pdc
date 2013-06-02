@@ -1,0 +1,213 @@
+ <script>
+                        var cantidadAddJs = 0;
+                        var collectionHolder = $('ul.tags');
+
+                        
+                        var $addTagLink = $('<a href="#" class="add_tag_link">Agregar Linea</a>');
+                        var $newLinkLi = $('<li></li>').append($addTagLink);
+
+                        jQuery(document).ready(function() {
+                       
+                            collectionHolder.append($newLinkLi);
+
+                            $addTagLink.on('click', function(e) {
+                               
+                                e.preventDefault();
+
+                               
+                                addTagForm(collectionHolder, $newLinkLi);
+                            });
+                        });
+
+                        function addTagForm(collectionHolder, $newLinkLi) {
+                           
+                            var prototype = collectionHolder.attr('data-prototype');
+
+                           
+                            var newForm = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+                            
+                            var $newFormLi = $('<li></li>').append(newForm);
+                            $newLinkLi.before($newFormLi);
+    
+                            cantidadAddJs = cantidadAddJs+1;
+                            cargarStock(cantidadAddJs);
+                            cargarAddJs(cantidadAddJs);
+                           
+                        }
+
+                       
+                            </script>
+
+                            <script>
+                                function cargarStock(cantidadAddJs){
+                                    
+                                    var $addJ = 
+                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaStock($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "});"                                 
+                                    ;
+                                    var $newAddJ = $('<script><\/script>').append($addJ);
+                                    //$('<div></div>').append($newAddJs);
+                                    $newLinkLi.before($newAddJ);
+                                }
+                                function cargarAddJs(cantidadAddJs){                                    
+                                    var $addJs =                                        
+                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaNombre($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "});"+                                        
+                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_cantidad').change(function() {"+
+                                            "calculaTotal("+cantidadAddJs+")"+
+                                        "});"+
+                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaPrecio($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "});"+
+                                        "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
+                                            "consultaId($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
+                                        "});" 
+                                    ;
+                                    var $newAddJs = $('<script><\/script>').append($addJs);                                  
+                                    $newLinkLi.before($newAddJs);        
+                                }
+                                
+                                function consultaStock(id, cantidadAddJs){
+                                    $.ajax({
+                                      url: '{{ path('orden_repvolvo_stock') }}',
+                                      type: "POST",
+                                      data: { "id" : id },
+                                      success: function(data) {                                                    
+                                       $('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(data);
+                                      }
+                                    });
+                                    stock=parseFloat(document.getElementById('#ordvolvo_consumos_'+cantidadAddJs+'_stock').value);
+                                    //stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
+                                        if(stock==0){
+                                          alert('Sin Stock');
+                                          //die();                                        
+                                        }
+                                }
+    
+                                function consultaPrecio(id, cantidadAddJs){
+                                    $.ajax({
+                                      url: '{{ path('orden_repvolvo_precio') }}',
+                                      type: "POST",
+                                      data: { "id" : id },
+                                      success: function(data) {
+                                        //$('.result').html(data);
+                                        cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10)
+                                        porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)                                        
+                                        if(isNaN(cotizacion)){
+                                                 alert('indique cotizacion y realice nuevamente la acción');
+                                                 //die();
+                                                 }
+                                        else{                                                                                
+                                        porc=porc/100;
+                                        precioPesos = data * cotizacion;
+                                        precioPesos = precioPesos + (precioPesos * porc);
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio').val(data);            
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val(1);
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
+                                        //totalFacturado = $('#sistema_adminbundle_facturatype_total').val();
+                                        //totalLinea = $('#sistema_adminbundle_facturatype_idLineaFactura_'+cantidadAddJs+'_total').val();
+                                        //totalFacturado = totalFacturado + totalLinea;
+                                        //$('#sistema_adminbundle_facturatype_total').val(totalFacturado);
+                                        valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                    if(isNaN(valuetotaltotal)){
+                                                totalFacturado = 0;
+                                            }else{
+                                    totalFacturado = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                    }
+                                    totalFacturado11 = 0;
+                                        collectionHolder.find('li').each(function(index) {
+                                            if(index != 0){
+                                                totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
+                                                if(!isNaN(totalLinea)){
+                                                   totalFacturado11 = totalFacturado + totalLinea;
+                                                }
+                                            }
+                                        });
+                                        $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
+                                        iva11 = totalFacturado11.toFixed(2)*0.21;
+                                        $('#ordvolvo_iva').val(iva11.toFixed(2));
+                                        total11= totalFacturado11 + iva11;
+                                        $('#ordvolvo_total').val(total11.toFixed(2));
+                                      }
+                                      }
+                                    });
+                                }    
+    
+                                function consultaNombre(id, cantidadAddJs){
+                                    $.ajax({
+                                      url: '{{ path('orden_repvolvo_nombre') }}',
+                                      type: "POST",
+                                      data: { "id" : id },
+                                      success: function(data) {
+                                        //$('.result').html(data);            
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_Repvolvo').val(data);            
+                                      }
+                                    });
+                                }  
+                                
+                                function consultaId(id, cantidadAddJs){
+                                    $.ajax({
+                                      url: '{{ path('orden_repvolvo_id') }}',
+                                      type: "POST",
+                                      data: { "id" : id },
+                                      success: function(data) {
+                                        //$('.result').html(data);            
+                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_idRep').val(data);            
+                                      }
+                                    });
+                                } 
+                                
+    
+                                function calculaTotal(cantidadAddJs){
+                                    cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
+                                    valuePrecio = $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio').val();
+                                    valueCantidad = $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val();
+                                    porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)                                                                       
+                                    porc=porc/100;                              
+                                    
+                                    valuePrecio = valuePrecio * cotizacion;                                    
+                                    valueTotal = valuePrecio * valueCantidad;
+                                    valueTotal = valueTotal + (valueTotal * porc);
+                                    $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(valueTotal.toFixed(2));
+                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                    if(isNaN(valuetotaltotal)){
+                                                totalFacturado = 0;
+                                            }else{
+                                    totalFacturado = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                    }
+                                    totalFacturado11 = 0;
+                                    collectionHolder.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
+                                            }
+                                        }
+                                    });
+                                    collectionHolder2.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
+                                            }
+                                        }
+                                    });
+                                    collectionHolder3.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
+                                            }
+                                        }
+                                    });
+                                    $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
+                                    iva11 = totalFacturado11.toFixed(2)*0.21;
+                                    $('#ordvolvo_iva').val(iva11.toFixed(2));
+                                    total11= totalFacturado11 + iva11;
+                                    $('#ordvolvo_total').val(total11.toFixed(2));
+                                }
+                                </script>

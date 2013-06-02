@@ -6,7 +6,7 @@
 
 {% block page %}
 
-<h1>Remitovolvo</h1>
+<h1>Remito - volvo</h1>
 
 <form class="form-horizontal">
     <fieldset>        <div class="control-group">
@@ -61,6 +61,15 @@
             </tr>
         {% endfor %}
         {% for consumos in entity.consumosrenault %}
+            <tr>            
+                <td>{{ consumos.cantidad }}</td>
+                <td>{{ consumos.idRepvolvo.codigo }}</td>
+                <td>{{ consumos.idRepvolvo }}</td>
+                <td>{{ consumos.idRepvolvo.precio }}</td>
+                <td>{{ consumos.subtotal }}</td>                
+            </tr>
+        {% endfor %}
+        {% for consumos in entity.consumospdc %}
             <tr>            
                 <td>{{ consumos.cantidad }}</td>
                 <td>{{ consumos.idRepvolvo.codigo }}</td>

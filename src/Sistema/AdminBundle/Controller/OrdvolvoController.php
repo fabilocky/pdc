@@ -165,34 +165,23 @@ class OrdvolvoController extends Controller {
      * @Route("/new", name="new_ordvolvo")
      * @Template()
      */
-    public function newAction(Request $request) {
-        $ord = new Ordvolvo();
-//        $fec= date("d-m-Y");
-//        $ord->setFecha(date("d-m-Y"));
-//        $solicitud1 = new Solicrep();
-//        $ord->addSolicitudes($solicitud1);
-//        $consumo1 = new Consumo();
-//        $ord->addConsumos($consumo1);        
-        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");
-
-//        if ( preg_match('|<td align="right" class="texto2">UF : </td>\s+<td class="texto2"><b>(.*?)</b></td>|is' , $data , $cap ) )
-//        {
-//        echo "UF ".$cap[1];
-//        }
-        if (preg_match('|<td style="text-align: left;">Dolar</td>
-<td style="text-align: center;">(.*?)</td>
-<td style="text-align: center;">(.*?)</td></tr>|is', $data, $cap)) {
-            $str = $cap[2];
-            $fa = str_replace(",", ".", $str);
-        } else {
+    public function newAction() {
+        $ord = new Ordvolvo();     
+//        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");
+//        if (preg_match('|<td style="text-align: left;">Dolar</td>
+//        <td style="text-align: center;">(.*?)</td>
+//        <td style="text-align: center;">(.*?)</td></tr>|is', $data, $cap)) {
+//            $str = $cap[2];
+//            $fa = str_replace(",", ".", $str);
+//        } else {
             $fa = 0;
-        }
+//        }
 
         $form = $this->createForm(new OrdvolvoType(), $ord);
-
+ 
         return $this->render('SistemaAdminBundle:Ordvolvo:new.html.twig', array(
-                    'form' => $form->createView(),
-                    'dolar' => $fa,
+            'form' => $form->createView(),
+            'dolar'=> $fa,
         ));
     }
 
@@ -220,7 +209,15 @@ class OrdvolvoController extends Controller {
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
-            $repuestos = array();            
+            $repuestos = array();
+            foreach ($consumos as $consumo) {
+                if($consumo["stock"] <= 0){               
+                $repstock=$consumo["Repvolvo"];
+                $codigostock=$consumo["codigo"];
+                $this->get('session')->getFlashBag()->add('error', 'error, no hay stock de '.$repstock.' código = '.$codigostock);
+                return $this->redirect($this->generateUrl('new_ordvolvo'));   
+                }
+            }
             foreach ($consumos as $consumo) {
                 $id1 = $consumo["idRep"];                
                 $em1 = $this->getDoctrine()->getManager();
@@ -1156,8 +1153,13 @@ EOD;
             foreach ($remito->getConsumosRenault() as $consumo) {                
                 $reppdc+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();
                 $objPHPExcel->getActiveSheet()->SetCellValue('E' . $a, $reppdc);
-                $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, 'PESCAROLO DIESEL CENTER');
-            }            
+                $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, 'PESCAROLO DIESEL CENTER');                
+            }
+            foreach ($remito->getConsumosPdc() as $consumo) {                
+                $reppdc+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();
+                $objPHPExcel->getActiveSheet()->SetCellValue('E' . $a, $reppdc);
+                $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, 'PESCAROLO DIESEL CENTER');                
+            }
             foreach ($remito->getConsumos() as $consumo) {
                 $repctacter+=$cotizacion * $consumo->getIdRepvolvo()->getPrecio();
                 $objPHPExcel->getActiveSheet()->SetCellValue('F' . $a, $repctacter);
@@ -1165,8 +1167,8 @@ EOD;
                 $totporc+=$repctacter*0.15;
                 $objPHPExcel->getActiveSheet()->SetCellValue('B' . $a, $remito->getCliente());
             }
-            $reppdc=number_format($reppdc, 2);
             $totreppdc+=$reppdc;
+            $reppdc=number_format($reppdc, 2);          
 //            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $a, $reppdc);           
             $objPHPExcel->getActiveSheet()->getStyle('A' . $a.':I' . $a)->applyFromArray($fuente);
             
@@ -1182,6 +1184,7 @@ EOD;
             $objPHPExcel->getActiveSheet()->getStyle('I' . $a)->applyFromArray($styleArray);
             $a++;
         }
+         
         //Sumatoria Ordenes
         $objPHPExcel->getActiveSheet()->SetCellValue('G' . $a, $totmo);
         $objPHPExcel->getActiveSheet()->SetCellValue('H' . $a, $toter);

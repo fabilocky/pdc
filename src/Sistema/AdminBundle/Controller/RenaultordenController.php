@@ -211,7 +211,15 @@ class RenaultordenController extends Controller
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
-            $repuestos = array();            
+            $repuestos = array();
+            foreach ($consumos as $consumo) {
+                if($consumo["stock"] <= 0){               
+                $repstock=$consumo["Repvolvo"];
+                $codigostock=$consumo["codigo"];
+                $this->get('session')->getFlashBag()->add('error', 'error, no hay stock de '.$repstock.' código = '.$codigostock);
+                return $this->redirect($this->generateUrl('renaultorden_new'));   
+                }
+            }
             foreach ($consumos as $consumo) {
                 $id1 = $consumo["idRep"];                
                 $em1 = $this->getDoctrine()->getManager();
@@ -562,8 +570,8 @@ EOD;
         foreach ($entity->getConsumos() as $consumo) {
         $precio=$consumo->getSubtotal()/$consumo->getCantidad();
         $objPHPExcel->getActiveSheet()->SetCellValue('B'.$b, $consumo->getCantidad());
-        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$b, $consumo->getIdRenaultrepuestos()->getCodigo());
-        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$b, $consumo->getIdRenaultrepuestos()->getDescripcion());
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$b, $consumo->getIdRepvolvo()->getCodigo());
+        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$b, $consumo->getIdRepvolvo()->getDescripcion());
         $objPHPExcel->getActiveSheet()->SetCellValue('J'.$b, $precio);
         $objPHPExcel->getActiveSheet()->SetCellValue('K'.$b, $consumo->getSubtotal());
         $b++;

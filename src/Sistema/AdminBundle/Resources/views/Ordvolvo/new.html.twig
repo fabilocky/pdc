@@ -107,8 +107,8 @@
                 <tr>
                     <td>{{ form_row(form.fecha) }}</td> 
                     <td></td>
-                    <td></td>
-                    <td><div><label for="ordvolvo_cotizacion" class="required">Cotizacion</label><input type="text" id="ordvolvo_cotizacion" name="ordvolvo[cotizacion]" required="required" value={{ dolar }}></div></td>
+                    <td></td>                    
+                    <td><input type="text" id="ordvolvo_cotizacion" name="ordvolvo[cotizacion]" required="required" value={{dolar}}></td>                    
                 </tr>
                 <tr>
                     <td>{{ form_row(form.client) }}</td>
@@ -217,12 +217,6 @@
                             </div>
                         </div>
 
-{#<script src="{{ asset('js/jquery-ui-timepicker-addon.js') }}"></script>
-<script>
-    $('.date').datetimepicker({ dateFormat: 'dd-mm-yy',changeMonth: true,
-            changeYear: true, showSecond: true, timeFormat: 'hh:mm:ss', })
-    
-</script>#}
                         <script>
                         var cantidadAddJs = 0;
                         var collectionHolder = $('ul.tags');
@@ -309,7 +303,7 @@
                                         "});"+                                        
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_cantidad').change(function() {"+
                                             "calculaTotal("+cantidadAddJs+")"+
-                                        "});"+
+                                        "});"+                                        
                                         "$('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').change(function() {"+               
                                             "consultaPrecio($('#ordvolvo_consumos_"+cantidadAddJs+"_codigo').val(), "+cantidadAddJs+")"+
                                         "});"+
@@ -345,13 +339,14 @@
                                       success: function(data) {
                                         //$('.result').html(data);            
                                        $('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(data);
-                                      }
-                                    });
-                                    stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
-                                        if(isNaN(stock)){
+                                       stock=parseFloat($('#ordvolvo_consumos_'+cantidadAddJs+'_stock').val(), 10);
+                                        if(stock < 1){
                                           alert('Sin Stock');
                                           //die();                                        
                                         }
+                                      }
+                                    });
+                                    
                                 }
     
                                 function consultaPrecio(id, cantidadAddJs){
@@ -375,30 +370,57 @@
                                         $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
                                         $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val(1);
                                         $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
-                                        //totalFacturado = $('#sistema_adminbundle_facturatype_total').val();
-                                        //totalLinea = $('#sistema_adminbundle_facturatype_idLineaFactura_'+cantidadAddJs+'_total').val();
-                                        //totalFacturado = totalFacturado + totalLinea;
-                                        //$('#sistema_adminbundle_facturatype_total').val(totalFacturado);
-                                        valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
+                                        cotizacion=parseFloat($('#ordvolvo_cotizacion').val(), 10);        
+                                    valuePrecio = $('#ordvolvo_consumos_'+cantidadAddJs+'_Precio').val();
+                                    valueCantidad = $('#ordvolvo_consumos_'+cantidadAddJs+'_cantidad').val();
+                                    porc=parseFloat($('#ordvolvo_porc_rep').val(), 10)                                                                       
+                                    porc=porc/100;                              
+                                    
+                                    valuePrecio = valuePrecio * cotizacion;                                    
+                                    valueTotal = valuePrecio * valueCantidad;
+                                    valueTotal = valueTotal + (valueTotal * porc);
+                                    $('#ordvolvo_consumos_'+cantidadAddJs+'_subtotal').val(valueTotal.toFixed(2));
+                                    valuetotaltotal = parseFloat($('#ordvolvo_neto').val(), 10); 
                                     if(isNaN(valuetotaltotal)){
                                                 totalFacturado = 0;
                                             }else{
                                     totalFacturado = parseFloat($('#ordvolvo_neto').val(), 10); 
                                     }
                                     totalFacturado11 = 0;
-                                        collectionHolder.find('li').each(function(index) {
-                                            if(index != 0){
-                                                totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
-                                                if(!isNaN(totalLinea)){
-                                                   totalFacturado11 = totalFacturado + totalLinea;
-                                                }
+                                    collectionHolder.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#ordvolvo_consumos_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
                                             }
-                                        });
-                                        $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
-                                        iva11 = totalFacturado11.toFixed(2)*0.21;
-                                        $('#ordvolvo_iva').val(iva11.toFixed(2));
-                                        total11= totalFacturado11 + iva11;
-                                        $('#ordvolvo_total').val(total11.toFixed(2));
+                                        }
+                                    });
+                                    collectionHolder2.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#ordvolvo_operaciones_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
+                                            }
+                                        }
+                                    });
+                                    collectionHolder3.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#ordvolvo_terceros_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
+                                            }
+                                        }
+                                    });
+                                    $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
+                                    iva11 = totalFacturado11.toFixed(2)*0.21;
+                                    $('#ordvolvo_iva').val(iva11.toFixed(2));
+                                    total11= totalFacturado11 + iva11;
+                                    $('#ordvolvo_total').val(total11.toFixed(2));
+                                        //totalFacturado = $('#sistema_adminbundle_facturatype_total').val();
+                                        //totalLinea = $('#sistema_adminbundle_facturatype_idLineaFactura_'+cantidadAddJs+'_total').val();
+                                        //totalFacturado = totalFacturado + totalLinea;
+                                        //$('#sistema_adminbundle_facturatype_total').val(totalFacturado);
+                                       
                                       }
                                       }
                                     });

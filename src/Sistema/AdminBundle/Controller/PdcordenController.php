@@ -153,29 +153,21 @@ class PdcordenController extends Controller
      */
     public function newAction()
     {
-        $ord = new Pdcorden();
-//        $fec= date("d-m-Y");
-//        $ord->setFecha(date("d-m-Y"));
-//        $solicitud1 = new Solicrep();
-//        $ord->addSolicitudes($solicitud1);
-//        $consumo1 = new Consumo();
-//        $ord->addConsumos($consumo1);
-        
-        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");
- 
-        if ( preg_match('|<td align="right" class="texto2">UF : </td>\s+<td class="texto2"><b>(.*?)</b></td>|is' , $data , $cap ) )
-        {
-        echo "UF ".$cap[1];
-        }
-        if ( preg_match('|<td style="text-align: left;">Dolar</td>
-<td style="text-align: center;">(.*?)</td>
-<td style="text-align: center;">(.*?)</td></tr>|is' , $data , $cap ) )
-        {
-        $str = $cap[2];
-        $fa=str_replace(",", ".",$str);
-        }else{
+        $ord = new Pdcorden();        
+//        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp"); 
+//        if ( preg_match('|<td align="right" class="texto2">UF : </td>\s+<td class="texto2"><b>(.*?)</b></td>|is' , $data , $cap ) )
+//        {
+//        echo "UF ".$cap[1];
+//        }
+//        if ( preg_match('|<td style="text-align: left;">Dolar</td>
+//        <td style="text-align: center;">(.*?)</td>
+//        <td style="text-align: center;">(.*?)</td></tr>|is' , $data , $cap ) )
+//        {
+//        $str = $cap[2];
+//        $fa=str_replace(",", ".",$str);
+//        }else{
             $fa=0;
-        }
+//        }
         
         $form = $this->createForm(new PdcordenType(), $ord);
  
@@ -210,7 +202,15 @@ class PdcordenController extends Controller
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
-            $repuestos = array();            
+            $repuestos = array();
+            foreach ($consumos as $consumo) {
+                if($consumo["stock"] <= 0){               
+                $repstock=$consumo["Repvolvo"];
+                $codigostock=$consumo["codigo"];
+                $this->get('session')->getFlashBag()->add('error', 'error, no hay stock de '.$repstock.' código = '.$codigostock);
+                return $this->redirect($this->generateUrl('pdcorden_new'));   
+                }
+            }
             foreach ($consumos as $consumo) {
                 $id1 = $consumo["idRep"];                
                 $em1 = $this->getDoctrine()->getManager();
@@ -561,8 +561,8 @@ EOD;
         foreach ($entity->getConsumos() as $consumo) {
         $precio=$consumo->getSubtotal()/$consumo->getCantidad();
         $objPHPExcel->getActiveSheet()->SetCellValue('B'.$b, $consumo->getCantidad());
-        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$b, $consumo->getIdPdcrepuestos()->getCodigo());
-        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$b, $consumo->getIdPdcrepuestos()->getDescripcion());
+        $objPHPExcel->getActiveSheet()->SetCellValue('C'.$b, $consumo->getIdRepvolvo()->getCodigo());
+        $objPHPExcel->getActiveSheet()->SetCellValue('D'.$b, $consumo->getIdRepvolvo()->getDescripcion());
         $objPHPExcel->getActiveSheet()->SetCellValue('J'.$b, $precio);
         $objPHPExcel->getActiveSheet()->SetCellValue('K'.$b, $consumo->getSubtotal());
         $b++;

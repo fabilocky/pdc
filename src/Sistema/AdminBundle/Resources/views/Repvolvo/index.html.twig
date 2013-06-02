@@ -58,6 +58,7 @@
             <th>Cd</th>
             <th>Precio</th>
             <th>Tipo</th>
+            <th>Cantidad</th>
             <th>{{ 'views.index.actions'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</th>
         </tr>
     </thead>
@@ -70,6 +71,7 @@
             <td>{{ entity.cd }}</td>
             <td>{{ entity.precio }}</td>
             <td>{{ entity.tipo }}</td>
+            <td>{{ entity.cantidad }}</td>
             <td>
         <a class="btn btn-mini" href="{{ path('repvolvo_show', { 'id': entity.id }) }}">
             {{ 'views.actions.show'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}
@@ -89,7 +91,7 @@
 
         <div class="span8">
     <a class="btn btn-primary likepaginator" href="{{ path('repvolvo_new') }}">
-            {{ 'views.index.createnew'|trans({}, 'JordiLlonchCrudGeneratorBundle') }} Repvolvo
+            Cargar Repuesto
         </a>
     </div>
             <div class="span8">

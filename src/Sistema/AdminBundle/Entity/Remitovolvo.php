@@ -39,7 +39,7 @@ class Remitovolvo
     /**
      * @var string $chasis
      *
-     * @ORM\Column(name="chasis", type="string", length=255)
+     * @ORM\Column(name="chasis", type="string", length=255, nullable=true)
      */
     private $chasis;
 
@@ -53,14 +53,14 @@ class Remitovolvo
     /**
      * @var string $modelo
      *
-     * @ORM\Column(name="modelo", type="string", length=255)
+     * @ORM\Column(name="modelo", type="string", length=255, nullable=true)
      */
     private $modelo;
 
     /**
      * @var string $dominio
      *
-     * @ORM\Column(name="dominio", type="string", length=255)
+     * @ORM\Column(name="dominio", type="string", length=255, nullable=true)
      */
     private $dominio;
     
@@ -111,10 +111,17 @@ class Remitovolvo
      */
     private $consumosrenault;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Pdcconsumo", mappedBy="remitovolvo", cascade={"persist"})
+     * @var type 
+     */
+    private $consumospdc;
+    
     public function __construct()
     {        
         $this->consumos = new \Doctrine\Common\Collections\ArrayCollection();
         $this->consumosrenault = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->consumospdc = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fecha =  new \DateTime();
     }
 
@@ -442,5 +449,36 @@ class Remitovolvo
     public function getCtacte()
     {
         return $this->ctacte;
+    }
+    
+    /**
+     * Get ConsumosPdc
+     * 
+     * @return type 
+     */
+    public function getConsumosPdc()
+    {
+        return $this->consumospdc;
+    }
+ 
+    /**
+     * Set ConsumosPdc
+     * 
+     * @param ArrayCollection $consumospdc 
+     */
+    public function setConsumosPdc(ArrayCollection $consumospdc)
+    {
+        $this->consumospdc = $consumospdc;
+    }
+    
+    /**
+     * Add consumos
+     *
+     * @param Sistema\AdminBundle\Entity\Pdcconsumo $consumos
+     */
+    public function addConsumosPdc(\Sistema\AdminBundle\Entity\Pdcconsumo $consumos)
+    {
+        $this->consumospdc[] = $consumos;
+        $consumos->setRemitovolvo($this);
     }
 }

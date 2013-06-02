@@ -38,10 +38,16 @@ class RemitovolvoType extends AbstractType
                     'required'=> false,
 //                    'empty_value' => 'Seleccionar repuesto',                
                 ))   
-            ->add('chasis')
+            ->add('chasis', null, array(
+                'required' => false,
+            ))
             ->add('cotizacion')
-            ->add('modelo')
-            ->add('dominio')
+            ->add('modelo', null, array(
+                'required' => false,
+            ))
+            ->add('dominio', null, array(
+                'required' => false,
+            ))
             ->add('ctacte', null, array(                    
                     'label' => 'Cuenta Corriente',                            
                 ))   

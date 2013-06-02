@@ -75,7 +75,7 @@
     <script src="{{ asset('js/jquery-1.8.2.min.js') }}"></script>
     <script src="{{ asset('js/jquery-ui-1.9.0.custom.min.js') }}"></script>
 {{ form_javascript(form) }}
-    <h1>Nueva Remito - Volvo</h1>
+    <h1>Nuevo Remito - Volvo</h1>
     <!-- cotizacion-dolar.com.ar 234x90px FormalCD -->
     <div style="border: 1px solid rgb(90, 90, 90); background:
          rgb(176, 180, 160) none repeat scroll 0% 50%; text-align: center; width:
@@ -288,68 +288,70 @@ $newLinkLi.before($newAddJs);
 
 function consultaStock(id, cantidadAddJs){
 $.ajax({
-  url: '{{ path('orden_repvolvo_stock') }}',
-  type: "POST",
-  data: { "id" : id },
-  success: function(data) {
-    //$('.result').html(data);            
-   $('#remitovolvo_consumos_'+cantidadAddJs+'_stock').val(data);
-  }
+url: '{{ path('orden_repvolvo_stock') }}',
+type: "POST",
+data: { "id" : id },
+success: function(data) {
+//$('.result').html(data);            
+$('#remitovolvo_consumos_'+cantidadAddJs+'_stock').val(data);
+stock=parseFloat($('#remitovolvo_consumos_'+cantidadAddJs+'_stock').val(), 10);
+if(stock < 1){
+  alert('Sin Stock');
+  //die();                                        
+}
+}
 });
-stock=parseFloat($('#remitovolvo_consumos_'+cantidadAddJs+'_stock').val(), 10)
-    if(isNaN(stock)){
-      alert('Sin Stock');
-      //die();                                        
-    }
 }
 
 function consultaPrecio(id, cantidadAddJs){
 $.ajax({
-  url: '{{ path('remitovolvo_repvolvo_preciorem') }}',
-  type: "POST",
-  data: { "id" : id },
-  success: function(data) {
-    //$('.result').html(data);
-    cotizacion=parseFloat($('#remitovolvo_cotizacion').val(), 10)
-    porc=parseFloat($('#remitovolvo_porc_rep').val(), 10)                                        
-    if(isNaN(cotizacion)){
-             alert('indique cotizacion y realice nuevamente la acción');
-             //die();
-             }
-    else{                                                                                
-    porc=porc/100;
-    precioPesos = data * cotizacion;
-    precioPesos = precioPesos + (precioPesos * porc);
-    $('#remitovolvo_consumos_'+cantidadAddJs+'_Precio').val(data);            
-    $('#remitovolvo_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
-    $('#remitovolvo_consumos_'+cantidadAddJs+'_cantidad').val(1);
-    $('#remitovolvo_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
-    //totalFacturado = $('#sistema_adminbundle_facturatype_total').val();
-    //totalLinea = $('#sistema_adminbundle_facturatype_idLineaFactura_'+cantidadAddJs+'_total').val();
-    //totalFacturado = totalFacturado + totalLinea;
-    //$('#sistema_adminbundle_facturatype_total').val(totalFacturado);
-    valuetotaltotal = parseFloat($('#remitovolvo_neto').val(), 10); 
+url: '{{ path('remitovolvo_repvolvo_preciorem') }}',
+type: "POST",
+data: { "id" : id },
+success: function(data) {
+//$('.result').html(data);
+cotizacion=parseFloat($('#remitovolvo_cotizacion').val(), 10)
+porc=parseFloat($('#remitovolvo_porc_rep').val(), 10)                                        
+if(isNaN(cotizacion)){
+alert('indique cotizacion y realice nuevamente la acción');
+//die();
+}
+else{                                                                                
+porc=porc/100;
+precioPesos = data * cotizacion;
+precioPesos = precioPesos + (precioPesos * porc);
+$('#remitovolvo_consumos_'+cantidadAddJs+'_Precio').val(data);            
+$('#remitovolvo_consumos_'+cantidadAddJs+'_Precio2').val(precioPesos.toFixed(2));
+$('#remitovolvo_consumos_'+cantidadAddJs+'_cantidad').val(1);
+$('#remitovolvo_consumos_'+cantidadAddJs+'_subtotal').val(precioPesos.toFixed(2));
+cotizacion=parseFloat($('#remitovolvo_cotizacion').val(), 10);        
+valuePrecio = $('#remitovolvo_consumos_'+cantidadAddJs+'_Precio').val();
+valueCantidad = $('#remitovolvo_consumos_'+cantidadAddJs+'_cantidad').val();
+porc=parseFloat($('#remitovolvo_porc_rep').val(), 10)                                                                       
+porc=porc/100;                              
+
+valuePrecio = valuePrecio * cotizacion;                                    
+valueTotal = valuePrecio * valueCantidad;
+valueTotal = valueTotal + (valueTotal * porc);
+$('#remitovolvo_consumos_'+cantidadAddJs+'_subtotal').val(valueTotal.toFixed(2));
+valuetotaltotal = parseFloat($('#remitovolvo_neto').val(), 10); 
 if(isNaN(valuetotaltotal)){
-            totalFacturado = 0;
-        }else{
+        totalFacturado = 0;
+    }else{
 totalFacturado = parseFloat($('#remitovolvo_neto').val(), 10); 
 }
 totalFacturado11 = 0;
-    collectionHolder.find('li').each(function(index) {
-        if(index != 0){
-            totalLinea = parseFloat($('#remitovolvo_consumos_'+index+'_subtotal').val(), 10)
-            if(!isNaN(totalLinea)){
-               totalFacturado11 = totalFacturado + totalLinea;
-            }
-        }
-    });
-    $('#remitovolvo_neto').val(totalFacturado11.toFixed(2));
-    iva11 = totalFacturado11.toFixed(2)*0.21;
-    $('#remitovolvo_iva').val(iva11.toFixed(2));
-    total11= totalFacturado11 + iva11;
-    $('#remitovolvo_total').val(total11.toFixed(2));
-  }
-  }
+collectionHolder.find('li').each(function(index) {
+if(index != 0){
+    totalLinea = parseFloat($('#remitovolvo_consumos_'+index+'_subtotal').val(), 10)
+    if(!isNaN(totalLinea)){
+        totalFacturado11 = totalFacturado11 + totalLinea;
+    }
+}
+});
+$('#remitovolvo_neto').val(totalFacturado11.toFixed(2));
+}
+}
 });
 }    
 

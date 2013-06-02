@@ -304,19 +304,41 @@ class RepvolvoController extends Controller {
         } else {
             echo "Ocurrió algún error al subir el fichero. No pudo guardarse.";
         }
-        
+       $tipo= $_POST['tipo'];       
        $excel = $this->get('os.excel');
        $excel->loadFile("excel.xlsx");
        $num=$excel->getRowCount();
-       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");
-       $query="TRUNCATE repvolvo CASCADE";
-       $result=pg_query($con, $query)or die('ERROR AL INSERTAR DATOS: ' . pg_last_error());
+//       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");       
+       if ($tipo == "volvo"){
        for ($i = 1; $i <= $num; $i++) {
        $hola=$excel->getRowData($i);
-       $query ="INSERT INTO repvolvo (id, codigo, descripcion, cd, precio, cantidad, tipo) VALUES ('$i', '$hola[0]', '$hola[1]','$hola[2]','$hola[3]','0', 'Volvo')"; 
-       $result=pg_query($con, $query);
-//       echo $hola[0].",".$hola[1].",".$hola[2].",".$hola[3];       
+       $rep=new Repvolvo();
+       $rep->setCodigo($hola[0]);
+       $rep->setDescripcion($hola[1]);
+       $rep->setCd($hola[2]);
+       $rep->setPrecio($hola[3]);
+       $rep->setCantidad(0);
+       $rep->setTipo('volvo');
+       $em = $this->getDoctrine()->getEntityManager();
+       $em->persist($rep);            
+       $em->flush();
        }
+       }
+       if ($tipo == 'renault'){
+       for ($i = 1; $i <= $num; $i++) {
+       $hola=$excel->getRowData($i);
+       $rep=new Repvolvo();
+       $rep->setCodigo($hola[0]);
+       $rep->setDescripcion("");
+       $rep->setCd($hola[2]);
+       $rep->setPrecio($hola[1]);
+       $rep->setCantidad(0);
+       $rep->setTipo('renault');
+       $em = $this->getDoctrine()->getEntityManager();
+       $em->persist($rep);            
+       $em->flush();
+       }
+       }       
        $pedidos="Carga Exitosa";
        //return array('entities' => $pedidos);
        return $this->redirect($this->generateUrl('repvolvo', array()));
