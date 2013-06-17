@@ -154,21 +154,43 @@ class PdcordenController extends Controller
     public function newAction()
     {
         $ord = new Pdcorden();        
-//        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp"); 
-//        if ( preg_match('|<td align="right" class="texto2">UF : </td>\s+<td class="texto2"><b>(.*?)</b></td>|is' , $data , $cap ) )
-//        {
-//        echo "UF ".$cap[1];
-//        }
-//        if ( preg_match('|<td style="text-align: left;">Dolar</td>
-//        <td style="text-align: center;">(.*?)</td>
-//        <td style="text-align: center;">(.*?)</td></tr>|is' , $data , $cap ) )
-//        {
-//        $str = $cap[2];
-//        $fa=str_replace(",", ".",$str);
-//        }else{
+        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");        
+        utf8_encode($data);
+        preg_match("/<table.*?>.*?<\/[\s]*table>/s", $data, $table_html);
+
+  // Get title for each row
+  preg_match_all("/<th.*?>(.*?)<\/[\s]*th>/", $table_html[0], $matches);
+  $row_headers = $matches[1];
+
+  // Iterate each row
+  preg_match_all("/<tr.*?>(.*?)<\/[\s]*tr>/s", $table_html[0], $matches);
+
+  $table = array();
+
+  foreach($matches[1] as $row_html)
+  {
+    preg_match_all("/<td.*?>(.*?)<\/[\s]*td>/", $row_html, $td_matches);
+    $row = array();
+    for($i=0; $i<count($td_matches[1]); $i++)
+    {
+      $td = strip_tags(html_entity_decode($td_matches[1][$i]));
+      $row[$row_headers[$i]] = $td;
+    }
+
+    if(count($row) > 0)
+      $table[] = $row;
+  }       
+        $valores= array();
+        foreach ($table[0] as $valor) {
+           $valores[]= $valor;
+        }        
+        if ($valores[2]){
+        $str = $valores[2];
+        $fa=str_replace(",", ".",$str);
+        }
+        else{
             $fa=0;
-//        }
-        
+        }
         $form = $this->createForm(new PdcordenType(), $ord);
  
         return $this->render('SistemaAdminBundle:Pdcorden:new.html.twig', array(
