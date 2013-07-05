@@ -226,15 +226,7 @@ $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareu
         if (isset($ords['consumos'])) {
             $consumos = $ords['consumos'];
             $consumoremito = $ords['consumos'];
-            $repuestos = array();
-            foreach ($consumos as $consumo) {
-                if($consumo["stock"] <= 0){               
-                $repstock=$consumo["Repvolvo"];
-                $codigostock=$consumo["codigo"];
-                $this->get('session')->getFlashBag()->add('error', 'error, no hay stock de '.$repstock.' código = '.$codigostock);
-                return $this->redirect($this->generateUrl('renaultorden_new'));   
-                }
-            }
+            $repuestos = array();            
             foreach ($consumos as $consumo) {
                 $id1 = $consumo["idRep"];                
                 $em1 = $this->getDoctrine()->getManager();

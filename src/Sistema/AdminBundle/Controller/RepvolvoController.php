@@ -298,50 +298,28 @@ class RepvolvoController extends Controller {
         $nombre_archivo = $_FILES['userfile']['name'];
         $tipo_archivo = $_FILES['userfile']['type'];
         $tamano_archivo = $_FILES['userfile']['size'];
-
+        $tipo= $_POST['tipo'];
         if (move_uploaded_file($_FILES['userfile']['tmp_name'], "excel.xlsx")) {
             echo "El archivo ha sido cargado correctamente.";
         } else {
             echo "Ocurrió algún error al subir el fichero. No pudo guardarse.";
         }
-       $tipo= $_POST['tipo'];       
+       $id=101011;
        $excel = $this->get('os.excel');
        $excel->loadFile("excel.xlsx");
        $num=$excel->getRowCount();
-//       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");       
-       if ($tipo == "volvo"){
+       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");
+       //$query="TRUNCATE repvolvo CASCADE";
+//       $result=pg_query($con, $query)or die('ERROR AL INSERTAR DATOS: ' . pg_last_error());
        for ($i = 1; $i <= $num; $i++) {
        $hola=$excel->getRowData($i);
-       $rep=new Repvolvo();
-       $rep->setCodigo($hola[0]);
-       $rep->setDescripcion($hola[1]);
-       $rep->setCd($hola[2]);
-       $rep->setPrecio($hola[3]);
-       $rep->setCantidad(0);
-       $rep->setTipo('volvo');
-       $em = $this->getDoctrine()->getEntityManager();
-       $em->persist($rep);            
-       $em->flush();
+       $query ="INSERT INTO repvolvo (id, codigo, descripcion, cd, precio, cantidad, tipo) VALUES ('$id', '$hola[0]', ' ', '$hola[2]','$hola[1]', 0, '$tipo')"; 
+       $result=pg_query($con, $query);
+       $id++;
+//       echo $hola[0].",".$hola[1].",".$hola[2].",".$hola[3];       
        }
-       }
-       if ($tipo == 'renault'){
-       for ($i = 1; $i <= $num; $i++) {
-       $hola=$excel->getRowData($i);
-       $rep=new Repvolvo();
-       $rep->setCodigo($hola[0]);
-       $rep->setDescripcion("");
-       $rep->setCd($hola[2]);
-       $rep->setPrecio($hola[1]);
-       $rep->setCantidad(0);
-       $rep->setTipo('renault');
-       $em = $this->getDoctrine()->getEntityManager();
-       $em->persist($rep);            
-       $em->flush();
-       }
-       }       
        $pedidos="Carga Exitosa";
-       //return array('entities' => $pedidos);
-       return $this->redirect($this->generateUrl('repvolvo', array()));
+       return array('entities' => $pedidos);
     }
     
 }
