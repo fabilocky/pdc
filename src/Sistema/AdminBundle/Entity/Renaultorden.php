@@ -131,6 +131,12 @@ class Renaultorden
     private $total;
     
     /**
+     * @ORM\OneToMany(targetEntity="Otro", mappedBy="renaultorden", cascade={"persist"})
+     * @var type 
+     */
+    private $otro;
+    
+    /**
      * @var Repvolvo
      *
      * @ORM\OneToOne(targetEntity="Remitovolvo", cascade={"persist"})
@@ -168,6 +174,7 @@ class Renaultorden
     {
         $this->solicitudes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->consumos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->otro = new \Doctrine\Common\Collections\ArrayCollection();
         $this->operaciones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->terceros = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fecha =  new \DateTime();
@@ -721,5 +728,47 @@ class Renaultorden
     public function getIdRemito()
     {
         return $this->idRemito;
+    }
+    
+    /**
+     * Add otro
+     *
+     * @param Sistema\AdminBundle\Entity\Otro $otro
+     * @return Renaultorden
+     */
+    public function addOtro(\Sistema\AdminBundle\Entity\Otro $otro)
+    {
+        $this->otro[] = $otro;
+        $otro->setRenaultorden($this);
+    }
+
+    /**
+     * Remove otro
+     *
+     * @param Sistema\AdminBundle\Entity\Otro $otro
+     */
+    public function removeOtro(\Sistema\AdminBundle\Entity\Otro $otro)
+    {
+        $this->otro->removeElement($otro);
+    }
+
+    /**
+     * Get otro
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOtro()
+    {
+        return $this->otro;
+    }
+    
+    /**
+     * Set Otro
+     * 
+     * @param ArrayCollection $otro
+     */
+    public function setOtro(ArrayCollection $otro)
+    {
+        $this->otro = $otro;
     }
 }

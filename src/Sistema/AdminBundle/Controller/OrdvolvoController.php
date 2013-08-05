@@ -12,6 +12,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 use Liuggio\ExcelBundle\LiuggioExcelBundle;
 use Sistema\AdminBundle\Entity\Ordvolvo;
 use Sistema\AdminBundle\Form\OrdvolvoType;
+use Sistema\AdminBundle\Form\PresupuestoType;
 use Sistema\AdminBundle\Form\LiquidacionType;
 use Sistema\AdminBundle\Form\OrdvolvoFilterType;
 use Sistema\AdminBundle\Entity\Solicrep;
@@ -297,7 +298,23 @@ class OrdvolvoController extends Controller {
                 $ord->addTerceros($terceros[$i]);
             }
         }
-
+        $cont3 = 0;
+        if (isset($ords['otro'])) {
+            $otro = $ords['otro'];
+            foreach ($otro as $otro) {
+                $str3 = $otro['precio'];
+                $fa3 = str_replace(".", ",", $str3);
+                $otro['precio'] = $fa3;
+                $str4 = $otro['subtotal'];
+                $fa4 = str_replace(".", ",", $str4);
+                $otro['subtotal'] = $fa4;
+                $cont2 = $cont2 + 1;
+            }
+            for ($i = 0; $i <= $cont3; $i++) {
+                $otro[$i] = new Otro();
+                $ord->addOtro($otro[$i]);
+            }
+        }
 
         $form = $this->createForm(new OrdvolvoType(), $ord);
         $form->bindRequest($request);
@@ -491,7 +508,9 @@ class OrdvolvoController extends Controller {
             $id = $this->getRequest()->get('id');
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);
+            if ($entity){
             return new Response($entity->getPrecio());
+            }else return '';
         }
         return new Response('Error. This is not ajax!', 400);
     }
@@ -507,7 +526,9 @@ class OrdvolvoController extends Controller {
             $id = $this->getRequest()->get('id');
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);
+            if ($entity){
             return new Response($entity->getCantidad());
+            }else return '';
         }
         return new Response('Error. This is not ajax!', 400);
     }
@@ -523,7 +544,9 @@ class OrdvolvoController extends Controller {
             $id = $this->getRequest()->get('id');
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SistemaAdminBundle:Repvolvo')->findOneByCodigo($id);
+            if ($entity){
             return new Response($entity->getDescripcion());
+            }else return '';
         }
         return new Response('Error. This is not ajax!', 400);
     }
@@ -1302,6 +1325,168 @@ EOD;
         break;
         }
         
+    }
+    
+    /**
+     * Displays a form to create a new OrdVolvo entity.
+     *
+     * @Route("/presupuesto", name="presupuesto")
+     * @Template()
+     */
+    public function PresupuestoAction() {
+        $ord = new Ordvolvo();     
+        $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareuro.jsp");        
+        utf8_encode($data);
+        preg_match("/<table.*?>.*?<\/[\s]*table>/s", $data, $table_html);
+
+  // Get title for each row
+  preg_match_all("/<th.*?>(.*?)<\/[\s]*th>/", $table_html[0], $matches);
+  $row_headers = $matches[1];
+
+  // Iterate each row
+  preg_match_all("/<tr.*?>(.*?)<\/[\s]*tr>/s", $table_html[0], $matches);
+
+  $table = array();
+
+  foreach($matches[1] as $row_html)
+  {
+    preg_match_all("/<td.*?>(.*?)<\/[\s]*td>/", $row_html, $td_matches);
+    $row = array();
+    for($i=0; $i<count($td_matches[1]); $i++)
+    {
+      $td = strip_tags(html_entity_decode($td_matches[1][$i]));
+      $row[$row_headers[$i]] = $td;
+    }
+
+    if(count($row) > 0)
+      $table[] = $row;
+  }       
+        $valores= array();
+        foreach ($table[0] as $valor) {
+           $valores[]= $valor;
+        }        
+        if ($valores[2]){
+        $str = $valores[2];
+        $fa=str_replace(",", ".",$str);
+        }
+        else{
+            $fa=0;
+        }
+
+        $form = $this->createForm(new PresupuestoType(), $ord);
+ 
+        return $this->render('SistemaAdminBundle:Ordvolvo:newpresupuesto.html.twig', array(
+            'form' => $form->createView(),
+            'dolar'=> $fa,
+        ));
+    }    
+    
+    /**
+     * REPORTE DE TORNEO GRUPO EQUIPOS
+     * 
+     * @Route("/presupuestoimprimir", name="presupuesto_imprimir")
+     * @Method("post")
+     * @Template()
+     */
+    public function imprimirPresupuestoAction(Request $request) {
+       $ords = $request->request->get('ordvolvo', array());
+//       var_dump($ords);die();
+        $contenido = $this->renderView('SistemaAdminBundle:Ordvolvo:imprimirPresupuesto.pdf.twig', array(
+            'entity' => $ords,
+        ));
+
+        $pdf = <<<EOD
+<style>
+table {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 10pt;
+}
+.table-bordered {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-collapse: separate;
+    border-color: #DDDDDD;
+    border-image: none;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+}
+.table-bordered td {
+    border: solid thin #DDDDDD;
+}
+.table-bordered td.th {
+    font-weight: bold;
+}
+</style>
+$contenido
+EOD;
+
+        return $this->get('sistema_tcpdf')->quick3_pdf($pdf);
+    }
+    
+    /**
+     * Displays a form to create a new OrdVolvo entity.
+     *
+     * @Route("/pedido", name="pedido")
+     * @Template()
+     */
+    public function PedidoAction() {
+        $ord = new Ordvolvo();     
+        
+
+        $form = $this->createForm(new \Sistema\AdminBundle\Form\PedidoType(), $ord); 
+        return $this->render('SistemaAdminBundle:Ordvolvo:newpedido.html.twig', array(
+            'form' => $form->createView(),           
+        ));
+    }    
+    
+    /**
+     * REPORTE DE TORNEO GRUPO EQUIPOS
+     * 
+     * @Route("/pedidoimprimir", name="pedido_imprimir")
+     * @Method("post")
+     * @Template()
+     */
+    public function imprimirPedidoAction(Request $request) {
+       $ords = $request->request->get('ordvolvo', array());
+//       var_dump($ords);die();
+        $contenido = $this->renderView('SistemaAdminBundle:Ordvolvo:imprimirPedido.pdf.twig', array(
+            'entity' => $ords,
+        ));
+
+        $pdf = <<<EOD
+<style>
+table {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 10pt;
+}
+.table-bordered {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-collapse: separate;
+    border-color: #DDDDDD;
+    border-image: none;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+}
+.table-bordered td {
+    border: solid thin #DDDDDD;
+}
+.table-bordered td.th {
+    font-weight: bold;
+}
+</style>
+$contenido
+EOD;
+
+        return $this->get('sistema_tcpdf')->quick3_pdf($pdf);
     }
 
 }

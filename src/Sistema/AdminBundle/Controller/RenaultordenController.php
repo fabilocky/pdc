@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\View\TwitterBootstrapView;
-
+use Sistema\AdminBundle\Entity\Otro;
 use Sistema\AdminBundle\Entity\Renaultorden;
 use Sistema\AdminBundle\Form\RenaultordenType;
 use Sistema\AdminBundle\Form\RenaultordenFilterType;
@@ -285,7 +285,25 @@ $data = file_get_contents("https://hb.bbv.com.ar/fnet/mod/inversiones/NL-dolareu
                 $terceros[$i] = new \Sistema\AdminBundle\Entity\Renaultterceros();
                 $ord->addTerceros($terceros[$i]);                
             }
-        }     
+        }
+        
+        $cont3 = 0;
+        if (isset($ords['otro'])) {
+            $otro = $ords['otro'];
+            foreach ($otro as $otro) {
+                $str3 = $otro['precio'];
+                $fa3 = str_replace(".", ",", $str3);
+                $otro['precio'] = $fa3;
+                $str4 = $otro['subtotal'];
+                $fa4 = str_replace(".", ",", $str4);
+                $otro['subtotal'] = $fa4;
+                $cont2 = $cont2 + 1;
+            }
+            for ($i = 0; $i <= $cont3; $i++) {
+                $otro[$i] = new Otro();
+                $ord->addOtro($otro[$i]);
+            }
+        }
         
  
         $form = $this->createForm(new RenaultordenType(), $ord);        

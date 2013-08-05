@@ -55,14 +55,14 @@ class ConsumoType extends AbstractType
 //        ))
             ->add('Precio', null, array(
                     'label' => ' ',
-                    'disabled' => true,
+                    'disabled' => false,
                     'attr' => array('style' => 'width:85px'),
                     'property_path' => false,
 //                    'data' => 0
                 ))
             ->add('Precio2', null, array(
                     'label' => ' ',
-                    'disabled' => true,
+                    'disabled' => false,
                     'attr' => array('style' => 'width:85px'),
                     'property_path' => false,
 //                    'data' => 0

@@ -142,6 +142,9 @@
             <button class="btn btn-danger" type="submit" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}');">{{ 'views.recordactions.delete'|trans({}, 'JordiLlonchCrudGeneratorBundle') }}</button>
         </form>
     </div>
+        <a class="btn btn-success" href="{{ path('pdcorden_imprimir', { 'id': entity.id }) }}">
+            Imprimir PDF
+        </a>
         <div class="float-left">
             <a class="btn btn-primary" href="{{ path('pdcorden_imprimir_excel', { 'id': entity.id }) }}">
             Imprimir Excel

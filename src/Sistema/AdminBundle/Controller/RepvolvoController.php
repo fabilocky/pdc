@@ -164,6 +164,11 @@ class RepvolvoController extends Controller {
         $form->bind($request);
 
         if ($form->isValid()) {
+            $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");
+            $query = "SELECT max(id) from Repvolvo";
+            $result=pg_query($con, $query);
+            $row=pg_fetch_row($result);
+            $entity->setId($row[0]+1);
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -308,7 +313,7 @@ class RepvolvoController extends Controller {
        $excel = $this->get('os.excel');
        $excel->loadFile("excel.xlsx");
        $num=$excel->getRowCount();
-       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");
+       $con = pg_connect("host=localhost port=5432 dbname=pdc user=postgres password=postgres");       
        //$query="TRUNCATE repvolvo CASCADE";
 //       $result=pg_query($con, $query)or die('ERROR AL INSERTAR DATOS: ' . pg_last_error());
        for ($i = 1; $i <= $num; $i++) {

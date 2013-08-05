@@ -79,6 +79,18 @@
             <td>${{ consumos.subtotal }}</td>
         </tr>
         {% set suma = suma + consumos.subtotal %}
+        {% endfor %}        
+        {% for otro in entity.otro %}
+        {% set pesos = otro.precio %}
+        {% set unit = otro.subtotal / otro.cantidad %}
+        <tr>            
+            <td>{{ otro.cantidad }}</td>
+            <td>{{ otro.codigo }}</td>
+            <td>{{ otro.descripcion }}</td>
+            <td>${{ unit|number_format(2, '.', ',') }}</td>
+            <td>${{ otro.subtotal }}</td>
+        </tr>
+        {% set suma = suma + otro.subtotal %}
         {% endfor %}
         <tr>            
             <td colspan="4" class="th" align="right" style="font-weight: bold; width: 85%">Total Sin IVA</td>

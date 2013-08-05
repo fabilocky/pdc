@@ -60,6 +60,12 @@ class RenaultordenType extends AbstractType
             'allow_delete' => true,
             'by_reference' => false,
         ))
+            ->add('otro', 'collection', array(
+            'type'         => new OtroType(),
+            'allow_add'    => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+        ))
             ->add('terceros', 'collection', array(
             'type'         => new RenaulttercerosType(),
             'allow_add'    => true,

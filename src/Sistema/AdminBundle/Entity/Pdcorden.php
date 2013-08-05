@@ -163,11 +163,18 @@ class Pdcorden
      * @var type 
      */
     private $terceros;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Otro", mappedBy="pdcorden", cascade={"persist"})
+     * @var type 
+     */
+    private $otro;
 
      public function __construct()
     {
         $this->solicitudes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->consumos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->otro = new \Doctrine\Common\Collections\ArrayCollection();
         $this->operaciones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->terceros = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fecha =  new \DateTime();
@@ -721,5 +728,47 @@ class Pdcorden
     public function getIdRemito()
     {
         return $this->idRemito;
+    }
+    
+    /**
+     * Add otro
+     *
+     * @param Sistema\AdminBundle\Entity\Otro $otro
+     * @return Pdcorden
+     */
+    public function addOtro(\Sistema\AdminBundle\Entity\Otro $otro)
+    {
+        $this->otro[] = $otro;
+        $otro->setPdcorden($this);
+    }
+
+    /**
+     * Remove otro
+     *
+     * @param Sistema\AdminBundle\Entity\Otro $otro
+     */
+    public function removeOtro(\Sistema\AdminBundle\Entity\Otro $otro)
+    {
+        $this->otro->removeElement($otro);
+    }
+
+    /**
+     * Get otro
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOtro()
+    {
+        return $this->otro;
+    }
+    
+    /**
+     * Set Otro
+     * 
+     * @param ArrayCollection $otro
+     */
+    public function setOtro(ArrayCollection $otro)
+    {
+        $this->otro = $otro;
     }
 }

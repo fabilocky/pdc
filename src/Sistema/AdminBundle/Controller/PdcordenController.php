@@ -12,6 +12,7 @@ use Pagerfanta\View\TwitterBootstrapView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sistema\AdminBundle\Entity\Pdcconsumo;
+use Sistema\AdminBundle\Entity\Otro;
 use \PHPExcel;
 use \PHPExcel_IOFactory;
 use \PHPExcel_Style_Color;
@@ -284,7 +285,23 @@ class PdcordenController extends Controller
                 $ord->addTerceros($terceros[$i]);                
             }
         }     
-        
+        $cont3 = 0;
+        if (isset($ords['otro'])) {
+            $otro = $ords['otro'];
+            foreach ($otro as $otro) {
+                $str3 = $otro['precio'];
+                $fa3 = str_replace(".", ",", $str3);
+                $otro['precio'] = $fa3;
+                $str4 = $otro['subtotal'];
+                $fa4 = str_replace(".", ",", $str4);
+                $otro['subtotal'] = $fa4;
+                $cont2 = $cont2 + 1;
+            }
+            for ($i = 0; $i <= $cont3; $i++) {
+                $otro[$i] = new Otro();
+                $ord->addOtro($otro[$i]);
+            }
+        }
  
         $form = $this->createForm(new PdcordenType(), $ord);        
         $form->bindRequest($request);
@@ -518,7 +535,7 @@ table {
 $contenido
 EOD;
 
-        return $this->get('sistema_tcpdf')->quick2_pdf($pdf);
+        return $this->get('sistema_tcpdf')->quick3_pdf($pdf);
     }
     
         /**
@@ -690,5 +707,6 @@ EOD;
 //            'edit_form'   => $editForm->createView(),
 //            'delete_form' => $deleteForm->createView(),
 //        );
-        }
+        }       
+    
 }

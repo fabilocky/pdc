@@ -128,6 +128,12 @@ class Ordvolvo
      */
     private $consumos;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Otro", mappedBy="ordvolvo", cascade={"persist"})
+     * @var type 
+     */
+    private $otro;
+    
      /**
      * @ORM\OneToMany(targetEntity="Operaciones", mappedBy="ordvolvo", cascade={"persist"})
      * @var type 
@@ -144,6 +150,7 @@ class Ordvolvo
     {
         $this->solicitudes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->consumos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->otro = new \Doctrine\Common\Collections\ArrayCollection();
         $this->operaciones = new \Doctrine\Common\Collections\ArrayCollection();
         $this->terceros = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fecha =  new \DateTime();
@@ -628,5 +635,47 @@ class Ordvolvo
     public function setTerceros(ArrayCollection $terceros)
     {
         $this->terceros = $terceros;
+    }
+    
+    /**
+     * Add otro
+     *
+     * @param Sistema\AdminBundle\Entity\Otro $otro
+     * @return Ordvolvo
+     */
+    public function addOtro(\Sistema\AdminBundle\Entity\Otro $otro)
+    {
+        $this->otro[] = $otro;
+        $otro->setOrdvolvo($this);
+    }
+
+    /**
+     * Remove otro
+     *
+     * @param Sistema\AdminBundle\Entity\Otro $otro
+     */
+    public function removeOtro(\Sistema\AdminBundle\Entity\Otro $otro)
+    {
+        $this->otro->removeElement($otro);
+    }
+
+    /**
+     * Get otro
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getOtro()
+    {
+        return $this->otro;
+    }
+    
+    /**
+     * Set Otro
+     * 
+     * @param ArrayCollection $otro
+     */
+    public function setOtro(ArrayCollection $otro)
+    {
+        $this->otro = $otro;
     }
 }

@@ -1,0 +1,72 @@
+<table>     
+        <tr>
+            <td align="center" style="font-weight: bold; width: 75%">SOLICITUD DE REPUESTOS</td>            
+            <td class="th" align="center" style="font-weight: bold; width: 10%; background-color: #e8e8e8">FECHA</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%; border-width: 1px 1px 1px 1px">{{ entity["fecha"]|date('d-m-Y') }}</td>
+        </tr>
+       
+</table>
+<br>
+<table>     
+        <tr>
+            <td align="center" style="font-weight: bold; font-size: 8; width: 75%">A través de la presente solicitamos el envío de los siguientes repuestos:</td>          
+        </tr>
+       
+</table>
+<br>
+<table>
+    <tbody>         
+        <tr>  
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 32%"></td>                        
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 15%; border-width: 1px 1px 1px 1px; background-color: #e8e8e8">CLIENTE</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 38%; border-width: 1px 1px 1px 1px">PESCAROLO DIESEL CENTER</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 15%; border-width: 1px 1px 1px 1px"></td>
+        </tr>             
+    </tbody>
+</table>
+<table>
+    <tbody>         
+        <tr>  
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 32%"></td>                        
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 15%; border-width: 1px 1px 1px 1px; background-color: #e8e8e8">ID-CHASIS</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 19%; border-width: 1px 1px 1px 1px"></td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 15%; border-width: 1px 1px 1px 1px; background-color: #e8e8e8">MODELO</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 19%; border-width: 1px 1px 1px 1px"></td>
+        </tr>             
+    </tbody>
+</table>
+<br>
+<table class="table-bordered">
+    <tbody>         
+        <tr>  
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 5%">IT.</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 15%">CODIGO</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 12%">CANTIDAD</td>            
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 38%">DENOMINACION</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 15%">PRECIO UNIT.</td>
+            <td class="th" align="center" style="font-weight: bold; font-size: 8; width: 15%">SUB.TOTAL</td>
+        </tr>
+        {% set num = 1 %}
+        {% for consumos in entity["consumos"] %}        
+        <tr>
+            <td>{{ num }}</td>
+            <td>{{ consumos["codigo"] }}</td>
+            <td>{{ consumos["cantidad"] }}</td>            
+            <td>{{ consumos["Repvolvo"] }}</td>
+            <td></td>  
+            <td></td>  
+        </tr>
+        {% set num = num + 1 %}
+        {% endfor %}        
+    </tbody>
+</table>
+<br>
+<table>     
+        <tr>
+            <td align="center" style="font-weight: bold; width: 60%"></td>            
+            <td class="th" align="center" style="font-weight: bold; width: 10%; background-color: #e8e8e8; font-size: 8">ENVIA</td>
+            <td class="th" align="center" style="font-weight: bold; width: 30%; border-width: 1px 1px 1px 1px; font-size: 8">MARIA ANTONELLA PESCAROLO</td>
+        </tr>
+       
+</table>
+

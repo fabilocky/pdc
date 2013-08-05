@@ -1,0 +1,165 @@
+<table>     
+        <tr>
+            <td align="right" style="font-weight: bold"></td>
+            <td align="right" style="font-weight: bold">Fecha: {{ entity["fecha"]|date('d-m-Y') }}</td>
+        </tr>
+       
+</table>
+<table>    
+        <tr>
+            <td align="right" style="font-weight: bold; color: red">Cotizacion: {{ entity["cotizacion"] }}</td>            
+        </tr>                
+</table>
+<br>
+<table>
+    <tbody>
+        <tr>            
+            <td class="th">Cliente: {{ entity["client"] }}</td>
+            <td class="th"></td>            
+        </tr>        
+    </tbody>
+</table>
+<br>
+<br>
+<table class="table-bordered">
+    <tbody>
+        <tr>            
+            <td colspan="5" align="center" class="th">Presupuesto - Repuestos y Lubricantes</td>
+        </tr> 
+        <tr>            
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Cantidad</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Codigo</td>
+            <td class="th" align="center" style="font-weight: bold; width: 40%">Denominacion</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%">P. Unit.</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Subtotal</td>
+        </tr>
+        {% set suma = 0 %}
+        {% for consumos in entity["consumos"] %}
+        {% set pesos =  consumos["Precio2"]%}
+        {% set unit = consumos["subtotal"] / consumos["cantidad"] %}
+        <tr>            
+            <td>{{ consumos["cantidad"] }}</td>
+            <td>{{ consumos["codigo"] }}</td>
+            <td>{{ consumos["Repvolvo"] }}</td>
+            <td>${{ unit|number_format(2, '.', ',') }}</td>
+            <td>${{ consumos["subtotal"] }}</td>
+        </tr>
+        {% set suma = suma + consumos["subtotal"] %}
+        {% endfor %}
+        {% for otro in entity["otro"] %}
+        {% set pesos = otro["precio"] %}
+        {% set unit = otro["subtotal"] / otro["cantidad"] %}
+        <tr>            
+            <td>{{ otro["cantidad"] }}</td>
+            <td>{{ otro["codigo"]}}</td>
+            <td>{{ otro["descripcion"] }}</td>
+            <td>${{ unit|number_format(2, '.', ',') }}</td>
+            <td>${{ otro["subtotal"] }}</td>
+        </tr>
+        {% set suma = suma + otro["subtotal"] %}
+        {% endfor %}
+        <tr>            
+            <td colspan="4" class="th" align="right" style="font-weight: bold; width: 85%">Total Sin IVA</td>
+            <td class="th" align="left" style="font-weight: bold; width: 15%">${{ suma }}</td>
+        </tr>
+        
+    </tbody>
+</table>
+<table class="table-bordered">
+    <tbody>
+        <tr>            
+            <td colspan="4" align="center" class="th">Operaciones</td>
+        </tr>
+        <tr>
+            <td class="th" align="center" style="font-weight: bold; width: 15%"></td>
+            <td class="th" align="center" style="font-weight: bold; width: 55%">Denominacion</td>
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Hs</td>                
+            <td class="th" align="center" style="font-weight: bold; width: 15%">Subtotal</td>
+        </tr>
+        {% set suma = 0 %}
+        {% set i = 1 %}
+        {% for operaciones in entity["operaciones"] %}
+        <tr>
+            <td>{{ i }}</td>
+            <td>{{ operaciones["denominacion"] }}</td>
+            <td>{{ operaciones["hs"] }}</td>
+            <td>${{ operaciones["subtotal"] }}</td>
+        </tr>
+        {% set suma = suma + operaciones["subtotal"] %}
+        {% set i = i+1 %}
+        {% endfor %}
+        <tr>            
+            <td colspan="4" class="th" align="right" style="font-weight: bold; width: 85%">Total Sin IVA</td>
+            <td class="th" align="left" style="font-weight: bold; width: 15%">${{ suma }}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<table>    
+        <tr>
+            <td style="font-weight: bold; width: 70%; ">CONDICIONES DE PAGO POR SERVICIO:</td>
+            <td style="font-weight: bold; width: 15%">Neto</td>
+            <td style="width: 15%">${{ entity["neto"] }}</td>            
+                 
+        </tr>        
+        <tr>
+            <td style="width: 70%">*VALORES DE 15 A 20 DIAS</td>
+            <td style="font-weight: bold; width: 15%">IVA 21%</td>               
+            <td>${{ entity["iva"] }}</td>
+            
+        </tr>
+         <tr>
+            <td style="width: 70%">*CONTADO EFECTIVO O DEPOSITO BANCARIO</td>
+            <td style="font-weight: bold; width: 15%">Total</td>              
+            <td>${{ entity["total"] }}</td>
+        </tr>
+        <tr>
+            <td style="color: red; width: 70%; ">25 dias despues de confeccionada la factura devengara un 0,25% diario</td>
+            <td style="font-weight: bold; width: 15%"></td>
+            <td style="width: 15%"></td>            
+                 
+        </tr> 
+    
+</table>
+<br>
+<br>
+<table>    
+        <tr>
+            <td align="left" style="font-weight: bold">Observaciones:</td>
+            <td align="center" style="font-weight: bold"></td>
+        </tr>        
+</table>
+<br>
+<br>
+<br>
+<br>
+<table>
+<tr>
+            <td align="left" style="font-weight: bold; width: 50%">Firma Responsable de Taller:</td>
+            <td align="center" style="font-weight: bold; width: 50%">Firma del Cliente:</td>
+        </tr>
+        </table>
+{#<table class="table-bordered">
+    <tbody>
+        <tr>
+            <td class="th">Producto</td>
+            <td class="th">Precio</td>
+            <td class="th">Cantidad</td>
+            <td class="th">Total</td>
+        </tr>
+        {% for lineaFactura in entity.idLineaFactura %}
+        <tr>
+            <td>{{ lineaFactura.idTipoProducto }}</td>
+            <td>$ {{ lineaFactura.idTipoProducto.precio }}</td>
+            <td>{{ lineaFactura.cantidad }}</td>
+            <td>$ {{ lineaFactura.total }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Total: </td>
+            <td>$ {{ entity.total }}</td>
+        </tr>
+    </tbody>
+</table>#}

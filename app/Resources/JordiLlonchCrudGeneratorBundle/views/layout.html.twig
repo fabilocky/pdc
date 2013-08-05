@@ -72,10 +72,10 @@
 					</nav>#}
 					<nav>
 						<ul id="menu">
-                                                    {% if is_granted('ROLE_ADMIN') %}
-                                                        <li {% if app.request.pathinfo ==  '/admin/' %} class="active" {% endif %}>
-                                                            <a href="{{ path('admin_index') }}">Inicio</a></li>
+                                                    {% if is_granted('ROLE_ADMIN') %}                                                        
 							{#<li class="active"><a href="{{ path('admin_index') }}">Inicio</a></li>#}
+                                                        <li {% if app.request.pathinfo ==  '/admin/ordvolvo/pedido' %} class="active" {% endif %}>
+                                                            <a href="{{ path('pedido') }}">Pedidos</a></li>
 							<li {% if app.request.pathinfo ==  '/admin/ordvolvo/' %} class="active" {% endif %}>
                                                             <a href="{{ path('ordvolvo') }}">Ordenes - Volvo</a></li>
                                                         <li {% if app.request.pathinfo ==  '/admin/renaultorden/' %} class="active" {% endif %}>
@@ -88,6 +88,8 @@
                                                             <a href="{{ path('repvolvo') }}">Repuestos</a></li>
                                                         <li {% if app.request.pathinfo ==  '/admin/ordvolvo/liquidacion' %} class="active" {% endif %}>
                                                             <a href="{{ path('liquidacion') }}">Liquidacion - Volvo</a></li>
+                                                        <li {% if app.request.pathinfo ==  '/admin/ordvolvo/presupuesto' %} class="active" {% endif %}>
+                                                            <a href="{{ path('presupuesto') }}">Presupuestos</a></li>                      
                                                         
                                                     {% elseif is_granted('ROLE_CAJERO') %}
                                                         <li {% if app.request.pathinfo ==  '/admin/caja/' %} class="active" {% endif %}>

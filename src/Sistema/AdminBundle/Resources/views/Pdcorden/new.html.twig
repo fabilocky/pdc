@@ -177,6 +177,25 @@
                     <li>{{ form_row(consumos.subtotal) }}</li>
         {% endfor %}            
                 </ul>
+         <h2>Otros</h2> 
+    {#{{ form_row(form.fecha) }}#}
+                        <div class="titulos">
+                            <div class="tituloproducto">Codigo</div>
+                            <div class="titulocodigo">Repuesto</div>
+                            <div class="tituloprecio">Precio</div>                
+                            <div class="titulocantidad">Cant</div>                
+                            <div class="titulototal">SubTotal</div>
+                        </div>
+    {#<h3>Lineas de Factura</h3>#}
+                        <ul class="tags4" data-prototype4="{{ form_widget(form.otro.vars.prototype)|e }}">       
+        {# iterate over each existing tag and render its only field: name #}
+        {% for otro in form.otro %}
+                                <li>{{ form_row(otro.codigo) }}</li>
+                                <li>{{ form_row(otro.descripcion) }}</li>
+                                <li>{{ form_row(otro.cantidad) }}</li>            
+                                <li>{{ form_row(otro.subtotal) }}</li>
+        {% endfor %}            
+                                </ul>
         <h2>Operaciones</h2> 
                 <div class="titulos">
                     <div class="tituloperaciones">Denominación</div>
@@ -416,6 +435,14 @@
                                             }
                                         }
                                     });
+                                    collectionHolder4.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#pdcorden_otro_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
+                                            }
+                                        }
+                                    });
                                     $('#pdcorden_neto').val(totalFacturado11.toFixed(2));
                                     iva11 = totalFacturado11.toFixed(2)*0.21;
                                     $('#pdcorden_iva').val(iva11.toFixed(2));
@@ -488,6 +515,14 @@
                                     collectionHolder3.find('li').each(function(index) {
                                         if(index != 0){
                                             totalLinea = parseFloat($('#pdcorden_terceros_'+index+'_subtotal').val(), 10)
+                                            if(!isNaN(totalLinea)){
+                                                totalFacturado11 = totalFacturado11 + totalLinea;
+                                            }
+                                        }
+                                    });
+                                    collectionHolder4.find('li').each(function(index) {
+                                        if(index != 0){
+                                            totalLinea = parseFloat($('#pdcorden_otro_'+index+'_subtotal').val(), 10)
                                             if(!isNaN(totalLinea)){
                                                 totalFacturado11 = totalFacturado11 + totalLinea;
                                             }
@@ -680,6 +715,14 @@
                                                             }
                                                         }
                                                     });
+                                                    collectionHolder4.find('li').each(function(index) {
+                                                        if(index != 0){
+                                                            totalLinea2 = parseFloat($('#pdcorden_otro_'+index+'_subtotal').val(), 10)
+                                                            if(!isNaN(totalLinea2)){
+                                                                totalFacturado22 = totalFacturado22 + totalLinea2;
+                                                            }
+                                                        }
+                                                    });
                                                     //totalFacturado222= totalFacturado2 + totalFacturado22;
                                                     $('#pdcorden_neto').val(totalFacturado22.toFixed(2));
                                                     iva22 = totalFacturado22.toFixed(2)*0.21;
@@ -806,6 +849,14 @@
                                                             }
                                                         }
                                                     });
+                                                    collectionHolder4.find('li').each(function(index) {
+                                                        if(index != 0){
+                                                            totalLinea3 = parseFloat($('#pdcorden_otro_'+index+'_subtotal').val(), 10)
+                                                            if(!isNaN(totalLinea3)){
+                                                                totalFacturado33 = totalFacturado33 + totalLinea3;
+                                                            }
+                                                        }
+                                                    });
                                                     //totalFacturado333= totalFacturado3 + totalFacturado33;                                                    
                                                     $('#pdcorden_neto').val(totalFacturado33.toFixed(2));
                                                     iva33 = totalFacturado33.toFixed(2)*0.21;                                                    
@@ -823,6 +874,140 @@ $(document).ready(function(){
 });
 
 </script>
+
+<script>
+                                                                                        // Obtiene el div que contiene la colección de etiquetas
+                                                                                        var cantidadAddJs4 = 0;
+                                                                                        var collectionHolder4 = $('ul.tags4');
+
+                                                                                        // configura una enlace "Agregar una etiqueta"
+                                                                                        var $addTagLink4 = $('<a href="#" class="add_tag_link">Agregar otro</a>');
+                                                                                        var $newLinkLi4 = $('<li></li>').append($addTagLink4);
+
+                                                                                        jQuery(document).ready(function() {
+                                                                                            // Añade el ancla "Agregar una etiqueta" y las etiquetas li y ul
+                                                                                            collectionHolder4.append($newLinkLi4);
+
+                                                                                            $addTagLink4.on('click', function(e) {
+                                                                                                // evita crear el enlace con una "#" en la URL
+                                                                                                e.preventDefault();
+
+                                                                                                // añade una nueva etiqueta form (ve el siguiente bloque de código)
+                                                                                                addTagForm4(collectionHolder4, $newLinkLi4);
+                                                                                            });
+                                                                                        });
+
+                                                                                        function addTagForm4(collectionHolder4, $newLinkLi4) {
+                                                                                            // Obtiene el data-prototype explicado anteriormente
+                                                                                            var prototype4 = collectionHolder4.attr('data-prototype4');
+
+                                                                                            // cuenta las entradas actuales en el formulario (p. ej. 4),
+                                                                                            // lo usa como el nuevo índice (p. ej. 4)
+                                                                                            var newIndex4 = collectionHolder4.find(':input').length;
+
+                                                                                            // Reemplaza el '__name__' en el prototipo HTML para que
+                                                                                            // en su lugar sea un número basado en cuántos elementos hay
+                                                                                            //var newForm4 = prototype4.replace(/__name__/g, newIndex4);
+
+                                                                                            var newForm4 = prototype4.replace(/__name__/g, collectionHolder4.children().length);
+
+                                                                                            // Muestra el formulario en la página en un elemento li,
+                                                                                            // antes del enlace 'Agregar una etiqueta'
+                                                                                            var $newFormLi4 = $('<li></li>').append(newForm4);
+                                                                                            $newLinkLi4.before($newFormLi4);
+
+                                                                                            cantidadAddJs4 = cantidadAddJs4 + 1;
+                                                                                            cargarAddJs4(cantidadAddJs4);
+                                                                                        }
+
+                                                                                        </script>
+
+                                                                                        <script>
+                                                                                            function cargarAddJs4(cantidadAddJs4) {
+                                                                                                //var $addTwig = " {\% set idProducto = "+cantidadAddJs+" \%} ";
+                                                                                                //var $newAddTwig = $('<div><\/div>').append($addTwig);
+                                                                                                //$newLinkLi.before($newAddTwig);
+                                                                                                var $addJs4 =
+                                                                                                        "$('#pdcorden_otro_" + cantidadAddJs4 + "_cantidad').change(function() {" +
+                                                                                                        "calculaTotal4(" + cantidadAddJs4 + ")" +
+                                                                                                        "});" +
+                                                                                                        "$('#pdcorden_otro_" + cantidadAddJs4 + "_precio').change(function() {" +
+                                                                                                        "calculaTotal4(" + cantidadAddJs4 + ")" +
+                                                                                                        "});"
+                                                                                                        ;
+                                                                                                var $newAddJs4 = $('<script><\/script>').append($addJs4);
+                                                                                                //$('<div></div>').append($newAddJs);
+                                                                                                $newLinkLi4.before($newAddJs4);
+
+                                                                                                //        var $div4 = $("<div />",
+                                                                                                //        {
+                                                                                                //            id: "Div4", //atributo directo, igual que si fuéramos con attr(“id”)
+                                                                                                //            "class": "Div4", //class entre comillas porque es una palabra reservada en javascript
+                                                                                                //            text: "Lorem ipsum", //text no es un atributo sino una propiedad de jQuery, por ejemplo: .text("Lorem ipsum")
+                                                                                                //            css: //propiedad de jQuery
+                                                                                                //                {
+                                                                                                //                "font-weight": "bold", "color": "White"
+                                                                                                //                },
+                                                                                                //            click: function (e) { //evento de jQuery
+                                                                                                //                alert("Hola mundo!");
+                                                                                                //                }
+                                                                                                //        });
+                                                                                                //        $newLinkLi.before($div4);
+                                                                                            }
+
+                                                                                            function calculaTotal4(cantidadAddJs4) {
+                                                                                                cotizacion = parseFloat($('#pdcorden_cotizacion').val(), 10);
+                                                                                                valueCantidad = $('#pdcorden_otro_' + cantidadAddJs4 + '_cantidad').val();
+                                                                                                valueUnitario = $('#pdcorden_otro_' + cantidadAddJs4 + '_precio').val();
+                                                                                                valueTotal = valueCantidad * valueUnitario;
+                                                                                                $('#pdcorden_otro_' + cantidadAddJs4 + '_subtotal').val(valueTotal.toFixed(2));
+                                                                                                valuetotaltotal = parseFloat($('#pdcorden_neto').val(), 10);
+                                                                                                if (isNaN(valuetotaltotal)) {
+                                                                                                    totalFacturado4 = 0;
+                                                                                                } else {
+                                                                                                    totalFacturado4 = parseFloat($('#pdcorden_neto').val(), 10);
+                                                                                                }
+                                                                                                totalFacturado44 = 0;
+                                                                                                collectionHolder4.find('li').each(function(index) {
+                                                                                                    if (index != 0) {
+                                                                                                        totalLinea4 = parseFloat($('#pdcorden_otro_' + index + '_subtotal').val(), 10)
+                                                                                                        if (!isNaN(totalLinea4)) {
+                                                                                                            totalFacturado44 = totalFacturado44 + totalLinea4;
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
+                                                                                                collectionHolder.find('li').each(function(index) {
+                                                                                                    if (index != 0) {
+                                                                                                        totalLinea4 = parseFloat($('#pdcorden_consumos_' + index + '_subtotal').val(), 10)
+                                                                                                        if (!isNaN(totalLinea4)) {
+                                                                                                            totalFacturado44 = totalFacturado44 + totalLinea4;
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
+                                                                                                collectionHolder2.find('li').each(function(index) {
+                                                                                                    if (index != 0) {
+                                                                                                        totalLinea4 = parseFloat($('#pdcorden_operaciones_' + index + '_subtotal').val(), 10)
+                                                                                                        if (!isNaN(totalLinea4)) {
+                                                                                                            totalFacturado44 = totalFacturado44 + totalLinea4;
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
+                                                                                                collectionHolder3.find('li').each(function(index) {
+                                                                                                    if (index != 0) {
+                                                                                                        totalLinea4 = parseFloat($('#pdcorden_terceros_' + index + '_subtotal').val(), 10)
+                                                                                                        if (!isNaN(totalLinea4)) {
+                                                                                                            totalFacturado44 = totalFacturado44 + totalLinea4;
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
+                                                                                                //totalFacturado444= totalFacturado4 + totalFacturado44;                                                    
+                                                                                                $('#pdcorden_neto').val(totalFacturado44.toFixed(2));
+                                                                                                iva44 = totalFacturado44.toFixed(2) * 0.21;
+                                                                                                $('#pdcorden_iva').val(iva44.toFixed(2));
+                                                                                                total44 = totalFacturado44 + iva44;
+                                                                                                $('#pdcorden_total').val(total44.toFixed(2));
+                                                                                            }
+                                                                                            </script>
 {#<script type="text/javascript">
     jQuery(document).ready(function($) {
         var $autocompleter = $('#sistema_adminbundle_facturatype_idCliente');
