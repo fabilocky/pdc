@@ -19,6 +19,7 @@ use Sistema\AdminBundle\Entity\Solicrep;
 use Sistema\AdminBundle\Entity\Consumo;
 use Sistema\AdminBundle\Entity\Operaciones;
 use Sistema\AdminBundle\Entity\Terceros;
+use Sistema\AdminBundle\Entity\Otro;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use \PHPExcel;

@@ -430,6 +430,14 @@
                                                                                 }
                                                                             }
                                                                         });
+                                                                        collectionHolder4.find('li').each(function(index) {
+                                                                            if (index != 0) {
+                                                                                totalLinea = parseFloat($('#ordvolvo_otro_' + index + '_subtotal').val(), 10)
+                                                                                if (!isNaN(totalLinea)) {
+                                                                                    totalFacturado11 = totalFacturado11 + totalLinea;
+                                                                                }
+                                                                            }
+                                                                        });
                                                                         $('#ordvolvo_neto').val(totalFacturado11.toFixed(2));
                                                                         iva11 = totalFacturado11.toFixed(2) * 0.21;
                                                                         $('#ordvolvo_iva').val(iva11.toFixed(2));
