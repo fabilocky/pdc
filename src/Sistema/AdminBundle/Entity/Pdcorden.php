@@ -133,7 +133,7 @@ class Pdcorden
     /**
      * @var Repvolvo
      *
-     * @ORM\OneToOne(targetEntity="Remitovolvo", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Remitovolvo", cascade={"all"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_remitovolvo", referencedColumnName="id")
      * })
@@ -141,31 +141,31 @@ class Pdcorden
     private $idRemito;
     
     /**
-     * @ORM\OneToMany(targetEntity="Pdcsolicrep", mappedBy="pdcorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Pdcsolicrep", mappedBy="pdcorden", cascade={"all"})
      * @var type 
      */
     private $solicitudes;
     
     /**
-     * @ORM\OneToMany(targetEntity="Pdcconsumo", mappedBy="pdcorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Pdcconsumo", mappedBy="pdcorden", cascade={"all"})
      * @var type 
      */
     private $consumos;
     
      /**
-     * @ORM\OneToMany(targetEntity="Pdcoperaciones", mappedBy="pdcorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Pdcoperaciones", mappedBy="pdcorden", cascade={"all"})
      * @var type 
      */
     private $operaciones;
     
     /**
-     * @ORM\OneToMany(targetEntity="Pdcterceros", mappedBy="pdcorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Pdcterceros", mappedBy="pdcorden", cascade={"all"})
      * @var type 
      */
     private $terceros;
     
     /**
-     * @ORM\OneToMany(targetEntity="Otro", mappedBy="pdcorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Otro", mappedBy="pdcorden", cascade={"all"})
      * @var type 
      */
     private $otro;

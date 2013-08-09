@@ -117,31 +117,31 @@ class Ordvolvo
     private $total;
     
     /**
-     * @ORM\OneToMany(targetEntity="Solicrep", mappedBy="ordvolvo", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Solicrep", mappedBy="ordvolvo", cascade={"all"})
      * @var type 
      */
     private $solicitudes;
     
     /**
-     * @ORM\OneToMany(targetEntity="Consumo", mappedBy="ordvolvo", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Consumo", mappedBy="ordvolvo", cascade={"all"})
      * @var type 
      */
     private $consumos;
     
     /**
-     * @ORM\OneToMany(targetEntity="Otro", mappedBy="ordvolvo", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Otro", mappedBy="ordvolvo", cascade={"all"})
      * @var type 
      */
     private $otro;
     
      /**
-     * @ORM\OneToMany(targetEntity="Operaciones", mappedBy="ordvolvo", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Operaciones", mappedBy="ordvolvo", cascade={"all"})
      * @var type 
      */
     private $operaciones;
     
     /**
-     * @ORM\OneToMany(targetEntity="Terceros", mappedBy="ordvolvo", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Terceros", mappedBy="ordvolvo", cascade={"all"})
      * @var type 
      */
     private $terceros;

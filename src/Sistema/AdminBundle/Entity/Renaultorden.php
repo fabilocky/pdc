@@ -131,7 +131,7 @@ class Renaultorden
     private $total;
     
     /**
-     * @ORM\OneToMany(targetEntity="Otro", mappedBy="renaultorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Otro", mappedBy="renaultorden", cascade={"all"})
      * @var type 
      */
     private $otro;
@@ -139,7 +139,7 @@ class Renaultorden
     /**
      * @var Repvolvo
      *
-     * @ORM\OneToOne(targetEntity="Remitovolvo", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Remitovolvo", cascade={"all"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_remitovolvo", referencedColumnName="id")
      * })
@@ -147,25 +147,25 @@ class Renaultorden
     private $idRemito;
     
     /**
-     * @ORM\OneToMany(targetEntity="Renaultsolicrep", mappedBy="renaultorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Renaultsolicrep", mappedBy="renaultorden", cascade={"all"})
      * @var type 
      */
     private $solicitudes;
     
     /**
-     * @ORM\OneToMany(targetEntity="Renaultconsumo", mappedBy="renaultorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Renaultconsumo", mappedBy="renaultorden", cascade={"all"})
      * @var type 
      */
     private $consumos;
     
      /**
-     * @ORM\OneToMany(targetEntity="Renaultoperaciones", mappedBy="renaultorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Renaultoperaciones", mappedBy="renaultorden", cascade={"all"})
      * @var type 
      */
     private $operaciones;
     
     /**
-     * @ORM\OneToMany(targetEntity="Renaultterceros", mappedBy="renaultorden", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Renaultterceros", mappedBy="renaultorden", cascade={"all"})
      * @var type 
      */
     private $terceros;
